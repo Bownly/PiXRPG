@@ -16,6 +16,8 @@ import flixel.math.FlxMath;
 
 import haxe.io.Path;
 
+import EnemyClasses;
+
 
 
 /**
@@ -173,7 +175,7 @@ class TownState extends FlxState
 				val = 1;
 			
 			songTownsong.pause();
-			sub = new BattleSubState([val - 1]);
+			sub = new BattleSubState(calculateEncounter(val));
 			this.openSubState(sub);
 		}
 
@@ -212,6 +214,26 @@ class TownState extends FlxState
 	public function assignEvents():Void
 	{
 		return;
+	}
+
+	private function calculateEncounter(Val:Int):Array<EnemyClasses.BaseEnemy>
+	{
+		var arr:Array<EnemyClasses.BaseEnemy> = [];
+
+		switch (Val)
+		{
+			case 1:
+				arr.push(new EnemyClasses.EnemyMush());
+			case 2:
+				arr.push(new EnemyClasses.EnemyBee());
+			case 3:
+				arr.push(new EnemyClasses.EnemySnail());
+			case 4:
+				arr.push(new EnemyClasses.EnemyMush());
+				arr.push(new EnemyClasses.EnemyFlower());
+		}
+
+		return arr;
 	}
 
 	private function goToNextLevel(EntID:Int, MapName:String):Void

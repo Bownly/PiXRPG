@@ -7,6 +7,8 @@ import flixel.group.FlxGroup;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 
+import EnemyClasses;
+
 /**
  * ...
  * @author Bownly
@@ -66,20 +68,20 @@ class BaseEvent
 
 class EventBattle extends BaseEvent
 {
-	var _val:Array<Int>;
+	var _enemies:Array<BaseEnemy>;
 	var _state:TownState;
 
-	public function new(Val:Array<Int>, State:TownState)
+	public function new(Enemies:Array<BaseEnemy>, State:TownState)
 	{
 		super();
-		_val = Val;
+		_enemies = Enemies;
 		_state = State;
 	}
 
 	override public function update()
 	{
 		destroy();
-		var sub = new BattleSubState(_val);
+		var sub = new BattleSubState(_enemies);
 		_state.openSubState(sub);
 		super.update();
 	}

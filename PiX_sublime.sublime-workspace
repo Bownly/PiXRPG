@@ -467,7 +467,7 @@
 			"file": "source/PenClasses.hx",
 			"settings":
 			{
-				"buffer_size": 1463,
+				"buffer_size": 1140,
 				"line_ending": "Unix",
 				"name": "PenClasses.hx"
 			}
@@ -476,7 +476,7 @@
 			"file": "source/FrogPond1.hx",
 			"settings":
 			{
-				"buffer_size": 1572,
+				"buffer_size": 1578,
 				"line_ending": "Unix",
 				"name": "FrogPond-1"
 			}
@@ -493,7 +493,7 @@
 			"file": "source/TownState.hx",
 			"settings":
 			{
-				"buffer_size": 5898,
+				"buffer_size": 5916,
 				"line_ending": "Unix"
 			}
 		},
@@ -856,22 +856,23 @@
 					"file": "source/PenClasses.hx",
 					"settings":
 					{
-						"buffer_size": 1463,
+						"buffer_size": 1140,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1179,
-								1179
+								0,
+								0
 							]
 						],
 						"settings":
 						{
 							"auto_name": "PenClasses.hx",
 							"haxe-build-id": 0,
-							"syntax": "Packages/Haxe/Haxe.tmLanguage"
+							"syntax": "Packages/Haxe/Haxe.tmLanguage",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -884,15 +885,15 @@
 					"file": "source/FrogPond1.hx",
 					"settings":
 					{
-						"buffer_size": 1572,
+						"buffer_size": 1578,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1190,
-								1190
+								0,
+								0
 							]
 						],
 						"settings":
@@ -941,15 +942,15 @@
 					"file": "source/TownState.hx",
 					"settings":
 					{
-						"buffer_size": 5898,
+						"buffer_size": 5916,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								827,
-								827
+								0,
+								0
 							]
 						],
 						"settings":
@@ -1043,7 +1044,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 1.0,
-						"translation.y": 1013.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1099,7 +1100,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 2.0,
-						"translation.y": 1997.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"

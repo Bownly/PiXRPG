@@ -5,7 +5,7 @@ import flixel.group.FlxGroup;
 
 import DialogClasses;
 import EventClasses;
-
+import EnemyClasses;
 import MenuClasses;
 
 /**
@@ -57,7 +57,7 @@ class FrogPond1 extends TownState
 		{
 			npc1.events = [	
 			// new EventDialog(new DialogBox(Strings.stringArray[0]), this),
-			new EventBattle([0, 1, 2], this),
+			new EventBattle([new EnemySnail(), new EnemyMush()], this),
 			new EventDialog(new DialogBox(Strings.stringArray[5], 
 										[new MenuItemFlag("A", 0, null, new EventFlag("AorB", 1)),
 										 new MenuItemFlag("B", 0, null, new EventFlag("AorB", -1, this))]),

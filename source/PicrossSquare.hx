@@ -19,27 +19,27 @@ class PicrossSquare extends FlxSprite
 	static public var CORRECT:Int = 2;
 	static public var GOODHURT:Int = 3;
 	
-	var _id:Int = 0;
+	var _color:Int = 0;
 	public var colID:Int;
 	public var rowID:Int;
 	public var status:Int = 0;  // 0 = off, 1 = on, 2 == marked
 	public var answer:Int = 2;
 	public var isActive:Bool = true;
 	
-	public function new(X:Float=0, Y:Float=0, ID:Int, XID:Int, YID:Int, Answer:Int) 
+	public function new(X:Float=0, Y:Float=0, Color:Int, XID:Int, YID:Int, Answer:Int) 
 	{
 		super(X, Y);
 		
-		_id = ID;
+		_color = Color;
 		colID = XID;
 		rowID = YID;
 		answer = Answer;
 		
 		var o = 4;  // number of colors per type
 		loadGraphic(AssetPaths.picross_colors__png, true, 9, 9);
-		animation.add("off",       [0 + o * _id]);
-		animation.add("on",        [1 + o * _id]);
-		animation.add("mark",      [2 + o * _id]);
+		animation.add("off",       [0 + o * _color]);
+		animation.add("on",        [1 + o * _color]);
+		animation.add("mark",      [2 + o * _color]);
 		animation.play("off");
 	}
 	

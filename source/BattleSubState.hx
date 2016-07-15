@@ -9,6 +9,7 @@ import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.math.FlxRandom;
 
+import EnemyClasses;
 import MenuClasses;
 
 /**
@@ -41,6 +42,7 @@ class BattleSubState extends FlxSubState
 	
 	var _grpTexts:FlxTypedGroup<FlxText>;
 	var _grpSprites:FlxTypedGroup<FlxSprite>;
+	var _grpObstacles:FlxTypedGroup<FlxSprite>;
 	var _grpPicrossSquaresBoards:FlxTypedGroup<PicrossBoard>;
 	var _arrPicrossBoards:Array<PicrossBoard>;
 	var _grpCursor:FlxTypedGroup<FlxSprite>;
@@ -52,6 +54,7 @@ class BattleSubState extends FlxSubState
 	var _enemyNum:Int = 0;
 	var _enemyID:Int;
 	var _enemyIDs:Array<Int>;
+	var _arrEnemies:Array<BaseEnemy>;
 	var _dimens:Int;
 	var _winCount:Int = 0;
 	var _curCount:Int = 0;
@@ -79,16 +82,18 @@ class BattleSubState extends FlxSubState
 	var songFanfare:FlxSound = FlxG.sound.load("assets/music/victoly_fanfare.wav");
 	var songLost:FlxSound = FlxG.sound.load("assets/music/lost_the_battle.wav");
 	
-	public function new(EnemyIDs:Array<Int>, ?CursorShape:Int, ?BGColor:Int=FlxColor.TRANSPARENT) 
+	public function new(Enemies:Array<BaseEnemy>, ?CursorShape:Int, ?BGColor:Int=FlxColor.TRANSPARENT) 
 	{
 		super();
 	
-		_enemyIDs = EnemyIDs;
+		// _enemyIDs = EnemyIDs;
+		_arrEnemies = Enemies;
 	
 		_grpTexts = new FlxTypedGroup<FlxText>();
 		_grpSprites = new FlxTypedGroup<FlxSprite>();
 		_grpPicrossSquaresBoards = new FlxTypedGroup<PicrossBoard>();
 		_grpCursor = new FlxTypedGroup<FlxSprite>();
+		_grpObstacles = new FlxTypedGroup<FlxSprite>();
 
 		xanchor = Std.int(FlxG.width / 2 - w/2);
 		yanchor = Std.int(FlxG.height / 2 - h/2);
@@ -175,14 +180,13 @@ class BattleSubState extends FlxSubState
 		_txtMessage.alignment = "center";
 	
 		_arrPicrossBoards = new Array<PicrossBoard>();
-		for (i in EnemyIDs)
-		{
-			_dimens = 4 + i; 
-			if (_enemyID == 4)  // aka endboss
-				_dimens = 10;
 
-			var picross = new PicrossBoard(_dimens, [xanchor, yanchor]);
+		for (e in _arrEnemies)
+		{
+			var picross = new PicrossBoard(e.dimens, e.color, [xanchor, yanchor]);
 	   		_arrPicrossBoards.push(picross);
+	   		e.board = picross;
+	   		e.grpObs = _grpObstacles;
 		}
 
    		for(pc in _arrPicrossBoards)
@@ -200,7 +204,8 @@ class BattleSubState extends FlxSubState
 		add(_grpSprites);
 		add(_grpTexts);
 		add(_grpPicrossSquaresBoards);
-		add(_grpCursor);  // for zlayer reasons, this has to be added last
+		add(_grpObstacles);
+		add(_grpCursor);  
 	
 		// sets all of the elements to stay centered to the current camera location
 		for(text in _grpTexts) 
@@ -218,6 +223,7 @@ class BattleSubState extends FlxSubState
 	
 	public override function update(elapsed:Float)
 	{
+
 		// timer buisness
 		if (_txtMessage.text != "")
 			_msgTimer -= FlxG.elapsed;
@@ -267,6 +273,7 @@ class BattleSubState extends FlxSubState
 		// cursor movement
 		if (battleState == STATE_BATTLE)
 		{
+			_arrEnemies[_enemyNum].update(elapsed);
 			if (FlxG.keys.anyJustPressed(["UP", "W"]))
 			{
 				if (_sprPen.y <= yanchor + 48)
@@ -298,6 +305,15 @@ class BattleSubState extends FlxSubState
 				else
 					_sprPen.x += 10;
 				_arrPicrossBoards[_enemyNum].colRowBold(_sprPen.x, _sprPen.y);
+			}
+
+			if (FlxG.keys.anyJustPressed(["L"]))
+			{
+				_arrEnemies[_enemyNum].spawnObstacle();
+			}
+			if (FlxG.keys.anyJustPressed(["O"]))
+			{
+				_arrEnemies[_enemyNum].removeObstacle();
 			}
 
 			if (_sprPen1 != null) {
@@ -338,6 +354,7 @@ class BattleSubState extends FlxSubState
 			{
 				if (markSquare(_sprPen, PicrossSquare.ON) == 1)
 				{
+					_arrEnemies[_enemyNum].removeObstacle();
 					// this is if I decide to have larger cursors
 					for (cursor in _grpCursor)
 					{
@@ -383,7 +400,8 @@ class BattleSubState extends FlxSubState
 		}
 		
 		// if you win
-		if (_arrPicrossBoards[_enemyNum].curCount == _arrPicrossBoards[_enemyNum].winCount)
+		// if (_arrPicrossBoards[_enemyNum].curCount == _arrPicrossBoards[_enemyNum].winCount)
+		if (winCheck() == true)
 		{
 			if (battleState != STATE_VICTORY)
 			{
@@ -404,14 +422,10 @@ class BattleSubState extends FlxSubState
 				}
 				else 
 				{
-					trace("a", Reg.pMP);
 					_arrPicrossBoards[_enemyNum].flipActive();
-					trace("b", Reg.pMP);
+					_arrEnemies[_enemyNum].removeAllObstacles();
 					_enemyNum += 1;
-					trace("c", Reg.pMP);
 					setUpMenu();
-					trace("d", Reg.pMP);
-
 					battleState = STATE_MENU;
 				}
 			}
@@ -487,8 +501,11 @@ class BattleSubState extends FlxSubState
 
 	private function setUpBoard():Void
 	{
-		_enemyID = _enemyIDs[_enemyNum];
+		// _enemyID = _enemyIDs[_enemyNum];
+		_enemyID = _arrEnemies[_enemyNum].id;
 
+		for (e in _arrEnemies)
+			e.grpObs = _grpObstacles;
 		if (_sprEnemy != null)
 		{
 			_sprEnemy.loadGraphic("assets/images/enemies.png", true, 16, 16);
@@ -532,6 +549,18 @@ class BattleSubState extends FlxSubState
 		_txtMessage.text = "Suffered " + 10 * (_enemyID + 1) + " damages.";
 		_msgTimer = _msgDuration;
 		_mcHurtTimer = _mcHurtDuration;
+	}
+
+	private function winCheck():Bool
+	{
+		for (row in 0..._arrPicrossBoards[_enemyNum].dimens)
+		{
+			if (_arrPicrossBoards[_enemyNum].checkRowCorrect(row) == false)
+			{
+				return false;
+			}
+		}
+		return true;
 	}
 
 }
