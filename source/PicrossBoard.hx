@@ -17,7 +17,8 @@ class PicrossBoard extends FlxGroup
 	public var grpSprites:FlxTypedGroup<FlxSprite>;
 	public var grpPicrossSquares:FlxTypedGroup<PicrossSquare>;
 
-	var _coords:Array<Int>;
+	public var coords:Array<Int>;
+	public var color:Int;
 
 	public var isActive:Bool;
 	
@@ -34,12 +35,13 @@ class PicrossBoard extends FlxGroup
 	public var gridPicrossSquares:Array<Array<PicrossSquare>> = new Array<Array<PicrossSquare>>();
 
 	
-	public function new(Size:Int, Coords:Array<Int>, ?Anchor:FlxSprite) 
+	public function new(Size:Int, Color:Int, Coords:Array<Int>, ?Anchor:FlxSprite) 
 	{
 		super();
 	
 		// _sprBack = Anchor;
-		_coords = Coords;
+		coords = Coords;
+		color = Color;
 		dimens = Size;
 	
 		grpTexts = new FlxTypedGroup<FlxText>();
@@ -76,7 +78,7 @@ class PicrossBoard extends FlxGroup
 			}
 			rowHints.push(calcRowHints(rowArray));
 
-			var txt:FlxText = new FlxText(_coords[0], _coords[1] + 46 + i * 10, 48, rowHints[i], 8);
+			var txt:FlxText = new FlxText(coords[0], coords[1] + 46 + i * 10, 48, rowHints[i], 8);
 			txt.alignment = "right";
 			arrRowHints.push(txt);
 			grpTexts.add(txt);
@@ -86,7 +88,7 @@ class PicrossBoard extends FlxGroup
 		{
 			colHints.push(calcColHints(colArray, i));
 
-			var txt:FlxText = new FlxText(_coords[0] + 48 + i * 10, _coords[1] + 48, 14, colHints[i], 8);
+			var txt:FlxText = new FlxText(coords[0] + 48 + i * 10, coords[1] + 48, 14, colHints[i], 8);
 			txt.y -= txt.height;
 			arrColHints.push(txt);
 			grpTexts.add(txt);
@@ -97,7 +99,7 @@ class PicrossBoard extends FlxGroup
 		{
 			for (Y in 0...colArray.length)
 			{
-				var pSquare:PicrossSquare = new PicrossSquare(_coords[0] + 48 + X * 10, _coords[1] + 48 + Y * 10, Math.floor((dimens - 4) / 2), X, Y, colArray[Y][X]);
+				var pSquare:PicrossSquare = new PicrossSquare(coords[0] + 48 + X * 10, coords[1] + 48 + Y * 10, color, X, Y, colArray[Y][X]);
 				gridPicrossSquares[Y][X] = pSquare;
 				grpPicrossSquares.add(pSquare);
 			}
@@ -202,19 +204,13 @@ class PicrossBoard extends FlxGroup
 		}
 	}
 
-	public function colRowGray(X:Float, Y:Float):Void
-	{
-		// blah blah blah TODO: do this later
-		// arrColHints[cell.colID].setFormat(arrColHints[cell.colID].size, FlxColor.GRAY);
-
-	}
-
 	public function checkRowCorrect(RowID:Int):Bool
 	{
 		for (i in 0...dimens)
 		{
 			if (colArray[RowID][i] != gridPicrossSquares[RowID][i].status)
 			{
+				arrRowHints[RowID].setFormat(arrRowHints[RowID].size, FlxColor.WHITE);
 				return false;
 			}
 		}
@@ -228,6 +224,7 @@ class PicrossBoard extends FlxGroup
 		{
 			if (colArray[row][ColID] != gridPicrossSquares[row][ColID].status)
 			{
+				arrColHints[ColID].setFormat(arrColHints[ColID].size, FlxColor.WHITE);
 				return false;
 			}
 		}
