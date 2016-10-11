@@ -14,6 +14,7 @@ import flixel.group.FlxGroup;
 class BaseObstacle extends FlxSprite
 {
 	public var coords:Array<Float>;
+	public var hp:Int = 0;
 
 	public function new(Coords:Array<Float>) 
 	{
@@ -21,73 +22,94 @@ class BaseObstacle extends FlxSprite
 		super(coords[0], coords[1]);
 	}
 
+	override public function update(elapsed:Float) {
+		super.update(elapsed);
+	}
+
+	public function tryRemove():Bool {
+		return false;
+	}
 }
 
-
-
-class ObsHintHiderHorz extends FlxSprite
+// Mush
+class ObsHintHider extends BaseObstacle
 {
-	public var coords:Array<Float>;
+	var isVert:Bool;
+	var landed:Bool = false;
+	var speed:Int = 2;
 
-	public function new(Coords:Array<Float>) 
+	public function new(Coords:Array<Float>, HP:Int, IsVert:Bool) 
 	{
-		coords = Coords;
-		super(coords[0]-50, coords[1]);
-		loadGraphic(AssetPaths.vialhorz__png, true, 50, 10);
+		isVert = IsVert;
+		if (isVert)
+		{
+			super([Coords[0], Coords[1]-50]);
+			loadGraphic(AssetPaths.vial__png, true, 10, 50);
+		}
+		else
+		{
+			super([Coords[0]-50, Coords[1]]);
+			loadGraphic(AssetPaths.vialhorz__png, true, 50, 10);
+		}
 		animation.add("idle", [0], 1, true);
+		animation.add("hurt", [1], 1, true);
 		animation.play("idle");
 		scrollFactor.set();	
+		hp = HP;
+		coords = Coords;
 	}
 
 	override public function update(elapsed:Float)
 	{
 		super.update(elapsed);
-		if (x < coords[0]-3)  // Stupid hack to get the gfx to line up. n needs to be speed+1
-			x+=2;
+		if (landed == false)
+		{
+			if (isVert)
+			{
+				if (y < coords[1]-speed-1)  // Stupid hack to get the gfx to line up. n needs to be speed+1, er, speed-1
+					y += speed;
+				else
+					landed = true;				
+			}
+			else
+			{
+				if (x < coords[0]-speed-1)  // Same as above
+					x += speed;
+				else
+					landed = true;				
+			}
+		}
+	}
+
+	override public function tryRemove():Bool
+	{
+		if (landed) 
+		{
+			hp -= 1;
+			animation.play("hurt");
+		}
+		if (hp <= 0)
+			return true;
+		else
+			return false;
 	}
 }
 
-
-
-class ObsHintHiderVert extends FlxSprite
-{
-	public var coords:Array<Float>;
-
-	public function new(Coords:Array<Float>) 
-	{
-		coords = Coords;
-		super(coords[0], coords[1]-50);
-		loadGraphic(AssetPaths.vial__png, true, 10, 50);
-		animation.add("idle", [0], 1, true);
-		animation.play("idle");
-		scrollFactor.set();	
-	}
-
-	override public function update(elapsed:Float)
-	{
-		super.update(elapsed);
-		if (y < coords[1]-3)  // Stupid hack to get the gfx to line up. n needs to be speed+1
-			y+=2;
-	}
-}
-
-
-
-class ObsEraser extends FlxSprite
+// Snail
+class ObsEraser extends BaseObstacle
 {
 	var _coords:Array<Float>;
 	var _board:PicrossBoard;
 	var _square:PicrossSquare;
 	var _enemy:EnemyClasses.BaseEnemy;
 
-	// public function new(Coords:Array<Float>, Square:PicrossSquare, Enemy:EnemyClasses.BaseEnemy)
 	public function new(Board:PicrossBoard, Enemy:EnemyClasses.BaseEnemy)
 	{
 		_board = Board;
 		_square = _board.grpPicrossSquares.getRandom();
 		_coords = [_square.x, _square.y];
 		_enemy = Enemy;
-		super(_coords[0], _coords[1]-50);
+		super([_coords[0], _coords[1]-50]);
 		loadGraphic(AssetPaths.drop__png, true, 20, 20);
 		x -= 5;
 		animation.add("fall", [0, 1], 4, true);
@@ -100,8 +122,8 @@ class ObsEraser extends FlxSprite
 	{
 
 		super.update(elapsed);
-		if (y < _coords[1]-6)  // Stupid hack to get the gfx to line up. n needs to be speed+1
-			y+=2;
+		if (y < _coords[1]-6) 
+			y+=1;
 		else
 		{
 			if (animation.name != "splat")
@@ -125,7 +147,7 @@ class ObsEraser extends FlxSprite
 
 
 
-
+// some kind of obstacle that splats down on the board, and has to be "wiped" off by the cursor; also vanishes after x seconds
 
 
 

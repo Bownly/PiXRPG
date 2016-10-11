@@ -35,7 +35,7 @@ class PicrossSquare extends FlxSprite
 		rowID = YID;
 		answer = Answer;
 		
-		var o = 4;  // number of colors per type
+		var o = 3;  // number of colors per type
 		loadGraphic(AssetPaths.picross_colors__png, true, 9, 9);
 		animation.add("off",       [0 + o * _color]);
 		animation.add("on",        [1 + o * _color]);

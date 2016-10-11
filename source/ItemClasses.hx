@@ -14,33 +14,37 @@ import flixel.util.FlxColor;
 
 class InventoryManager
 {
-	public static var _arr:Array<BaseItem> = [];
+	public static var arr:Array<BaseItem> = [];
 
-	public function new() 
-	{
-	}
+	public function new() {}
 
 	public static function removeItem()
 	{
-		for (item in 0..._arr.length) 
+		for (item in 0...arr.length) 
 		{
-			if (_arr[item].isUsed == true)
+			if (arr[item].isUsed == true)
 			{
-				_arr.remove(_arr[item]);
+				arr.remove(arr[item]);
 				break;
 			}
 		}
 	}
 
+	public static function removeAllItems()
+	{
+		for (item in 0...arr.length) 
+			arr.remove(arr[item]);
+	}
+
 	public static function addItem(item:BaseItem) 
 	{
-		if (_arr.length >= 6)
+		if (arr.length >= 6)
 		{
 			trace("inventory too full");
 		}
 		else
 		{
-			_arr.push(item);
+			arr.push(item);
 		}
 	}
 }

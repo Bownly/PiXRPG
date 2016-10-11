@@ -8,16 +8,21 @@ import flixel.ui.FlxButton;
 
 /**
  * ...
- * @author .:BuzzJeux:., Bownly
+ * @author Bownly
  */
 
 class Player extends FlxSprite
 {
 	private static inline var TILE_SIZE:Int = 16;
 	private static inline var MOVEMENT_SPEED:Int = 2;
-	
-	public var isMoving:Bool;
-	
+
+	public static var lvl:Int = 1;
+	public static var mp:Int = 60;
+	public static var maxmp:Int = 60;
+	public static var xp:Int = 0;
+	public static var MAXXP:Int = 100;	
+
+	public var isMoving:Bool;	
 	public var canMove:Bool = true;
 	
 	var _state:TownState;
@@ -28,7 +33,6 @@ class Player extends FlxSprite
 		
 		_state = State;
 		facing = Facing;
-		
 		
 		loadGraphic(AssetPaths.mctest__png, true, 16, 16);
 		animation.add("up", [0, 1], 4, true);
@@ -42,16 +46,16 @@ class Player extends FlxSprite
 	override public function update(elapsed:Float):Void
 	{
 
-				if (FlxG.keys.anyJustPressed(["Z"]))
-				{
-					Reg.STATE = 0;
-					trace("Reg.STATE", Reg.STATE);
-				}
-				if (FlxG.keys.anyJustPressed(["X"]))
-				{
-					Reg.STATE = 1;
-					trace("Reg.STATE", Reg.STATE);
-				}
+		if (FlxG.keys.anyJustPressed(["Z"]))
+		{
+			Reg.STATE = 0;
+			trace("Reg.STATE", Reg.STATE);
+		}
+		if (FlxG.keys.anyJustPressed(["X"]))
+		{
+			Reg.STATE = 1;
+			trace("Reg.STATE", Reg.STATE);
+		}
 
 		if (Reg.STATE == Reg.STATE_NORMAL)
 		{
@@ -122,11 +126,53 @@ class Player extends FlxSprite
 				{
 					interactionCheck(facing);
 				}
+
+				if (FlxG.keys.anyJustPressed(["P"]))
+				{
+					FlxG.switchState(new MenuState());
+				}
 				
 
 			}
 		}
+	}
 
+	public static function AddXP(Val:Int):Void
+	{
+		xp += Val;
+		if (xp > MAXXP)
+			xp = MAXXP;
+		
+		if (xp >= 100)
+		{
+			lvl = 5;
+		}
+		else if (xp >= 55)
+		{
+			lvl = 4;
+		}
+		else if (xp >= 25)
+		{
+			lvl = 3;
+		}
+		else if (xp >= 10)
+		{
+			lvl = 2;
+		}
+		mp = 30 + (lvl) * 30;
+	}
+
+	public static function setStats(LVL:Int, MP:Int, XP:Int):Void
+	{
+		lvl = LVL;
+		mp = MP;
+		xp = XP;
+	}
+
+	public static function resetStats():Void
+	{
+
+		setStats(1, 30, 0);
 	}
 	
 	public function setFacing(Dir:Int):Void

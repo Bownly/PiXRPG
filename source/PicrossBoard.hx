@@ -66,8 +66,8 @@ class PicrossBoard extends FlxGroup
 			rowArray = [];
 			for (j in 0...dimens)
 			{
-				var rand:Int = FlxG.random.int(0, 2);
-				if (rand > 0)
+				var rand:Int = FlxG.random.int(0, 5);
+				if (rand > 1)
 				{
 					rowArray.push(1);
 					winCount++;
@@ -99,7 +99,14 @@ class PicrossBoard extends FlxGroup
 		{
 			for (Y in 0...colArray.length)
 			{
-				var pSquare:PicrossSquare = new PicrossSquare(coords[0] + 48 + X * 10, coords[1] + 48 + Y * 10, color, X, Y, colArray[Y][X]);
+				var pSquare:PicrossSquare;
+				// the if statements are to determine what the pattern of the squares' basecolors.
+				// var halfway:Int = Math.ceil(dimens/2);
+				// if ((X >= halfway && Y < halfway) || (Y >= halfway && X < halfway))
+				if (((X%10 >= 5) && (Y%10 >= 5)) || ((X%10 <= 4) && (Y%10 <= 4)))
+					pSquare = new PicrossSquare(coords[0] + 48 + X * 10, coords[1] + 48 + Y * 10, color+1, X, Y, colArray[Y][X]);
+				else
+					pSquare = new PicrossSquare(coords[0] + 48 + X * 10, coords[1] + 48 + Y * 10, color, X, Y, colArray[Y][X]);
 				gridPicrossSquares[Y][X] = pSquare;
 				grpPicrossSquares.add(pSquare);
 			}
@@ -138,9 +145,7 @@ class PicrossBoard extends FlxGroup
 		for (cell in Row)
 		{
 			if (cell == 1)
-			{
 				count++;
-			}
 			else
 			{
 				if (count != 0)
@@ -151,9 +156,7 @@ class PicrossBoard extends FlxGroup
 			}
 		}
 		if (count != 0)  // have to do this one more time because it won't otherwise check after the last cell
-		{
 			str += " " + count;
-		}
 		return str;
 	}
 	
@@ -167,9 +170,7 @@ class PicrossBoard extends FlxGroup
 		for (row in Col)
 		{
 			if (row[i] == 1)
-			{
 				count++;
-			}
 			else
 			{
 				if (count != 0)

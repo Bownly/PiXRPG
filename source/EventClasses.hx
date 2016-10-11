@@ -31,7 +31,6 @@ class EventManager
 			Reg.STATE = Reg.STATE_CUTSCENE;
 			if (_arr[0].isAlive == false)
 				_arr.shift();
-				// _arr.remove(_arr[0]);
 			else
 				_arr[0].update();
 		}
@@ -130,7 +129,6 @@ class EventDialogMenu extends BaseEvent
 	// }
 }
 
-
 class EventFlag extends BaseEvent
 {
 	var _flag:String;
@@ -151,16 +149,45 @@ class EventFlag extends BaseEvent
 		destroy();
 	}
 
-	override public function destroy()
-	{
-		// if (_state != null)
-		// {
-		// 	_state.eventManager.addEvent(this);
-		// 	Reg.STATE = Reg.STATE_CUTSCENE;
-		// 	trace("did that shuffle");
-		// }
-		super.destroy();
+	// override public function destroy()
+	// {
+	// 	super.destroy();
+	// }
+}
 
+class EventItemGet extends BaseEvent
+{
+	var _item:ItemClasses.BaseItem;
+
+	public function new(Item:ItemClasses.BaseItem)
+	{
+		_item = Item;
+		super();
+	}
+
+	override public function update()
+	{
+		ItemClasses.InventoryManager.arr.push(_item);
+		destroy();
+	}
+}
+
+class EventSaveGame extends BaseEvent
+{
+	var _mapName:String;
+	var _entID:Int;
+
+	public function new(EntID:Int, MapName:String)
+	{
+		_mapName = MapName;
+		_entID = EntID;
+		super();
+	}
+
+	override public function update()
+	{
+		Reg.saveGame(_entID, _mapName);
+		destroy();
 	}
 }
 

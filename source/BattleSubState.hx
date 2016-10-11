@@ -42,7 +42,7 @@ class BattleSubState extends FlxSubState
 	
 	var _grpTexts:FlxTypedGroup<FlxText>;
 	var _grpSprites:FlxTypedGroup<FlxSprite>;
-	var _grpObstacles:FlxTypedGroup<FlxSprite>;
+	var _grpObstacles:FlxTypedGroup<ObstacleClasses.BaseObstacle>;
 	var _grpPicrossSquaresBoards:FlxTypedGroup<PicrossBoard>;
 	var _arrPicrossBoards:Array<PicrossBoard>;
 	var _grpCursor:FlxTypedGroup<FlxSprite>;
@@ -59,7 +59,6 @@ class BattleSubState extends FlxSubState
 	var _winCount:Int = 0;
 	var _curCount:Int = 0;
 	
-	// var Reg.pMP:Float = Reg.pMP;
 	var _msgTimer:Float = 0;
 	var _msgDuration:Float = 1.5;
 	
@@ -93,7 +92,7 @@ class BattleSubState extends FlxSubState
 		_grpSprites = new FlxTypedGroup<FlxSprite>();
 		_grpPicrossSquaresBoards = new FlxTypedGroup<PicrossBoard>();
 		_grpCursor = new FlxTypedGroup<FlxSprite>();
-		_grpObstacles = new FlxTypedGroup<FlxSprite>();
+		_grpObstacles = new FlxTypedGroup<ObstacleClasses.BaseObstacle>();
 
 		xanchor = Std.int(FlxG.width / 2 - w/2);
 		yanchor = Std.int(FlxG.height / 2 - h/2);
@@ -103,7 +102,7 @@ class BattleSubState extends FlxSubState
 		yanchor += window.pad*2;
 		add(window);
 		
-		_txtHP = new FlxText(xanchor, yanchor, 64, "MP: " + Reg.pMP, 8);
+		_txtHP = new FlxText(xanchor, yanchor, 64, "MP: " + Player.mp, 8);
 		
 		_sprPlayer = new FlxSprite(xanchor, _txtHP.y + _txtHP.height);
 		_sprPlayer.loadGraphic("assets/images/mctest.png", true, 16, 16);
@@ -230,7 +229,7 @@ class BattleSubState extends FlxSubState
 		if (_msgTimer <= 0)
 			_txtMessage.text = "";
 
-		_txtHP.text = "MP: " + Math.floor(Reg.pMP);
+		_txtHP.text = "MP: " + Math.floor(Player.mp);
 
 		// this block is basically resolveAnimations()
 		// TODO: make it resolveAnimations() if you add a 3rd animation to resolve
@@ -315,6 +314,10 @@ class BattleSubState extends FlxSubState
 			{
 				_arrEnemies[_enemyNum].removeObstacle();
 			}
+			if (FlxG.keys.anyJustPressed(["P"]))
+			{
+				camera.shake(0.005, 0.2);
+			}
 
 			if (_sprPen1 != null) {
 				_sprPen1.x = _sprPen.x - 10;
@@ -382,9 +385,9 @@ class BattleSubState extends FlxSubState
 		}
 
 		// if you die
-		if (Reg.pMP <= 0)
+		if (Player.mp <= 0)
 		{
-			Reg.pMP = 0;
+			Player.mp = 0;
 			if (battleState != STATE_DEFEAT)
 			{
 				_sprPlayer.animation.play("dead");
@@ -400,9 +403,10 @@ class BattleSubState extends FlxSubState
 		}
 		
 		// if you win
-		// if (_arrPicrossBoards[_enemyNum].curCount == _arrPicrossBoards[_enemyNum].winCount)
 		if (winCheck() == true)
 		{
+			_grpObstacles.clear();
+
 			if (battleState != STATE_VICTORY)
 			{
 				_sprEnemy.animation.play("dead");
@@ -424,6 +428,7 @@ class BattleSubState extends FlxSubState
 				{
 					_arrPicrossBoards[_enemyNum].flipActive();
 					_arrEnemies[_enemyNum].removeAllObstacles();
+					_grpObstacles.clear();
 					_enemyNum += 1;
 					setUpMenu();
 					battleState = STATE_MENU;
@@ -487,10 +492,14 @@ class BattleSubState extends FlxSubState
 						takeDamage();
 						_arrPicrossBoards[_enemyNum].checkRowCorrect(cell.rowID);
 						_arrPicrossBoards[_enemyNum].checkColCorrect(cell.colID);
+						camera.shake(0.005, 0.2);
 						return 1;
 					}
 					case PicrossSquare.HURT:
+					{
+						camera.shake(0.005, 0.2);
 						takeDamage();
+					}
 					return 0;
 				}
 				break;
@@ -503,6 +512,9 @@ class BattleSubState extends FlxSubState
 	{
 		// _enemyID = _enemyIDs[_enemyNum];
 		_enemyID = _arrEnemies[_enemyNum].id;
+
+		_sprPen.x = xanchor + 48;
+		_sprPen.y = yanchor + 48;
 
 		for (e in _arrEnemies)
 			e.grpObs = _grpObstacles;
@@ -537,14 +549,15 @@ class BattleSubState extends FlxSubState
 
 		_menu = new MenuInventory([xanchor-window.pad*2, square.y-window.pad*2], 
 							[w, yanchor + h - square.y], 
-							2, "Next Battle");
+							2, "Next Battle", [4, -12]);
 		_menu.isAlive = true;
 		add(_menu);
+		_menu.open();
 	}
 
 	private function takeDamage():Void
 	{
-		Reg.pMP -= 10 * (_enemyID + 1);
+		Player.mp -= 10 * (_enemyID + 1);
 		_txtMessage.text = " ";
 		_txtMessage.text = "Suffered " + 10 * (_enemyID + 1) + " damages.";
 		_msgTimer = _msgDuration;

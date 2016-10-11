@@ -51,16 +51,19 @@ class MenuSubState extends FlxSubState
 		
 
 		if (Menu != null)
-			setMenu(Menu);
+			// setMenu(Menu);
+			trace("TODO: clean up this code later");
 		else
 		{
 			_menu = new MenuPause([0, 0], [100, 100], 1, _state, this);
 			_menu.isAlive = true;
 			add(_menu);
+			// MenuManager.pushMenu(_menu);
+			_menu.open();
 		}
 
-		// add(_sprBackBG);
-		// add(_sprBack);
+		MenuManager.setSubState(this);
+
 		add(statsWindow);
 		_grpEverything.add(_txtLevel);
 		_grpEverything.add(_txtHP);
@@ -72,23 +75,20 @@ class MenuSubState extends FlxSubState
 		{
 			text.scrollFactor.set();
         }
+
 	}
 	
 	public override function update(elapsed:Float)
 	{
-		if (_menu.isAlive == false)
-		{
+		if (_menu.isAlive == false || !_menu.exists)
 			this.close();
-		}
 		super.update(elapsed);
 	}
 
-	public function setMenu(Menu:BaseMenu)
+	public function removeMenu(Menu:BaseMenu)
 	{
-		remove(_menu);
-		_menu = Menu;
-		_menu.isAlive = true;
-		add(_menu);
+		remove(Menu);
 	}
+
 
 }

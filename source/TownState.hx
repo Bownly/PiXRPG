@@ -16,8 +16,10 @@ import flixel.math.FlxMath;
 
 import haxe.io.Path;
 
+import DialogClasses;
+import EventClasses;
 import EnemyClasses;
-
+import MenuClasses;
 
 
 /**
@@ -40,7 +42,6 @@ class TownState extends FlxState
 	var sub:BattleSubState;
 	
 	public var songTownsong:FlxSound;
-
 	
 	// tiled stuff
 	public var level:TiledLevel;
@@ -90,27 +91,9 @@ class TownState extends FlxState
 		
 		// Add backgrounds
 		add(level.backgroundLayer);
-		// for (lvl in level.backgroundLayer)
-		// {
 
-		// 	if (lvl.width < FlxG.width)
-		// 	{
-		// 		trace("tiny");
-		// 		trace("lvl.x pre: ", lvl.x);
-		// 		lvl.x -= 16;
-		// 		trace("lvl.x post: ", lvl.x);
-		// 		trace("lvl.width:  ", lvl.width);
-		// 	}
-		// }
-		
 		// Load player objects
 		add(level.objectsLayer);
-
-		// if (encounterMap != null)
-		// {
-		// 	trace("tilemap", encounterMap);
-		// 	trace("tile encounter map thing", encounterMap.tileArray);
-		// }
 
 		// Add foreground tiles after adding level objects, so these tiles render on top of player
 		add(level.foregroundTiles);
@@ -129,9 +112,6 @@ class TownState extends FlxState
 		super.destroy();
 	}
 
-	/**
-	 * Function that is called once every frame.
-	 */
 	override public function update(elapsed:Float):Void
 	{
 		eventManager.update();
@@ -145,7 +125,7 @@ class TownState extends FlxState
 		if (player.x == width || player.x == 0
 			|| player.y == height || player.y == 0)
 		{
-			goToNextLevel(edgeExitNextEntID, edgeExitNextMapName);
+			Reg.goToNextLevel(edgeExitNextEntID, edgeExitNextMapName);
 		}
 
 		// start battle!!!!
@@ -166,8 +146,6 @@ class TownState extends FlxState
 					xx = 16;
 			}
 			var map = tileMap;
-			// var val:Int = map.getTile(Math.floor((player.x + xx) / 16 ), Math.floor((player.y + yy) / 16));
-			// var val:Int = map.getTile(Math.floor((player.x) / 16 ), Math.floor((player.y) / 16));
 
 			var val:Int = encounterMap.tileArray[Std.int(player.y/16 * (width+16)/16 + player.x/16)];
 
@@ -179,29 +157,33 @@ class TownState extends FlxState
 			this.openSubState(sub);
 		}
 
-		if (FlxG.keys.anyJustPressed(["K", "ENTER"]))
+		if (Reg.STATE != Reg.STATE_CUTSCENE)
 		{
-			// var menu = new MenuClasses.MenuPause([0, 0], [100, 100], 1, this);
-			var sub = new MenuSubState(FlxG.width/2, FlxG.height/2, this);
-			this.openSubState(sub);
+			if (FlxG.keys.anyJustPressed(["K", "ENTER"]))
+			{
+				var sub = new MenuSubState(FlxG.width/2, FlxG.height/2, this);
+				this.openSubState(sub);
+			}
+			else if (FlxG.keys.anyJustPressed(["L"]))
+			{
+				eventManager.addEvent(new EventClasses.EventItemGet(new ItemClasses.ItemHealing("42 potion", "heal 42 MP", 9, 42)));
+				eventManager.addEvent(new EventClasses.EventItemGet(new ItemClasses.ItemHealing("42 potion", "heal 42 MP", 9, 42)));
+				eventManager.addEvent(new EventClasses.EventItemGet(new ItemClasses.ItemHealing("42 potion", "heal 42 MP", 9, 42)));
+				eventManager.addEvent(new EventClasses.EventItemGet(new ItemClasses.ItemHealing("42 potion", "heal 42 MP", 9, 42)));
+				eventManager.addEvent(new EventClasses.EventItemGet(new ItemClasses.ItemHealing("42 potion", "heal 42 MP", 9, 42)));
+				Reg.STATE = Reg.STATE_CUTSCENE;
+			}
 		}
-		else if (FlxG.keys.anyJustPressed(["M"]))
+		
+		if (FlxG.keys.anyJustPressed(["M"]))
 			Reg.muteToggle();
-		else if (FlxG.keys.anyJustPressed(["L"]))
-		{
-			ItemClasses.InventoryManager._arr.push(new ItemClasses.ItemHealing("a potion", "heal 1 MP", 9, 1));
-			ItemClasses.InventoryManager._arr.push(new ItemClasses.ItemHealing("b potion", "heal 2 MP", 9, 2));
-			ItemClasses.InventoryManager._arr.push(new ItemClasses.ItemHealing("c potion", "heal 3 MP", 9, 3));
-			ItemClasses.InventoryManager._arr.push(new ItemClasses.ItemHealing("d potion", "heal 4 MP", 9, 4));
-			ItemClasses.InventoryManager._arr.push(new ItemClasses.ItemHealing("e potion", "heal 5 MP", 9, 5));
-			ItemClasses.InventoryManager._arr.push(new ItemClasses.ItemHealing("f potion", "heal 6 MP", 9, 6));
-		}
+		
 		for (exit in grpExits)
 		{
 			if (exit.y == player.y && exit.x == player.x)
 			{
 				if (exit.isActive)
-					goToNextLevel(exit.nextLvlEntID, exit.nextLvl);
+					Reg.goToNextLevel(exit.nextLvlEntID, exit.nextLvl);
 			}			
 		}
 
@@ -213,6 +195,13 @@ class TownState extends FlxState
 
 	public function assignEvents():Void
 	{
+		if (Reg.flags["Save"] == 1)
+		{
+			eventManager.addEvent(new EventDialog(new DialogBox(Strings.stringArray[9]), this));
+			eventManager.addEvent(new EventFlag("Save", 0));
+			eventManager.addEvent(new EventSaveGame(2, mapName));
+		}
+
 		return;
 	}
 
@@ -236,19 +225,7 @@ class TownState extends FlxState
 		return arr;
 	}
 
-	private function goToNextLevel(EntID:Int, MapName:String):Void
-	{
-		switch MapName {
-		    case "frogpond.tmx": FlxG.switchState(new FrogPond(EntID, "frogpond.tmx"));
-		    case "town1.tmx": FlxG.switchState(new FrogPond(EntID, "town1.tmx"));
-		    case "town2.tmx": FlxG.switchState(new TownState(EntID, "town2.tmx"));
-		    case "town3.tmx": FlxG.switchState(new TownState(EntID, "town3.tmx"));
-		    case "town4.tmx": FlxG.switchState(new TownState(EntID, "town4.tmx"));
-		    case "town5.tmx": FlxG.switchState(new TownState(EntID, "town5.tmx"));
-		    case "town6.tmx": FlxG.switchState(new TownState(EntID, "town6.tmx"));
-		    default: FlxG.switchState(new TownState(EntID, MapName));
-		}
-	}
+
 
 
 

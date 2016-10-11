@@ -6,10 +6,12 @@ import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.FlxSubState;
 import flixel.group.FlxGroup;
+import flixel.group.FlxSpriteGroup;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 
 import PenClasses;
+import cloner.Cloner;
 
 /**
  * ...
@@ -17,11 +19,11 @@ import PenClasses;
  */
 
 
-
 class BaseMenuItem
 {
 	public var name:String;
 	public var iconID:Int;
+	public var grpRender:FlxTypedSpriteGroup<FlxSprite>;
 
 	public function new(Name:String, ?IconID:Int)
 	{
@@ -29,14 +31,40 @@ class BaseMenuItem
 		iconID = IconID;
 	}
 
-	public function selected()
+	public function renderLine(Anchor:Array<Float>) 
 	{
+		grpRender = null;
+		grpRender = new FlxTypedSpriteGroup<FlxSprite>(Anchor[0], Anchor[1]);
+		var xSpacer:Float = 0;
+		for (item in grpRender)
+			xSpacer += item.width + 2;
+		addIcon([xSpacer, grpRender.y]);
+		for (item in grpRender)
+			xSpacer += item.width + 2;
+		addText([xSpacer, grpRender.y]);
+		return grpRender;
 	}
 
-	public function highlighted()
+	public function highlighted() {}
+	public function selected() {}
+
+	private function addIcon(Anchor:Array<Float>)
 	{
+		var icon = new FlxSprite();
+		icon.loadGraphic(AssetPaths.item_icons__png, true, 8, 8);
+		icon.animation.add("idle", [iconID, iconID], 2, true);
+		icon.animation.play("idle");
+		icon.visible = true;
+		grpRender.add(icon);
 	}
+	private function addText(Anchor:Array<Float>)
+	{
+		var item = new FlxText(Anchor[0], 0, 64, name, 8);
+		grpRender.add(item);
+	}
+	
 }
+
 
 class MenuItemClose extends BaseMenuItem
 {
@@ -45,13 +73,11 @@ class MenuItemClose extends BaseMenuItem
 	public function new(Name:String, ?Menu:BaseMenu)
 	{
 		menu = Menu;
-		super(Name);
+		super(Name, 6);  // 6 is the x icon
 	}
 
 	override function selected()
-	{
 		menu.close();
-	}
 }
 
 
@@ -72,6 +98,7 @@ class MenuItemFlag extends MenuItemClose
 		super.selected();
 	}
 }
+
 
 class MenuItemItem extends BaseMenuItem
 {
@@ -94,21 +121,67 @@ class MenuItemItem extends BaseMenuItem
 }
 
 
-class MenuItemPen extends MenuItemClose
+class MenuItemPen extends BaseMenuItem
 {
 	var _pen:Pen;
-	
-	public function new(P:Pen)
+	var _menu:MenuPens;
+
+	public function new(P:Pen, MP:MenuPens)
 	{
 		_pen = P;
+		_menu = MP;
 		super(_pen.name);
 		iconID = _pen.id;
+	}
+
+	override public function renderLine(Anchor:Array<Float>) 
+	{
+		grpRender = null;
+		grpRender = new FlxTypedSpriteGroup<FlxSprite>(Anchor[0], Anchor[1]);
+		
+		var xSpacer:Float = 0;
+		// addEquipped([xSpacer, grpRender.y]);
+
+		for (item in grpRender)
+			xSpacer += item.width + 2;
+		addIcon([xSpacer, grpRender.y]);
+
+		for (item in grpRender)
+			xSpacer += item.width + 2;
+		addText([xSpacer, grpRender.y]);
+
+
+		return grpRender;
 	}
 
 	override public function selected()
 	{
 		PenManager.equip(_pen);
+		_menu.refresh(_menu.arrItem);
 		super.selected();
+	}
+	
+	override private function addIcon(Anchor:Array<Float>)
+	{
+		var id:Int = iconID;
+		if (PenManager.equipped == _pen)
+			id = 10;  // index for the E icon
+		var icon = new FlxSprite();
+		icon.loadGraphic(AssetPaths.item_icons__png, true, 8, 8);
+		icon.animation.add("idle", [id, id], 2, true);
+		icon.animation.play("idle");
+		icon.visible = true;
+		grpRender.add(icon);
+	}
+
+	private function addEquipped(Anchor:Array<Float>)
+	{
+		var item = new FlxText(Anchor[0], 0, 10, "E", 8);
+		if (PenManager.equipped != _pen)
+			item.setFormat(item.size, FlxColor.BLACK);
+		else
+			item.setFormat(item.size, FlxColor.WHITE);
+		grpRender.add(item);
 	}
 }
 
@@ -130,38 +203,63 @@ class MenuItemSubMenu extends BaseMenuItem
 
 	override public function selected()
 	{
-		var sub = new MenuSubState(FlxG.width/2, FlxG.height/2, _substate);
-		// var menu = new MenuPause([_menu.coords[0] + 20, _menu.coords[1] + 20], [100, 100], 1, _substate, sub);
+		var menu:BaseMenu = _menu;
+		// var sub = new MenuSubState(FlxG.width/2, FlxG.height/2, menu, _substate);
+		// sub.setMenu(menu);
 
-		var menu:BaseMenu = null;
-		var x = _menu.coords[0] + _menu.dimens[0]/2;
-		if (Type.getClassName(Type.getClass(_menu)) == "MenuPens")
+		_substate.add(_menu);
+		// MenuManager.pushMenu(_menu);
+		_menu.open();
+	}
+}
+
+
+
+class MenuManager
+{
+	public static var arrMenus:Array<BaseMenu> = [];
+	public static var activeMenu:BaseMenu = null;
+	public static var subState:MenuSubState = null;
+
+	public static function popMenu()
+	{
+		if (arrMenus.length > 0 && subState != null)
 		{
-			menu = new MenuPens([x, _menu.coords[1]], [100, 100]);
-			var castedMenu = cast(_menu, MenuPens);
-			castedMenu.refresh(castedMenu.itemArray);
+			subState.remove(arrMenus.pop());
+			resetActiveMenu();
+		}		
+	}
+
+	public static function pushMenu(m:BaseMenu)
+	{
+		for (menu in arrMenus)
+			menu.isActive = false;
+		arrMenus.push(m);
+		resetActiveMenu();
+	}
+
+	public static function resetActiveMenu()
+	{
+		if (arrMenus.length > 0)
+		{
+			activeMenu = arrMenus[arrMenus.length-1];
+			activeMenu.isActive = true;
 		}
-		else if (Type.getClassName(Type.getClass(_menu)) == "MenuInventory")
-			menu = new MenuInventory([x, _menu.coords[1]], 
-							[100, 200], 
-							1, "back");
-		else if (Type.getClassName(Type.getClass(_menu)) == "MenuPause")
-			menu = new MenuPause([x, _menu.coords[1]], [100, 100], 1, _substate, sub);
+	}
 
-		sub.setMenu(menu);
-
-		_substate.openSubState(sub);		
-		super.selected();
+	public static function setSubState(s:MenuSubState)
+	{
+		subState = s;
 	}
 
 }
 
 
 
-
 class BaseMenu extends FlxGroup
 {
 	public var isAlive:Bool = true;
+	public var isActive:Bool = false;
 
 	var _sprBack:FlxSprite;
 	var _sprBackBG:FlxSprite;
@@ -171,7 +269,7 @@ class BaseMenu extends FlxGroup
     var _xPad:Int = 8;
     var _yPad:Int = 8;
     var _iconBuffer:Int = 12;
-
+    var ITEM_GAP:Int = 12;
 
 	var _grpEverything:FlxTypedGroup<FlxSprite>;
 	var _grpIcon:FlxTypedGroup<FlxSprite>;
@@ -179,16 +277,19 @@ class BaseMenu extends FlxGroup
 	var _selected:Array<Int> = [0, 0];
 	var _arr:Array<Array<BaseMenuItem>>;
 	public var arrItem:Array<BaseMenuItem>;
-	var _arrSprite:Array<Array<FlxText>>;
+	var _arrSprite:Array<Array<FlxTypedSpriteGroup<FlxSprite>>>;
 	var _closeString:String;
 	var _closeItem:MenuItemClose;
 	var _window:Window;
+
+	var openTimerDuration:Float = 0.1;
+	var openTimer:Float = 1;
 
 	public function new(Coords:Array<Float>, Dimens:Array<Float>, ItemDimens:Int, ItemArray:Array<BaseMenuItem>, ?CloseString, ?IconBuffer) 
 	{
 
 		super();
-		_arrSprite = new Array<Array<FlxText>>();
+		_arrSprite = new Array<Array<FlxTypedSpriteGroup<FlxSprite>>>();
 		_grpIcon = new FlxTypedGroup<FlxSprite>();
 		_grpEverything = new FlxTypedGroup<FlxSprite>();
 		coords = Coords;
@@ -196,7 +297,6 @@ class BaseMenu extends FlxGroup
 		_itemDimens = ItemDimens;
 		_arr = new Array<Array<BaseMenuItem>>();
 		arrItem = ItemArray;
-		// _iconBuffer = IconBuffer;
 
 		if (CloseString != null)
 			_closeString = CloseString;
@@ -222,59 +322,75 @@ class BaseMenu extends FlxGroup
 
 	override public function update(elapsed:Float)
 	{
-		super.update(elapsed);
-
-		if (FlxG.keys.anyJustPressed(["DOWN", "S"]))
+		if (this.isActive == true)
 		{
-			if (_selected[1]+1 < _arrSprite.length && _arrSprite[_selected[1]+1][_selected[0]] != null)
-				_selected[1] += 1;
-			else 
-				_selected[1] = 0;
-			_cursor.y = _arrSprite[_selected[1]][_selected[0]].y;
-		}
-		else if (FlxG.keys.anyJustPressed(["UP", "W"]))
-		{
-			if (_selected[1]-1 >= 0 && _arrSprite[_selected[1]-1][_selected[0]] != null)
-				_selected[1] -= 1;
-			else
+			openTimer -= elapsed;
+			if (openTimer <= 0)
 			{
-				while (_selected[1]+1 < _arrSprite.length && _arrSprite[_selected[1]+1][_selected[0]] != null)
-					_selected[1] += 1;					
+				super.update(elapsed);
+
+				if (FlxG.keys.anyJustPressed(["DOWN", "S"]))
+				{
+					if (_selected[1]+1 < _arrSprite.length && _arrSprite[_selected[1]+1][_selected[0]] != null)
+						_selected[1] += 1;
+					else 
+						_selected[1] = 0;
+					_cursor.y = _arrSprite[_selected[1]][_selected[0]].y;
+				}
+				else if (FlxG.keys.anyJustPressed(["UP", "W"]))
+				{
+					if (_selected[1]-1 >= 0 && _arrSprite[_selected[1]-1][_selected[0]] != null)
+						_selected[1] -= 1;
+					else
+					{
+						while (_selected[1]+1 < _arrSprite.length && _arrSprite[_selected[1]+1][_selected[0]] != null)
+							_selected[1] += 1;					
+					}
+					_cursor.y = _arrSprite[_selected[1]][_selected[0]].y;
+				}
+				else if (FlxG.keys.anyJustPressed(["RIGHT", "D"]))
+				{
+					if (_selected[0] >= _arrSprite[0].length-1)
+						_selected[0] = 0;
+					else if (_arrSprite[_selected[1]][_selected[0]+1] != null)
+						_selected[0] += 1;
+					_cursor.x = _arrSprite[_selected[1]][_selected[0]].x - _cursor.width;
+				}
+				else if (FlxG.keys.anyJustPressed(["LEFT", "A"]))
+				{
+					if (_selected[0] <= 0 && _arrSprite[_selected[1]][_arrSprite[0].length-1] == null)
+						_selected[0] += 0;
+					else if (_selected[0] <= 0 && _arrSprite[_selected[1]][_arrSprite[0].length-1] != null)
+						_selected[0] = _arrSprite[0].length-1;
+					else 
+						_selected[0] -= 1;
+					_cursor.x = _arrSprite[_selected[1]][_selected[0]].x - _cursor.width;
+
+				}
+
+				if (FlxG.keys.anyJustPressed(["J"]))
+					_arr[_selected[1]][_selected[0]].selected();
+				// note: the null check is to disallow backing out of a MenuDialogChoices
+				else if (FlxG.keys.anyJustPressed(["K"]) && _closeString != null)
+					close();
 			}
-			_cursor.y = _arrSprite[_selected[1]][_selected[0]].y;
 		}
-		else if (FlxG.keys.anyJustPressed(["RIGHT", "D"]))
-		{
-			if (_selected[0] >= _arrSprite[0].length-1)
-				_selected[0] = 0;
-			else if (_arrSprite[_selected[1]][_selected[0]+1] != null)
-				_selected[0] += 1;
-			_cursor.x = _arrSprite[_selected[1]][_selected[0]].x - _cursor.width - _iconBuffer;
-		}
-		else if (FlxG.keys.anyJustPressed(["LEFT", "A"]))
-		{
-			trace("_arrSprite: ", _arrSprite);
-			trace("_arrSprite[0].length-1", _arrSprite[0].length-1);
-			if (_selected[0] <= 0 && _arrSprite[_selected[1]][_arrSprite[0].length-1] == null)
-				_selected[0] += 0;
-			else if (_selected[0] <= 0 && _arrSprite[_selected[1]][_arrSprite[0].length-1] != null)
-				_selected[0] = _arrSprite[0].length-1;
-			else 
-				_selected[0] -= 1;
-			_cursor.x = _arrSprite[_selected[1]][_selected[0]].x - _cursor.width - _iconBuffer;
-		}
-
-		if (FlxG.keys.anyJustPressed(["J"]))
-			_arr[_selected[1]][_selected[0]].selected();
-		// note: the null check is to disallow backing out of a dialog choice menu
-		else if (FlxG.keys.anyJustPressed(["K"]) && _closeString != null)
-			close();
-
 	}
 
 	public function close()
 	{
 		isAlive = false;
+		isActive = false;
+		MenuManager.popMenu();
+	}
+
+	public function open()
+	{
+		openTimer = openTimerDuration;
+		isAlive = true;
+		 		refresh(arrItem);
+
+		MenuManager.pushMenu(this);
 	}
 
 	public function refresh(ItemArray:Array<BaseMenuItem>)
@@ -293,6 +409,7 @@ class BaseMenu extends FlxGroup
 				_arr.push(tempArr);
 		}
 
+		// reset gwaphics
 		for (sprites in _arrSprite)
 		{
 			for (spr in sprites)
@@ -301,7 +418,6 @@ class BaseMenu extends FlxGroup
 					spr.visible = false;
 			}
 		}
-
 		for (icon in _grpIcon)
 		{
 			icon.visible = false;
@@ -311,30 +427,13 @@ class BaseMenu extends FlxGroup
 		_arrSprite = [];
 		for (i in 0..._arr.length)
 		{
-			var tempArr:Array<FlxText> = new Array<FlxText>();
+			var tempArr:Array<FlxTypedSpriteGroup<FlxSprite>> = new Array<FlxTypedSpriteGroup<FlxSprite>>();
 			for (j in 0..._arr[i].length)
 			{
-				var iconBuffer = 0;
-				// if (_arr[i][j].iconID != 0)
-				// 	iconBuffer = 8 + _window.pad;  // note: the 8 is the width of the icon
-				var item = new FlxText(coords[0] + _cursor.width + _iconBuffer, coords[1], 64, _arr[i][j].name, 8);
-				item.x += (dimens[0] * (j/_itemDimens)) + _window.pad*2;
-				item.y += i * item.height + _window.pad*2 + 1;
-				if (item != null)
-					tempArr.push(item);
-				_grpEverything.add(item);
-
-				var icon = new FlxSprite(item.x - _iconBuffer + _window.pad, item.y);
-			// icon.y += i * 18 + _window.pad*2;
-			// icon.x += (dimens[0] * (j/_itemDimens)) + _window.pad*2;
-				icon.loadGraphic(AssetPaths.item_icons__png, true, 8, 8);
-				icon.animation.add("idle", [_arr[i][j].iconID, _arr[i][j].iconID], 2, true);
-				icon.animation.play("idle");
-				icon.visible = true;
-				_grpIcon.add(icon);
-				_grpEverything.add(icon);
-				trace("added icon");
-
+				var grp = _arr[i][j].renderLine([coords[0] + _cursor.width + _window.pad*2 + (dimens[0] * (j/_itemDimens)),
+												 coords[1] + i * ITEM_GAP + _window.pad*2]);
+				tempArr.push(grp);
+				_grpEverything.add(grp);
 			}
 			if (tempArr != null)
 				_arrSprite.push(tempArr);
@@ -342,41 +441,37 @@ class BaseMenu extends FlxGroup
 
 		if (_closeString != null)
 		{
+
 			_closeItem = new MenuItemClose(_closeString, this);
 			_arr.push([_closeItem, null]);
-			var item = new FlxText(coords[0] + _cursor.width + _iconBuffer, coords[1], 64, _arr[_arr.length-1][0].name, 8);
-			item.x += _window.pad*2;
-			while (item.y < coords[1] + dimens[1] - _yPad - item.height)
-			{
-				item.y += item.height;
-			}
-	
-			var icon = new FlxSprite(item.x - _iconBuffer + _window.pad, item.y +1);
-			icon.loadGraphic(AssetPaths.item_icons__png, true, 8, 8);
-			icon.animation.add("idle", [6], 3, true);
-			icon.animation.play("idle");
-			_grpIcon.add(icon);
-			_grpEverything.add(icon);
 
-			_arrSprite.push([item, null]);
+			var grp = _closeItem.renderLine([coords[0] + _cursor.width + _window.pad*2, coords[1]]);
+			while (grp.y < coords[1] + dimens[1] - _yPad - ITEM_GAP)
+				grp.y += ITEM_GAP;
+			_arrSprite.push([grp, null]);
 
-			_grpEverything.add(item);
+			_grpEverything.add(grp);
+
+
 		}
 
 		for (sprite in _grpEverything)
 		{
-
-				if (sprite != null)
-					sprite.scrollFactor.set();
-			
+			if (sprite != null)
+				sprite.scrollFactor.set();	
 		}
 
 		_selected = [0, 0];
-		_cursor.x = _arrSprite[_selected[1]][_selected[0]].x - _cursor.width - _iconBuffer;
+		// if (_selected[0] >= _arr.length)
+		// 	_selected[0] = 0;
+		// if (_selected[1] >= _arr[_selected[0]].length)
+		// 	_selected[1] = 0;
+		// trace("selectiond: ", _selected);
+		// trace("_arr:       ", _arr);
+
+		_cursor.x = _arrSprite[_selected[1]][_selected[0]].x - _cursor.width - _window.pad/2;
 		_cursor.y = _arrSprite[_selected[1]][_selected[0]].y;
-
 	}
-
 }
 
 
@@ -392,8 +487,8 @@ class MenuDialogChoices extends BaseMenu
 	{
 		for (item in arrItem)
 		{
-				if (Type.getClassName(Type.getClass(item)) == "MenuItemFlag")
-					cast(item, MenuItemFlag).menu = this;
+			if (Type.getClassName(Type.getClass(item)) == "MenuItemFlag")
+				cast(item, MenuItemFlag).menu = this;
 		}
 	}
 
@@ -410,19 +505,24 @@ class MenuInventory extends BaseMenu
 	var _itemArray:Array<BaseMenuItem>;
 	var _descText:FlxText;
 
-	public function new(Coords:Array<Float>, Dimens:Array<Float>, ColCount:Int, ?CloseString:String)
+	public function new(Coords:Array<Float>, Dimens:Array<Float>, ColCount:Int, ?CloseString:String, ItemDescCoords:Array<Float>)
 	{	
+		var customDimens:Array<Float> = [200, Dimens[1]];
+
 		_itemArray = generateItems();
-		super(Coords, Dimens, ColCount, _itemArray, CloseString);
-		_descText = new FlxText(coords[0] + 4, coords[1] - 12, dimens[0], "Text", 8);
+		super(Coords, customDimens, ColCount, _itemArray, CloseString);
+		var idc = ItemDescCoords;
+		_descText = new FlxText(coords[0] + idc[0], coords[1] + idc[1], dimens[0], "Text", 8);
 		add(_descText);
 		_descText.scrollFactor.set();
+
+		// +4, -12
 	}
 
 	public function generateItems():Array<BaseMenuItem>
 	{
 		var items:Array<BaseMenuItem> = new Array<BaseMenuItem>();
-		for (item in ItemClasses.InventoryManager._arr)
+		for (item in ItemClasses.InventoryManager.arr)
 		{
 			items.push(new MenuItemItem(item, this));
 		}
@@ -438,11 +538,9 @@ class MenuInventory extends BaseMenu
 		if (Type.getClassName(Type.getClass(item)) == "MenuItemItem")
 			_descText.text = cast(item, MenuItemItem).item.desc;
 		else  // that pesky MenuItemClose isn't a MenuItemItem!
-			_descText.text = "Next battle!";
-
-
+			// _descText.text = "Next battle!";
+			_descText.text = _closeString;
 	}
-
 }
 
 
@@ -452,8 +550,9 @@ class MenuPause extends BaseMenu
 
 	public function new(Coords:Array<Float>, Dimens:Array<Float>, ItemDimens:Int, State:FlxState, Sub:FlxSubState)
 	{	
-		_itemArray = [  new MenuItemSubMenu("Pens", 5, State, Sub, new MenuPens(Coords, Dimens)),
-						new MenuItemSubMenu("Items", 9, State, Sub, new MenuInventory(Coords, Dimens, 1, "back"))
+		_itemArray = [  
+						new MenuItemSubMenu("Pens", 5, State, Sub, new MenuPens([Coords[0] + 50 + Dimens[0]/2, Coords[1]], Dimens)),
+						new MenuItemSubMenu("Items", 9, State, Sub, new MenuInventory([Coords[0] + Dimens[0]/2, Coords[1]], Dimens, 2, "back", [150, 5]))
 		];
 
 		super(Coords, Dimens, ItemDimens, _itemArray, "close");
@@ -471,19 +570,14 @@ class MenuPens extends BaseMenu
 		{
 			if (pen.isUnlocked == true)
 			{
-				var menuItemPen = new MenuItemPen(pen);
-				menuItemPen.menu = this;
+				var menuItemPen = new MenuItemPen(pen, this);
+				// menuItemPen.menu = this;
 				itemArray.push(menuItemPen);
 
 			}
 		}
 		super(Coords, Dimens, 1, itemArray, "back", 10);
 	}
-
-	// override public function refresh(_itemArray)
-	// {
-	// 	super.refresh(_itemArray);
-	// }
 }
 
 

@@ -41,7 +41,7 @@ class Reg
 	public static var STATE_NORMAL = 0;
 	public static var STATE_CUTSCENE = 1;
 
-	public static var pName = "Bownly";
+	public static var pName = "Main character";
 	public static var rivalName = "(((Rival Kid)))";
 
 	public static var pLV = 1;
@@ -50,10 +50,14 @@ class Reg
 	public static var maxXP = 100;
 	
 	public static var encounterCounter = 0;
+
+	public static var playTime:Int = 0;
 	
 	public static var postDialogBattleFlag:Bool = false;
 	public static var isMuted:Bool = false;
 
+
+	public static var SAVE_NAME:String = "Save file";
 
 	public static var flags:Map<String, Int> =
 	[
@@ -63,12 +67,57 @@ class Reg
 		"b" => 0
 	];
 
-	
-	public static function resetEncounterCounter():Void
+	public static function goToNextLevel(EntID:Int, MapName:String):Void
 	{
-		encounterCounter = FlxG.random.int(8, 12);
+		switch MapName {
+		    case "frogpond.tmx": FlxG.switchState(new FrogPond(EntID, "frogpond.tmx"));
+		    case "frogpond-1.tmx": FlxG.switchState(new FrogPond1(EntID, "frogpond-1.tmx"));
+		    case "town1.tmx": FlxG.switchState(new FrogPond(EntID, "town1.tmx"));
+		    case "town2.tmx": FlxG.switchState(new Town2(EntID, "town2.tmx"));
+		    case "town3.tmx": FlxG.switchState(new TownState(EntID, "town3.tmx"));
+		    case "town4.tmx": FlxG.switchState(new TownState(EntID, "town4.tmx"));
+		    case "town5.tmx": FlxG.switchState(new TownState(EntID, "town5.tmx"));
+		    case "town6.tmx": FlxG.switchState(new TownState(EntID, "town6.tmx"));
+		    default: FlxG.switchState(new TownState(EntID, MapName));
+		}
 	}
-	
+
+	public static function loadGame()
+	{
+		var save:FlxSave = new FlxSave();
+		save.bind(SAVE_NAME);
+		Player.mp = save.data.mp;
+		Player.maxmp = save.data.maxmp;
+		Player.xp = save.data.xp;
+		Player.lvl = save.data.lvl;
+
+		Reg.playTime = save.data.playTime;
+		ItemClasses.InventoryManager.arr = save.data.inventory;
+		Reg.flags = save.data.flags;
+
+		// set location (map + entrance) and load the game
+		goToNextLevel(save.data.entrance, save.data.mapName);
+	}
+
+	public static function newGame():Void
+	{
+		// set flags
+		for (flag in flags.keys())
+			flags[flag] = 0;
+
+		// set inv
+		ItemClasses.InventoryManager.removeAllItems();
+
+		// set mc stats
+
+
+		// set playtime
+		playTime = 0;
+
+		// set location (map + entrance) and start the game
+		FlxG.switchState(new FrogPond1(1, "frogpond-1.tmx"));
+	}	
+
 	public static function muteToggle():Void
 	{
 		if (isMuted)
@@ -76,29 +125,48 @@ class Reg
 		else
 			isMuted = true;
 	}
+
+	public static function saveGame(EntID:Int, MapName:String):Void {
+		var save:FlxSave = new FlxSave();
+		// Delete all existing data
+		save.bind(SAVE_NAME);
+		save.erase();
+
+		// Write new data
+		// set inv
+
+		// set mc stats
+		save.bind(SAVE_NAME);
+		save.data.mp = Player.mp;
+		save.data.maxmp = Player.maxmp;
+		save.data.xp = Player.xp;
+		save.data.lvl = Player.lvl;
+
+		// set location (map + entrance)
+		save.data.mapName = MapName;
+		save.data.entrance = EntID;
 	
-	public static function AddXP(Val:Int):Void
-	{
-		pXP += Val;
-		if (pXP > maxXP)
-			pXP = maxXP;
-		
-		if (pXP >= 100)
-		{
-			pLV = 5;
-		}
-		else if (pXP >= 55)
-		{
-			pLV = 4;
-		}
-		else if (pXP >= 25)
-		{
-			pLV = 3;
-		}
-		else if (pXP >= 10)
-		{
-			pLV = 2;
-		}
-		pMP = 30 + (pLV) * 30;
+		// set playtime
+		save.data.playTime = 6;
+	
+		// set inventory
+		save.data.inventory = ItemClasses.InventoryManager.arr;
+
+		// set flags
+		save.data.flags = Reg.flags;
+
+		save.flush();
+
 	}
+
+
+
+	public static function resetEncounterCounter():Void
+	{
+
+		encounterCounter = FlxG.random.int(8, 12);
+
+	}
+	
+
 }

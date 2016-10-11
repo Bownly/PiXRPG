@@ -46,19 +46,19 @@ class DialogChoiceSubState extends FlxSubState
 		// _menu.setMenus();
 		// _menu.isAlive = true;
 
+
 		if (Menu != null)
-			setMenu(Menu);
+			// setMenu(Menu);
+			trace("TODO: clean up this code later");
 		else
 		{
-			// _menu = new MenuDialogChoices([_sprBack.x, _sprBack.y], 
-										// [_sprBack.width, _sprBack.height], 
-										// 1, ArrChoices);
 			_menu = new MenuDialogChoices([_sprBack.x, _sprBack.y], [100, 100], 1, ArrChoices);
-
 			_menu.isAlive = true;
 			add(_menu);
-
+			// MenuManager.pushMenu(_menu);
+			_menu.open();
 		}
+
 
 		add(_grpEverything);
 		

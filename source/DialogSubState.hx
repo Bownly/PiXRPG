@@ -21,58 +21,41 @@ class DialogSubState extends FlxSubState
     private var _sprBlinker:FlxSprite;
     private var _sprFaceIcon:FlxSprite;
 	private var _lineNumber:Int = 0;
-	// private var _arrLines:Array<String>;
 	private var _dialogBox:DialogClasses.DialogBox;
 	private var _arrLines:Array<DialogClasses.DialogLine>;
 	private var _endLine:Int;
 	private var _lineTimer:Float = 0;
-	private var _endBoss:Bool = false;
 	var _grpEverything:FlxTypedGroup<FlxSprite>;
 	
 	
-	// public function new(Npc:NPC, ?Callback:String->Void, ?Endboss:Bool, ?BGColor:Int=FlxColor.TRANSPARENT) 
-	public function new(DB:DialogClasses.DialogBox, ?Callback:String->Void, ?Endboss:Bool, ?BGColor:Int=FlxColor.TRANSPARENT) 
+	public function new(DB:DialogClasses.DialogBox, ?Callback:String->Void, ?BGColor:Int=FlxColor.TRANSPARENT) 
 	{
 		super();
-
-		// _npc = Npc;
-		// _arrLines = Npc.dialogBox.arrLines;
 
 		_dialogBox = DB;
 		_arrLines = _dialogBox.arrLines;
 
 		_grpEverything = new FlxTypedGroup<FlxSprite>();
 
-
 		_endLine = _arrLines.length - 1;		
-		_endBoss = Endboss;
-		
-		// _sprBack = new FlxSprite().makeGraphic(FlxG.width, 48, FlxColor.BLACK);
-		// _sprBack.y = 192;
 
-		
-		var xanchor = 0;
-		var yanchor = 192;
-		var h = 44;
-		var w = FlxG.width - 2*2;
+		var iconsize = 48;
+		var h = iconsize;
+		var w = FlxG.width - iconsize;
+		var xanchor:Float = 0;
+		var yanchor = FlxG.height - h;
 
-		var window = new Window([xanchor, yanchor], [w, h]);
+		_sprFaceIcon = new FlxSprite().makeGraphic(iconsize, iconsize, FlxColor.GREEN);
+		_sprFaceIcon.x = 0;
+		_sprFaceIcon.y = yanchor;
+		_sprFaceIcon.loadGraphic("assets/images/heads.png", true, iconsize, iconsize);
+		loadFace(_dialogBox.arrLines[0].face);
 
-		xanchor += window.pad*2;
-		yanchor += window.pad*2;
-		
-		var tempx:Int = Std.int(h);
-		_sprFaceIcon = new FlxSprite().makeGraphic(tempx, tempx, FlxColor.GREEN);
-		_sprFaceIcon.x = window.pad;
-		_sprFaceIcon.y = yanchor - window.pad;
+		xanchor += _sprFaceIcon.width;  // offset for the icon
 
+		var window = new Window([xanchor, yanchor], [w-4, h-4]);
 
-		_sprFaceIcon.loadGraphic("assets/images/heads.png", true, 44, 44);
-		_sprFaceIcon.animation.add("idle", [0, 1], 3, true);
-		_sprFaceIcon.animation.add("stop", [0], 3, true);
-		_sprFaceIcon.animation.play("idle");
-
-		_txtDialog = new FlxText(xanchor + _sprFaceIcon.width, yanchor, w - _sprFaceIcon.width, "", 8);
+		_txtDialog = new FlxText(xanchor + window.pad*2, yanchor + window.pad*2, w - _sprFaceIcon.width, "", 8);
 
 		_sprBlinker = new FlxSprite(0, 0);
 		_sprBlinker.loadGraphic("assets/images/dialog_blinker.png", true, 10, 10);
@@ -109,9 +92,7 @@ class DialogSubState extends FlxSubState
 				_dialogBox.arrChoices = null;
 			}
 			else
-			{
 				this.close();
-			}
 		}
 		else
 		{
@@ -136,6 +117,9 @@ class DialogSubState extends FlxSubState
 				{
 					_lineNumber += 1;
 					_lineTimer = 0;
+					if (_lineNumber <= _endLine)
+						loadFace(_arrLines[_lineNumber].face);
+
 				}
 
 				if (_lineNumber <= _endLine)
@@ -154,6 +138,14 @@ class DialogSubState extends FlxSubState
 		super.close();
 	}
 
+	public function loadFace(I:Int):Void
+	{
+		var i = I*2;
+		_sprFaceIcon.animation.add("idle", [i, i+1], 3, true);
+		_sprFaceIcon.animation.add("stop", [i], 3, true);
+		_sprFaceIcon.animation.play("idle");
+
+	}
 	
 	public function hideBox():Void
 	{

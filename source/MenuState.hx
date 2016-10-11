@@ -29,6 +29,7 @@ class MenuState extends FlxState
 	var _txtSelection0:FlxText;
 	var _txtSelection1:FlxText;
 	var _txtSelection2:FlxText;
+	var _txtSelection3:FlxText;
 	var _grpSelections:FlxTypedGroup<FlxText>;
 
 	/**
@@ -52,8 +53,9 @@ class MenuState extends FlxState
 		
 		_grpSelections = new FlxTypedGroup<FlxText>();
 		_txtSelection0 = new FlxText(96, _txtTitle.y + _txtTitle.height + 16, "New Game", 8);
-		_txtSelection1 = new FlxText(96, _txtSelection0.y + _txtSelection0.height + 16, "Credits", 8);
-		_txtSelection2 = new FlxText(96, _txtSelection1.y + _txtSelection1.height + 16, "Sound Room", 8);
+		_txtSelection1 = new FlxText(96, _txtSelection0.y + _txtSelection0.height + 16, "Continue", 8);
+		_txtSelection2 = new FlxText(96, _txtSelection1.y + _txtSelection1.height + 16, "Credits", 8);
+		_txtSelection3 = new FlxText(96, _txtSelection2.y + _txtSelection2.height + 16, "Sound Room", 8);
 		
 		_txtControls = new FlxText(0, 0, FlxG.width, "J = confirm, K = not confirm, WASD/Arrows = move, m = mute");
 		_txtControls.alignment = "center";
@@ -61,13 +63,14 @@ class MenuState extends FlxState
 		_grpSelections.add(_txtSelection0);
 		_grpSelections.add(_txtSelection1);
 		_grpSelections.add(_txtSelection2);
+		_grpSelections.add(_txtSelection3);
 		
 		add(_grpSelections);
 		
 		add(_txtTitle);
 		add(_txtFurigana);
 		add(_txtTwitter);
-		add(_txtLD);
+		// add(_txtLD);
 		add(_txtControls);
 		
 		FlxG.mouse.visible = false;		
@@ -97,10 +100,10 @@ class MenuState extends FlxState
 		{
 			selectedSelection--;
 		}
-		if (selectedSelection >= 3)
+		if (selectedSelection >= 4)
 			selectedSelection = 0;
 		else if (selectedSelection < 0)
-			selectedSelection = 2;
+			selectedSelection = 3;
 			
 		if (FlxG.keys.anyJustPressed(["J"]))
 		{
@@ -108,11 +111,16 @@ class MenuState extends FlxState
 			{
 				case (0):
 					// FlxG.switchState(new Town1());
-					FlxG.switchState(new FrogPond1(1, "frogpond-1.tmx"));
+					Reg.newGame();
 				case (1):
-					FlxG.switchState(new CreditsState());
+					// FlxG.switchState(new FrogPond1(1, "frogpond-1.tmx"));
+					// todo: delete previous line and replace with a continue() call
+					Reg.loadGame();
 				case (2):
+					FlxG.switchState(new CreditsState());
+				case (3):
 					FlxG.switchState(new SoundRoomState());
+
 			}
 		}
 		super.update(elapsed);
