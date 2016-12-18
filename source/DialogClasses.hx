@@ -35,13 +35,3 @@ class DialogBox
 	    arrChoices = Choices;
 	}
 }
-
-// class DialogChoices
-// {
-// 	public var arrChoices: Array<MenuClasses.MenuItemFlag>;
-
-// 	public function new(Choices:Array<MenuClasses.MenuItemFlag)
-// 	{
-// 		arrChoices = Choices;
-// 	}
-// }

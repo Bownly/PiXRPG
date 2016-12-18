@@ -15,6 +15,7 @@ class NPC extends FlxSprite
 	private static inline var MOVEMENT_SPEED:Int = 1;
 	
 	public var name:String;
+	var _species:Int;
 	var _state:TownState;
 	public var baseX:Float;
 	public var baseY:Float;
@@ -27,49 +28,23 @@ class NPC extends FlxSprite
 		
 		name = Name;
 		_state = State;
+		_species = Species;
 		facing = Direction;
 
 		immovable = true;
 
-		
-		// gwaphics
-		var o = 8;  // number of sprites per char
-		loadGraphic(AssetPaths.NPC__png, true, 16, 16);
-		animation.add("up", [0 + o * Species, 1 + o * Species], 4, true);
-		animation.add("dn", [2 + o * Species, 3 + o * Species], 4, true);
-		animation.add("lf", [4 + o * Species, 5 + o * Species], 4, true);
-		animation.add("rt", [6 + o * Species, 7 + o * Species], 4, true);
-		switch(facing)
-		{
-			case FlxObject.UP:
-			{
-				animation.play("up");
-			}
-			case FlxObject.DOWN:
-			{
-				animation.play("dn");
-			}
-			case FlxObject.LEFT:
-			{
-				animation.play("lf");
-			}
-			case FlxObject.RIGHT:
-			{
-				animation.play("rt");
-			}
-		}	
+		setGraphics();
+
 	}
 	
 	
 	public function triggered(Dir:Int):Void
 	{
 		setFacing(Dir);
-		for (event in events)
-			_state.eventManager.addEvent(event);
+		if (events != null)
+			_state.eventManager.addEvents(events);
 	}
 	
-
-
 	private function setFacing(Dir:Int):Void
 	{
 		switch(Dir)
@@ -94,7 +69,39 @@ class NPC extends FlxSprite
 				facing = FlxObject.RIGHT;
 				animation.play("rt");
 			}
+			case -1:
+			{
+				return;
+			}
 		}
 	}
 	
+	private function setGraphics():Void
+	{
+		var o = 8;  // number of sprites per char
+		loadGraphic(AssetPaths.NPC__png, true, 16, 16);
+		animation.add("up", [0 + o * _species, 1 + o * _species], 3, true);
+		animation.add("dn", [2 + o * _species, 3 + o * _species], 3, true);
+		animation.add("lf", [4 + o * _species, 5 + o * _species], 3, true);
+		animation.add("rt", [6 + o * _species, 7 + o * _species], 3, true);
+		switch(facing)
+		{
+			case FlxObject.UP:
+			{
+				animation.play("up");
+			}
+			case FlxObject.DOWN:
+			{
+				animation.play("dn");
+			}
+			case FlxObject.LEFT:
+			{
+				animation.play("lf");
+			}
+			case FlxObject.RIGHT:
+			{
+				animation.play("rt");
+			}
+		}	
+	}
 }

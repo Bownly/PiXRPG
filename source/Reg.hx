@@ -37,34 +37,43 @@ class Reg
 	public static var saves:Array<FlxSave> = [];
 	
 	
-	public static var STATE = 0;
-	public static var STATE_NORMAL = 0;
-	public static var STATE_CUTSCENE = 1;
+	public static var STATE:Int = 0;
+	public static var STATE_NORMAL:Int = 0;
+	public static var STATE_CUTSCENE:Int = 1;
 
-	public static var pName = "Main character";
-	public static var rivalName = "(((Rival Kid)))";
+	public static var pName:String = "Main character";
+	public static var rivalName:String = "Rival Kid";
+	public static var curItem:String = ";)";
 
-	public static var pLV = 1;
-	public static var pMP = 60;
-	public static var pXP = 0;
-	public static var maxXP = 100;
+	public static var pLV:Int = 1;
+	public static var pMP:Int = 60;
+	public static var pXP:Int = 0;
+	public static var maxXP:Int = 100;
+	public static var playerHasHood:Bool = false;
 	
-	public static var encounterCounter = 0;
+	public static var encounterCounter:Int = 0;
 
 	public static var playTime:Int = 0;
 	
 	public static var postDialogBattleFlag:Bool = false;
 	public static var isMuted:Bool = false;
 
-
 	public static var SAVE_NAME:String = "Save file";
 
 	public static var flags:Map<String, Int> =
 	[
+		"tutorial_battle" => 0,
 		"first_wakeup" => 0,
 		"AorB" => 0,
 		"a" => 0,
-		"b" => 0
+		"b" => 0,
+		"fight_dummy" => 0,
+		"frogpond_chest1" => 0,
+		"frogpond_chest2" => 0,
+		"frogpond_chest3" => 0,
+		"frogpond_door1" => 0,
+		"frogpond_door2" => 0,
+		"frogpond_door3" => 0,
 	];
 
 	public static function goToNextLevel(EntID:Int, MapName:String):Void
@@ -72,6 +81,7 @@ class Reg
 		switch MapName {
 		    case "frogpond.tmx": FlxG.switchState(new FrogPond(EntID, "frogpond.tmx"));
 		    case "frogpond-1.tmx": FlxG.switchState(new FrogPond1(EntID, "frogpond-1.tmx"));
+		    case "frogpond-dungeon.tmx": FlxG.switchState(new FrogPondDun(EntID, "frogpond-dungeon.tmx"));
 		    case "town1.tmx": FlxG.switchState(new FrogPond(EntID, "town1.tmx"));
 		    case "town2.tmx": FlxG.switchState(new Town2(EntID, "town2.tmx"));
 		    case "town3.tmx": FlxG.switchState(new TownState(EntID, "town3.tmx"));
@@ -109,10 +119,13 @@ class Reg
 		ItemClasses.InventoryManager.removeAllItems();
 
 		// set mc stats
-
+		playerHasHood = false;
 
 		// set playtime
 		playTime = 0;
+
+		// set misc
+		curItem = "";
 
 		// set location (map + entrance) and start the game
 		FlxG.switchState(new FrogPond1(1, "frogpond-1.tmx"));

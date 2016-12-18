@@ -14,7 +14,8 @@ import flixel.ui.FlxButton;
 class Player extends FlxSprite
 {
 	private static inline var TILE_SIZE:Int = 16;
-	private static inline var MOVEMENT_SPEED:Int = 2;
+	// private static inline var MOVEMENT_SPEED:Float = 1.33333;
+	private static inline var MOVEMENT_SPEED:Float = 2;
 
 	public static var lvl:Int = 1;
 	public static var mp:Int = 60;
@@ -24,6 +25,8 @@ class Player extends FlxSprite
 
 	public var isMoving:Bool;	
 	public var canMove:Bool = true;
+
+	var hasHood:Bool = false;
 	
 	var _state:TownState;
 
@@ -31,14 +34,20 @@ class Player extends FlxSprite
 	{
 		super(X, Y);
 		
+		hasHood = Reg.playerHasHood;
+
 		_state = State;
 		facing = Facing;
 		
 		loadGraphic(AssetPaths.mctest__png, true, 16, 16);
-		animation.add("up", [0, 1], 4, true);
-		animation.add("dn", [2, 3], 4, true);
-		animation.add("lf", [4, 5], 4, true);
-		animation.add("rt", [6, 7], 4, true);
+		animation.add("up_false", [10, 11], 3, true);
+		animation.add("dn_false", [12, 13], 3, true);
+		animation.add("lf_false", [14, 15], 3, true);
+		animation.add("rt_false", [16, 17], 3, true);
+		animation.add("up_true", [0, 1], 3, true);
+		animation.add("dn_true", [2, 3], 3, true);
+		animation.add("lf_true", [4, 5], 3, true);
+		animation.add("rt_true", [6, 7], 3, true);
 		
 		setFacing(facing);
 	}
@@ -77,14 +86,15 @@ class Player extends FlxSprite
 				}
 			}
 			
-			
 			// Check if the player has now reached the next block
-			if ((x % TILE_SIZE == 0) && (y % TILE_SIZE == 0))
+			if (((Math.ceil(x) % TILE_SIZE == 0) || (Math.floor(x) % TILE_SIZE == 0)) &&
+				((Math.ceil(y) % TILE_SIZE == 0) || (Math.floor(y) % TILE_SIZE == 0)))
 			{
 				isMoving = false;
+				x = Math.round(x);
+				y = Math.round(y);
 			}
 		
-			
 			// Check for WASD or arrow key presses and move accordingly
 			if (!isMoving)
 			{
@@ -94,7 +104,7 @@ class Player extends FlxSprite
 					canMove = collisionCheck(facing);
 					if (canMove)
 						moveTo(FlxObject.UP);
-					animation.play("up");
+					animation.play("up_" + hasHood);
 				}
 				else if (FlxG.keys.anyPressed(["DOWN", "S"]))
 				{
@@ -102,7 +112,7 @@ class Player extends FlxSprite
 					canMove = collisionCheck(facing);
 					if (canMove)
 						moveTo(FlxObject.DOWN);
-					animation.play("dn");
+					animation.play("dn_" + hasHood);
 				}
 				else if (FlxG.keys.anyPressed(["LEFT", "A"]))
 				{
@@ -110,7 +120,7 @@ class Player extends FlxSprite
 					canMove = collisionCheck(facing);
 					if (canMove)
 						moveTo(FlxObject.LEFT);
-					animation.play("lf");
+					animation.play("lf_" + hasHood);
 				}
 				else if (FlxG.keys.anyPressed(["RIGHT", "D"]))
 				{
@@ -118,7 +128,7 @@ class Player extends FlxSprite
 					canMove = collisionCheck(facing);
 					if (canMove)
 						moveTo(FlxObject.RIGHT);
-					animation.play("rt");
+					animation.play("rt_" + hasHood);
 				}
 				
 				// interaction
@@ -130,6 +140,11 @@ class Player extends FlxSprite
 				if (FlxG.keys.anyJustPressed(["P"]))
 				{
 					FlxG.switchState(new MenuState());
+				}
+				if (FlxG.keys.anyJustPressed(["H"]))
+				{
+					hasHood = !hasHood;
+					Reg.playerHasHood = !Reg.playerHasHood;
 				}
 				
 
@@ -171,7 +186,6 @@ class Player extends FlxSprite
 
 	public static function resetStats():Void
 	{
-
 		setStats(1, 30, 0);
 	}
 	
@@ -182,22 +196,22 @@ class Player extends FlxSprite
 			case FlxObject.UP:
 			{
 				facing = FlxObject.UP;
-				animation.play("up");
+				animation.play("up_" + hasHood);
 			}
 			case FlxObject.DOWN:
 			{
 				facing = FlxObject.DOWN;
-				animation.play("dn");
+				animation.play("dn_" + hasHood);
 			}
 			case FlxObject.LEFT:
 			{
 				facing = FlxObject.LEFT;
-				animation.play("lf");
+				animation.play("lf_" + hasHood);
 			}
 			case FlxObject.RIGHT:
 			{
 				facing = FlxObject.RIGHT;
-				animation.play("rt");
+				animation.play("rt_" + hasHood);
 			}
 		}
 	}
@@ -228,8 +242,9 @@ class Player extends FlxSprite
 			case FlxObject.RIGHT:
 				xx = 16;
 		}
-		var map = _state.tileMap;
-		if (map.getTile(Math.floor((x + xx) / TILE_SIZE ), Math.floor((y + yy) / TILE_SIZE )) > 9)
+
+		var map = _state.level;
+		if (map.collidableTileMap.getTile(Math.floor((x +xx) / TILE_SIZE), Math.floor((y + yy) / TILE_SIZE)) > 0)
 			return false;
 
 		

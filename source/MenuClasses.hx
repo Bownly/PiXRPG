@@ -24,6 +24,7 @@ class BaseMenuItem
 	public var name:String;
 	public var iconID:Int;
 	public var grpRender:FlxTypedSpriteGroup<FlxSprite>;
+	var _isHighlighted:Bool;
 
 	public function new(Name:String, ?IconID:Int)
 	{
@@ -45,7 +46,14 @@ class BaseMenuItem
 		return grpRender;
 	}
 
-	public function highlighted() {}
+	public function getHighlighted() {
+		return _isHighlighted;
+	}
+
+	public function flipHighlighted() {
+		_isHighlighted = !_isHighlighted;
+	}
+
 	public function selected() {}
 
 	private function addIcon(Anchor:Array<Float>)
@@ -61,10 +69,8 @@ class BaseMenuItem
 	{
 		var item = new FlxText(Anchor[0], 0, 64, name, 8);
 		grpRender.add(item);
-	}
-	
+	}	
 }
-
 
 class MenuItemClose extends BaseMenuItem
 {
@@ -80,6 +86,22 @@ class MenuItemClose extends BaseMenuItem
 		menu.close();
 }
 
+class MenuItemDialogChoice extends MenuItemFlag
+{
+	public var dBox:DialogClasses.DialogBox;
+
+	public function new(DBLine:Array<DialogClasses.DialogLine>, Menu:BaseMenu, Flag:EventClasses.EventFlag)
+	{
+		dBox = new DialogClasses.DialogBox(DBLine);
+		super(dBox.arrLines[0].line, 0, Menu, Flag);
+	}
+
+	// override function highlighted()
+	// {
+	// 	if (Type.getClassName(Type.getClass(menu)) == "MenuDialogChoices")
+	// 		cast(menu, MenuDialogChoices). update spr head();
+	// }
+}
 
 class MenuItemFlag extends MenuItemClose
 {
@@ -98,7 +120,6 @@ class MenuItemFlag extends MenuItemClose
 		super.selected();
 	}
 }
-
 
 class MenuItemItem extends BaseMenuItem
 {
@@ -119,7 +140,6 @@ class MenuItemItem extends BaseMenuItem
 		super.selected();
 	}
 }
-
 
 class MenuItemPen extends BaseMenuItem
 {
@@ -184,7 +204,6 @@ class MenuItemPen extends BaseMenuItem
 		grpRender.add(item);
 	}
 }
-
 
 class MenuItemSubMenu extends BaseMenuItem
 {
@@ -251,10 +270,7 @@ class MenuManager
 	{
 		subState = s;
 	}
-
 }
-
-
 
 class BaseMenu extends FlxGroup
 {
@@ -275,6 +291,7 @@ class BaseMenu extends FlxGroup
 	var _grpIcon:FlxTypedGroup<FlxSprite>;
 	var _cursor:FlxSprite;
 	var _selected:Array<Int> = [0, 0];
+	var _highlighted:BaseMenuItem;
 	var _arr:Array<Array<BaseMenuItem>>;
 	public var arrItem:Array<BaseMenuItem>;
 	var _arrSprite:Array<Array<FlxTypedSpriteGroup<FlxSprite>>>;
@@ -291,7 +308,8 @@ class BaseMenu extends FlxGroup
 		super();
 		_arrSprite = new Array<Array<FlxTypedSpriteGroup<FlxSprite>>>();
 		_grpIcon = new FlxTypedGroup<FlxSprite>();
-		_grpEverything = new FlxTypedGroup<FlxSprite>();
+		if (_grpEverything == null)
+			_grpEverything = new FlxTypedGroup<FlxSprite>();
 		coords = Coords;
 		dimens = Dimens;
 		_itemDimens = ItemDimens;
@@ -336,6 +354,7 @@ class BaseMenu extends FlxGroup
 					else 
 						_selected[1] = 0;
 					_cursor.y = _arrSprite[_selected[1]][_selected[0]].y;
+					// _highlighted = _arrSprite[_selected[1]][_selected[0]];
 				}
 				else if (FlxG.keys.anyJustPressed(["UP", "W"]))
 				{
@@ -347,6 +366,7 @@ class BaseMenu extends FlxGroup
 							_selected[1] += 1;					
 					}
 					_cursor.y = _arrSprite[_selected[1]][_selected[0]].y;
+					// _highlighted = _arrSprite[_selected[1]][_selected[0]];
 				}
 				else if (FlxG.keys.anyJustPressed(["RIGHT", "D"]))
 				{
@@ -355,6 +375,7 @@ class BaseMenu extends FlxGroup
 					else if (_arrSprite[_selected[1]][_selected[0]+1] != null)
 						_selected[0] += 1;
 					_cursor.x = _arrSprite[_selected[1]][_selected[0]].x - _cursor.width;
+					// _highlighted = _arrSprite[_selected[1]][_selected[0]];
 				}
 				else if (FlxG.keys.anyJustPressed(["LEFT", "A"]))
 				{
@@ -365,7 +386,7 @@ class BaseMenu extends FlxGroup
 					else 
 						_selected[0] -= 1;
 					_cursor.x = _arrSprite[_selected[1]][_selected[0]].x - _cursor.width;
-
+					// _highlighted = _arrSprite[_selected[1]][_selected[0]];
 				}
 
 				if (FlxG.keys.anyJustPressed(["J"]))
@@ -474,21 +495,48 @@ class BaseMenu extends FlxGroup
 	}
 }
 
-
 class MenuDialogChoices extends BaseMenu
 {
+   	var _sprFaceIcon:FlxSprite;
+
 	public function new(Coords:Array<Float>, Dimens:Array<Float>, ItemDimens:Int, ItemArray:Array<BaseMenuItem>)
 	{
-		super(Coords, Dimens, ItemDimens, ItemArray);
+		_grpEverything = new FlxTypedGroup<FlxSprite>();
+
+		coords = Coords;
+
+		var iconsize = 48;
+		_sprFaceIcon = new FlxSprite();	
+		_sprFaceIcon.x = 0;
+		_sprFaceIcon.y = coords[1];
+		_sprFaceIcon.loadGraphic("assets/images/heads.png", true, iconsize, iconsize);
+
+		for (choice in 0...ItemArray.length)
+		{
+			if (Type.getClassName(Type.getClass(ItemArray[choice])) == "MenuItemDialogChoice")
+			{
+				var i = cast(ItemArray[choice], MenuItemDialogChoice).dBox.arrLines[0].face;
+				_sprFaceIcon.animation.add(""+choice, [i*2, i*2+1], 4, false);
+			}
+		}
+		_grpEverything.add(_sprFaceIcon);
+
+		super(coords, Dimens, ItemDimens, ItemArray);
 		setMenus();
+	}
+
+	override public function update(elapsed:Float)
+	{
+		super.update(elapsed);
+		_sprFaceIcon.animation.play(""+(_selected[0] + _selected[1] * _itemDimens));
 	}
 
 	public function setMenus()
 	{
 		for (item in arrItem)
 		{
-			if (Type.getClassName(Type.getClass(item)) == "MenuItemFlag")
-				cast(item, MenuItemFlag).menu = this;
+			if (Type.getClassName(Type.getClass(item)) == "MenuItemDialogChoice")
+				cast(item, MenuItemDialogChoice).menu = this;
 		}
 	}
 
@@ -498,7 +546,6 @@ class MenuDialogChoices extends BaseMenu
 		Reg.STATE = Reg.STATE_CUTSCENE;
 	}
 }
-
 
 class MenuInventory extends BaseMenu
 {
@@ -543,7 +590,6 @@ class MenuInventory extends BaseMenu
 	}
 }
 
-
 class MenuPause extends BaseMenu
 {
 	var _itemArray:Array<BaseMenuItem>;
@@ -558,7 +604,6 @@ class MenuPause extends BaseMenu
 		super(Coords, Dimens, ItemDimens, _itemArray, "close");
 	}
 }
-
 
 class MenuPens extends BaseMenu
 {

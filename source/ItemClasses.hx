@@ -83,7 +83,7 @@ class ItemHealing extends BaseItem
 
 	override public function use()
 	{
-		Reg.pMP += _val;
+		Player.mp += _val;
 		super.use();
 		InventoryManager.removeItem();
 	}

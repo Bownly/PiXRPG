@@ -29,7 +29,7 @@ class Window extends FlxGroup
 			pad = Pad;
 
 
-		_sprBackBG = new FlxSprite().makeGraphic(Std.int(_dimens[0]+pad*2), Std.int(_dimens[1]+pad*2), FlxColor.WHITE);
+		_sprBackBG = new FlxSprite().makeGraphic(Std.int(_dimens[0]), Std.int(_dimens[1]), FlxColor.WHITE);
 		_sprBackBG.x = coords[0];
 		_sprBackBG.y = coords[1];
 		_sprBackBG.scrollFactor.set(0, 0);
@@ -41,6 +41,11 @@ class Window extends FlxGroup
 
 		add(_sprBackBG);
 		add(_sprBack);
+	}
+
+	public function getHeight():Float
+	{
+		return _sprBackBG.height;
 	}
 
 }

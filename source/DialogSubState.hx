@@ -15,16 +15,18 @@ import flixel.util.FlxColor;
 class DialogSubState extends FlxSubState
 {
 
-	private var _npc:NPC;
-	private var _sprBack:FlxSprite;
-    private var _txtDialog:FlxText;
-    private var _sprBlinker:FlxSprite;
-    private var _sprFaceIcon:FlxSprite;
-	private var _lineNumber:Int = 0;
-	private var _dialogBox:DialogClasses.DialogBox;
-	private var _arrLines:Array<DialogClasses.DialogLine>;
-	private var _endLine:Int;
-	private var _lineTimer:Float = 0;
+	var _npc:NPC;
+	var _sprBack:FlxSprite;
+    var _txtDialog:FlxText;
+    var _sprBlinker:FlxSprite;
+    var _sprFaceIcon:FlxSprite;
+	var _lineNumber:Int = 0;
+	var _curLine:String;
+	var _dialogBox:DialogClasses.DialogBox;
+	var _arrLines:Array<DialogClasses.DialogLine>;
+	var _endLine:Int;
+	var _lineTimer:Float = 0;
+	var _window:Window;
 	var _grpEverything:FlxTypedGroup<FlxSprite>;
 	
 	
@@ -38,6 +40,8 @@ class DialogSubState extends FlxSubState
 		_grpEverything = new FlxTypedGroup<FlxSprite>();
 
 		_endLine = _arrLines.length - 1;		
+		setCurLine();
+
 
 		var iconsize = 48;
 		var h = iconsize;
@@ -53,18 +57,18 @@ class DialogSubState extends FlxSubState
 
 		xanchor += _sprFaceIcon.width;  // offset for the icon
 
-		var window = new Window([xanchor, yanchor], [w-4, h-4]);
+		_window = new Window([xanchor, yanchor], [w, h]);
 
-		_txtDialog = new FlxText(xanchor + window.pad*2, yanchor + window.pad*2, w - _sprFaceIcon.width, "", 8);
+		_txtDialog = new FlxText(xanchor + _window.pad*2, yanchor + _window.pad*2, w - _sprFaceIcon.width, "", 8);
 
 		_sprBlinker = new FlxSprite(0, 0);
 		_sprBlinker.loadGraphic("assets/images/dialog_blinker.png", true, 10, 10);
-		_sprBlinker.animation.add("idle", [0, 1], 3, true);
+		_sprBlinker.animation.add("idle", [0, 1], 1, true);
 		_sprBlinker.animation.play("idle");
 		_sprBlinker.y = yanchor + h - _sprBlinker.height * 1.5;
 		_sprBlinker.x = xanchor + w - _sprBlinker.width * 1.5;
 
-		add(window);
+		add(_window);
 		add(_txtDialog);
 		add(_sprFaceIcon);
 		add(_sprBlinker);
@@ -88,6 +92,7 @@ class DialogSubState extends FlxSubState
 			if (_dialogBox.arrChoices != null)
 			{
 				var sub = new DialogChoiceSubState(30, 30, _dialogBox.arrChoices);
+				hideBox();
 				this.openSubState(sub);
 				_dialogBox.arrChoices = null;
 			}
@@ -96,7 +101,7 @@ class DialogSubState extends FlxSubState
 		}
 		else
 		{
-			if (_txtDialog.text != _arrLines[_lineNumber].line)
+			if (_txtDialog.text != _curLine)
 			{
 				_lineTimer += elapsed * 30;
 				_sprFaceIcon.animation.play("idle");
@@ -104,13 +109,14 @@ class DialogSubState extends FlxSubState
 			else
 				_sprFaceIcon.animation.play("stop");
 
-			_txtDialog.text = _arrLines[_lineNumber].line.substr(0, Std.int(_lineTimer));
+			_txtDialog.text = _curLine.substr(0, Std.int(_lineTimer));
 
 			if (FlxG.keys.anyJustPressed(["J", "SPACE", "W", "A", "S", "D", "UP", "DOWN", "LEFT", "RIGHT", "K"]))
 			{
-				if (_txtDialog.text != _arrLines[_lineNumber].line)
+
+				if (_txtDialog.text != _curLine)
 				{
-					_txtDialog.text = _arrLines[_lineNumber].line;	
+					_txtDialog.text = _curLine;	
 					_lineTimer = 1000;
 				}
 				else
@@ -118,8 +124,10 @@ class DialogSubState extends FlxSubState
 					_lineNumber += 1;
 					_lineTimer = 0;
 					if (_lineNumber <= _endLine)
+					{
 						loadFace(_arrLines[_lineNumber].face);
-
+						setCurLine();
+					}
 				}
 
 				if (_lineNumber <= _endLine)
@@ -134,7 +142,7 @@ class DialogSubState extends FlxSubState
 	
 	override public function close():Void
 	{
-		var temp:Array<Array<Int>> = [[FlxObject.LEFT, 1], [FlxObject.DOWN, 2]];
+		// var temp:Array<Array<Int>> = [[FlxObject.LEFT, 1], [FlxObject.DOWN, 2]];
 		super.close();
 	}
 
@@ -146,9 +154,18 @@ class DialogSubState extends FlxSubState
 		_sprFaceIcon.animation.play("idle");
 
 	}
+
+	public function setCurLine():Void
+	{
+		_curLine = _arrLines[_lineNumber].line;
+		for (key in Strings.stringVars.keys())
+			_curLine = _curLine.split(key).join(Strings.stringVars[key]);
+	}
 	
 	public function hideBox():Void
 	{
-		this.visible = false;
+		for (spr in _grpEverything)
+			spr.visible = false;
+		_window.visible = false;
 	}
 }

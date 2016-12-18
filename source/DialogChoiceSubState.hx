@@ -22,7 +22,7 @@ class DialogChoiceSubState extends FlxSubState
     private var _txtHP:FlxText;
     private var _txtMP:FlxText;
     private var _txtXP:FlxText;
-    public var _menu:MenuDialogChoices;
+	public var _menu:MenuDialogChoices;
 	var _grpEverything:FlxTypedGroup<FlxText>;
 
 	var _state:FlxState;
@@ -36,28 +36,40 @@ class DialogChoiceSubState extends FlxSubState
 		
 		_grpEverything = new FlxTypedGroup<FlxText>();
 		
-		_sprBack = new FlxSprite().makeGraphic(64, 96, FlxColor.GREEN);
-		_sprBack.x = FlxG.width / 2 - _sprBack.width / 2;
-		_sprBack.y = FlxG.height / 2 - _sprBack.height / 2;
-		_sprBack.scrollFactor.set(0, 0);
-		add(_sprBack);
+		var iconsize = 48;
+		var h = iconsize;
+		var w = FlxG.width - iconsize;
+		var xanchor:Float = 0;
+		var yanchor = FlxG.height - h;
 
-
-		// _menu.setMenus();
-		// _menu.isAlive = true;
-
+		// xanchor += _sprFaceIcon.width;  // offset for the icon
+		xanchor += iconsize;  // offset for the icon
 
 		if (Menu != null)
 			// setMenu(Menu);
 			trace("TODO: clean up this code later");
 		else
 		{
-			_menu = new MenuDialogChoices([_sprBack.x, _sprBack.y], [100, 100], 1, ArrChoices);
+			var itemDimens = 1;
+			if (ArrChoices.length > 3)
+				itemDimens = 2;
+			_menu = new MenuDialogChoices([xanchor, yanchor], [w, h], itemDimens, ArrChoices);
 			_menu.isAlive = true;
 			add(_menu);
 			// MenuManager.pushMenu(_menu);
 			_menu.open();
 		}
+
+
+
+
+
+
+		// _menu.setMenus();
+		// _menu.isAlive = true;
+
+
+
 
 
 		add(_grpEverything);

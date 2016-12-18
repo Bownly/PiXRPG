@@ -9,7 +9,9 @@ import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.math.FlxRandom;
 
+import DialogClasses;
 import EnemyClasses;
+import EventClasses;
 import MenuClasses;
 
 /**
@@ -47,9 +49,13 @@ class BattleSubState extends FlxSubState
 	var _arrPicrossBoards:Array<PicrossBoard>;
 	var _grpCursor:FlxTypedGroup<FlxSprite>;
 
+	public var eventManager:EventClasses.EventManager;
+
 	// experimental vars for mid battle menu
-	var _menu:BaseMenu;
-	
+	var _menu:BaseMenu;	
+
+	var _winFlag:String;
+	var _winFlagVal:Int;
 	
 	var _enemyNum:Int = 0;
 	var _enemyID:Int;
@@ -65,28 +71,25 @@ class BattleSubState extends FlxSubState
 	var _mcHurtTimer:Float = 0;
 	var _mcHurtDuration:Float = 1.5;
 	
-	var isVictoly:Bool = false;
-	var isDefeat:Bool = false;
-	var isEscaped:Bool = false;
-
 	var battleState:Int = 0;
 	var STATE_BATTLE:Int = 0;
 	var STATE_VICTORY:Int = 1;
 	var STATE_ESCAPE:Int = 2;
 	var STATE_DEFEAT:Int = 3;
 	var STATE_MENU:Int = 4;
-
+	var STATE_CLOSE:Int = 5;
 	
 	var songBattle:FlxSound = FlxG.sound.load("assets/music/battle.wav");
 	var songFanfare:FlxSound = FlxG.sound.load("assets/music/victoly_fanfare.wav");
 	var songLost:FlxSound = FlxG.sound.load("assets/music/lost_the_battle.wav");
 	
-	public function new(Enemies:Array<BaseEnemy>, ?CursorShape:Int, ?BGColor:Int=FlxColor.TRANSPARENT) 
+	public function new(Enemies:Array<BaseEnemy>, ?WinFlag:String, ?WinFlagVal:Int) 
 	{
 		super();
 	
-		// _enemyIDs = EnemyIDs;
 		_arrEnemies = Enemies;
+		_winFlag = WinFlag;
+		_winFlagVal = WinFlagVal;
 	
 		_grpTexts = new FlxTypedGroup<FlxText>();
 		_grpSprites = new FlxTypedGroup<FlxSprite>();
@@ -94,10 +97,13 @@ class BattleSubState extends FlxSubState
 		_grpCursor = new FlxTypedGroup<FlxSprite>();
 		_grpObstacles = new FlxTypedGroup<ObstacleClasses.BaseObstacle>();
 
-		xanchor = Std.int(FlxG.width / 2 - w/2);
-		yanchor = Std.int(FlxG.height / 2 - h/2);
+		// xanchor = Std.int(FlxG.width / 2 - w/2);
+		// yanchor = Std.int(FlxG.height / 2 - h/2);
+		xanchor = Std.int((FlxG.width-FlxG.height)/2);
+		yanchor = Std.int(0);
 
-		window = new Window([xanchor, yanchor], [h, w]);
+		// window = new Window([xanchor, yanchor], [h, w]);
+		window = new Window([xanchor, yanchor], [FlxG.height, FlxG.height]);
 		xanchor += window.pad*2;
 		yanchor += window.pad*2;
 		add(window);
@@ -106,19 +112,13 @@ class BattleSubState extends FlxSubState
 		
 		_sprPlayer = new FlxSprite(xanchor, _txtHP.y + _txtHP.height);
 		_sprPlayer.loadGraphic("assets/images/mctest.png", true, 16, 16);
-		_sprPlayer.animation.add("idle", [2, 3], 4, true);
-		_sprPlayer.animation.add("dead", [8, 9], 4, true);
-		_sprPlayer.animation.play("idle");
+		_sprPlayer.animation.add("idle_true", [2, 3], 4, true);
+		_sprPlayer.animation.add("dead_true", [8, 9], 4, true);
+		_sprPlayer.animation.add("idle_false", [12, 13], 4, true);
+		_sprPlayer.animation.add("dead_false", [18, 19], 4, true);
+		_sprPlayer.animation.play("idle_" + Reg.playerHasHood);
 		
 		_txtVS = new FlxText(_sprPlayer.x + _sprPlayer.width, _sprPlayer.y + 8, 16, "vs", 8);
-		
-		// _sprEnemy = new FlxSprite(_sprPlayer.x + _sprPlayer.width * 2, _sprPlayer.y);
-		// _sprEnemy.loadGraphic("assets/images/enemies.png", true, 16, 16);
-		// var o:Int = 4;  // amount of tiles per enemy
-		// o *= _enemyID;
-		// _sprEnemy.animation.add("idle", [1 + o, 0 + o, 1 + o, 2 + o], 4, true);
-		// _sprEnemy.animation.add("dead", [3 + o]);
-		// _sprEnemy.animation.play("idle");
 		
 		_sprPen = new FlxSprite(xanchor + 48, yanchor + 48);
 		_sprPen.loadGraphic("assets/images/picross_hair.png", true, 9, 9);
@@ -174,11 +174,17 @@ class BattleSubState extends FlxSubState
 		}
 		_grpCursor.add(_sprPen);  // added afterwards to avoid the previous statement
 
-		
-		_txtMessage = new FlxText(xanchor, yanchor + h - 14, w, "", 8);
+		// 14 is the height in pixels of size 8 FlxTexts		
+		_txtMessage = new FlxText(xanchor, window.getHeight() - 14, w, "", 8);
 		_txtMessage.alignment = "center";
 	
 		_arrPicrossBoards = new Array<PicrossBoard>();
+
+		// 15 is max board dimens, 10 is size of picross squares, 14 is height of text
+		// xanchor = Std.int(window.getHeight()) - 15*10 - 14;
+		// yanchor = xanchor;
+		xanchor += 40 - 14;
+		yanchor += 40 - 14;
 
 		for (e in _arrEnemies)
 		{
@@ -217,11 +223,19 @@ class BattleSubState extends FlxSubState
 
 		_arrPicrossBoards[_enemyNum].colRowBold(_sprPen.x, _sprPen.y);
 
+		eventManager = new EventClasses.EventManager(this);
+		if (Reg.flags["tutorial_battle"] == 0)
+		{
+			eventManager.addEvents([new EventFlag("tutorial_battle", 1),
+									new EventDialog(Strings.stringArray[4], this)]);
+		}
+
 	}
 	
 	
 	public override function update(elapsed:Float)
 	{
+		eventManager.update();
 
 		// timer buisness
 		if (_txtMessage.text != "")
@@ -235,14 +249,13 @@ class BattleSubState extends FlxSubState
 		// TODO: make it resolveAnimations() if you add a 3rd animation to resolve
 		if (battleState == STATE_BATTLE)
 		{
-		
 			if (_mcHurtTimer > 0)
 				{
 					_mcHurtTimer -= FlxG.elapsed;
-					_sprPlayer.animation.play("dead");
+					_sprPlayer.animation.play("dead_" + Reg.playerHasHood);
 				}
 			else
-				_sprPlayer.animation.play("idle");
+				_sprPlayer.animation.play("idle_" + Reg.playerHasHood);
 			
 				if (!Reg.isMuted)
 					songBattle.play();
@@ -252,12 +265,12 @@ class BattleSubState extends FlxSubState
 
 		if (!Reg.isMuted)
 		{
-			if (isVictoly)
+			if (battleState == STATE_VICTORY)
 			{
 				songBattle.pause();
 				songFanfare.play();
 			}
-			else if (isDefeat)
+			else if (battleState == STATE_DEFEAT)
 			{
 				songBattle.pause();
 				songLost.play();			
@@ -269,7 +282,7 @@ class BattleSubState extends FlxSubState
 			songLost.pause();
 		}
 		
-		// cursor movement
+		// cursor movement and other control stuff
 		if (battleState == STATE_BATTLE)
 		{
 			_arrEnemies[_enemyNum].update(elapsed);
@@ -307,17 +320,11 @@ class BattleSubState extends FlxSubState
 			}
 
 			if (FlxG.keys.anyJustPressed(["L"]))
-			{
 				_arrEnemies[_enemyNum].spawnObstacle();
-			}
 			if (FlxG.keys.anyJustPressed(["O"]))
-			{
 				_arrEnemies[_enemyNum].removeObstacle();
-			}
 			if (FlxG.keys.anyJustPressed(["P"]))
-			{
 				camera.shake(0.005, 0.2);
-			}
 
 			if (_sprPen1 != null) {
 				_sprPen1.x = _sprPen.x - 10;
@@ -357,8 +364,7 @@ class BattleSubState extends FlxSubState
 			{
 				if (markSquare(_sprPen, PicrossSquare.ON) == 1)
 				{
-					_arrEnemies[_enemyNum].removeObstacle();
-					// this is if I decide to have larger cursors
+					_arrEnemies[_enemyNum].onSquareFilled();
 					for (cursor in _grpCursor)
 					{
 						if (cursor != _sprPen)
@@ -369,9 +375,7 @@ class BattleSubState extends FlxSubState
 			
 			// mark a square as marked
 			if (FlxG.keys.anyJustPressed(["K", "BACKSLASH"]))
-			{
 				markSquare(_sprPen, PicrossSquare.MARK);
-			}	
 		}
 		
 		else if (battleState == STATE_MENU)
@@ -390,16 +394,13 @@ class BattleSubState extends FlxSubState
 			Player.mp = 0;
 			if (battleState != STATE_DEFEAT)
 			{
-				_sprPlayer.animation.play("dead");
+				_sprPlayer.animation.play("dead_" + Reg.playerHasHood);
 				_txtMessage.text = "You got stumped on, kid.";
 				_msgTimer = _msgDuration;
 				battleState = STATE_DEFEAT;
 			}
 			else if (battleState == STATE_DEFEAT && _txtMessage.text == "")
-			{
-				Reg.resetEncounterCounter();
 				this.close();
-			}
 		}
 		
 		// if you win
@@ -410,7 +411,7 @@ class BattleSubState extends FlxSubState
 			if (battleState != STATE_VICTORY)
 			{
 				_sprEnemy.animation.play("dead");
-				_sprPlayer.animation.play("idle");
+				_sprPlayer.animation.play("idle_" + Reg.playerHasHood);
 				_txtMessage.text = "YOU DEFEATED";
 				_msgTimer = _msgDuration;
 				battleState = STATE_VICTORY;
@@ -421,8 +422,10 @@ class BattleSubState extends FlxSubState
 
 				if (_enemyNum == _arrPicrossBoards.length-1)
 				{
-					Reg.resetEncounterCounter();
-					this.close();
+					if (_winFlag != null && Reg.flags[_winFlag] != _winFlagVal)
+						eventManager.addEvents([new EventFlag(_winFlag, _winFlagVal)]);
+					if (eventManager.getLength() <= 0)
+						this.close();
 				}
 				else 
 				{
@@ -451,7 +454,6 @@ class BattleSubState extends FlxSubState
 		}
 		if (battleState == STATE_ESCAPE && _txtMessage.text == "")
 		{
-			Reg.resetEncounterCounter();
 			//Reg.AddXP(3 + 2 * _enemyID);
 			this.close();
 		}
@@ -464,6 +466,7 @@ class BattleSubState extends FlxSubState
 	
 	override public function close():Void
 	{
+		Reg.resetEncounterCounter();
 		songBattle.stop();
 		songFanfare.stop();
 		songLost.stop();

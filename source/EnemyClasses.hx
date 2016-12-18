@@ -22,6 +22,8 @@ class BaseEnemy
 	public var grpObs:FlxTypedGroup<BaseObstacle>;
 	public var board:PicrossBoard;
 	public var timerAttack:Float = 0;
+	public var attackFreq:Int = 1;
+	public var squareCount:Int = 0;
 
 
 	public function new(?ID:Int, ?S:Int, ?C:Int) 
@@ -36,6 +38,11 @@ class BaseEnemy
 	public function spawnObstacle() {}
 	public function removeObstacle() {}
 	public function removeAllObstacles() {}
+
+	public function onSquareFilled() {
+		squareCount++;
+	}
+
 }
 
 class EnemyTest extends BaseEnemy
@@ -43,12 +50,25 @@ class EnemyTest extends BaseEnemy
 	public function new()
 	{
 		super();
-		id = 0;
+		id = 6;
 		dimens = 15;
-		color = 10;
+		color = 4;
 	}
 }
 
+class EnemyDoor extends BaseEnemy
+{
+	public function new(?Dimens:Int)
+	{
+		super();
+		id = 7;
+		if (Dimens > 0)
+			dimens = Dimens;
+		else
+			dimens = 4;
+		color = 2;
+	}
+}
 
 class EnemyMush extends BaseEnemy
 {
@@ -59,6 +79,7 @@ class EnemyMush extends BaseEnemy
 		id = 0;
 		dimens = 4;
 		color = 4;
+		attackFreq = 5;
 	}
 
 	override public function update(elapsed:Float)
@@ -73,6 +94,18 @@ class EnemyMush extends BaseEnemy
 
 		super.update(elapsed);
 	}
+
+	override public function onSquareFilled() 
+	{
+		super.onSquareFilled();
+		removeObstacle();
+		if (squareCount % attackFreq == 0)
+		{
+			timerAttack = 0;
+			spawnObstacle();
+		}
+	}
+
 
 	override public function spawnObstacle()
 	{
@@ -128,6 +161,7 @@ class EnemySnail extends BaseEnemy
 		id = 2;
 		dimens = 5;
 		color = 6;
+		attackFreq = 5;
 	}
 
 	override public function update(elapsed:Float)
@@ -141,6 +175,16 @@ class EnemySnail extends BaseEnemy
 		}
 
 		super.update(elapsed);
+	}
+
+	override public function onSquareFilled()
+	{
+		super.onSquareFilled();
+		if (squareCount % attackFreq == 0)
+		{
+			spawnObstacle();
+			timerAttack = 0;
+		}
 	}
 
 	override public function spawnObstacle()

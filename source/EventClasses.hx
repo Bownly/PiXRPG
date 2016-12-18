@@ -3,11 +3,13 @@ package;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
+import flixel.FlxState;
 import flixel.group.FlxGroup;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 
 import EnemyClasses;
+import MenuClasses;
 
 /**
  * ...
@@ -17,9 +19,9 @@ import EnemyClasses;
 class EventManager
 {
 	var _arr:Array<BaseEvent> = [];
-	var _state:TownState;
+	var _state:FlxState;
 
-	public function new(S:TownState) 
+	public function new(S:FlxState) 
 	{
 		_state = S;
 	}
@@ -37,12 +39,21 @@ class EventManager
 		else
 		{
 			Reg.STATE = Reg.STATE_NORMAL;
-			_state.assignEvents();
+			if (Type.getClassName(Type.getClass(_state)) != "BattleSubState")
+			{	
+				var _state2 = cast(_state, TownState);
+				_state2.assignEvents();
+			}
 		}
 	}
 
-	public function addEvent(e:BaseEvent) {
-		_arr.push(e);
+	public function addEvents(events:Array<BaseEvent>) {
+		for (e in events)
+			_arr.push(e);
+	}
+
+	public function getLength():Int {
+		return _arr.length;
 	}
 }
 
@@ -65,36 +76,84 @@ class BaseEvent
 	}
 }
 
+class EventAddEvent extends BaseEvent
+{
+	var _events:Array<BaseEvent>;
+	var _eManager:EventManager;
+
+	public function new(Events:Array<BaseEvent>, EManager:EventManager)
+	{
+		super();
+		_events = Events;
+		_eManager = EManager;
+	}
+
+	override public function update()
+	{
+		for (event in _events)
+			_eManager.addEvents([event]);
+		destroy();
+	}
+}
+
 class EventBattle extends BaseEvent
 {
 	var _enemies:Array<BaseEnemy>;
 	var _state:TownState;
+	var _winFlag:String;
+	var _winFlagVal:Int;
 
-	public function new(Enemies:Array<BaseEnemy>, State:TownState)
+	public function new(Enemies:Array<BaseEnemy>, State:TownState, ?WinFlag:String, ?WinFlagVal:Int)
 	{
 		super();
 		_enemies = Enemies;
 		_state = State;
+		_winFlag = WinFlag;
+		_winFlagVal = WinFlagVal;
 	}
 
 	override public function update()
 	{
 		destroy();
-		var sub = new BattleSubState(_enemies);
-		_state.openSubState(sub);
+		if (_winFlag != null) {
+			var sub = new BattleSubState(_enemies, _winFlag, _winFlagVal);
+			_state.openSubState(sub);
+		}
+		else {
+			var sub = new BattleSubState(_enemies);			
+			_state.openSubState(sub);
+		}
 		super.update();
+	}
+}
+
+class EventCurItemChange extends BaseEvent
+{
+	var _name:String;
+
+	public function new(Name:String)
+	{
+		_name = Name;
+		super();
+	}
+
+	override public function update()
+	{
+		Strings.stringVars["%item%"] = _name;
+		trace("item name: ", Strings.stringVars["%item%"]);
+		destroy();
 	}
 }
 
 class EventDialog extends BaseEvent
 {
 	var _dialogBox:DialogClasses.DialogBox;
-	var _state:TownState;
+	var _state:FlxState;
 
-	public function new(DB:DialogClasses.DialogBox, State:TownState)
+	public function new(DBLine:Array<DialogClasses.DialogLine>, State:FlxState, ?Choices:Array<BaseMenuItem>)
 	{
 		super();
-		_dialogBox = DB;
+		_dialogBox = new DialogClasses.DialogBox(DBLine, Choices);
 		_state = State;
 	}
 
@@ -172,6 +231,42 @@ class EventItemGet extends BaseEvent
 	}
 }
 
+class EventNPCRemove extends BaseEvent
+{
+	var _npc:NPC;
+
+	public function new(Npc:NPC)
+	{
+		super();
+		_npc = Npc;
+	}
+
+	override public function update()
+	{
+		_npc.visible = false;
+		destroy();
+	}
+}
+
+class EventNPCTrigger extends BaseEvent
+{
+	var _npc:NPC;
+	var _dir:Int;
+
+	public function new(Npc:NPC, ?Dir:Int)
+	{
+		super();
+		_npc = Npc;
+		_dir = Dir;
+	}
+
+	override public function update()
+	{
+		_npc.triggered(_dir);
+		destroy();
+	}
+}
+
 class EventSaveGame extends BaseEvent
 {
 	var _mapName:String;
@@ -190,7 +285,6 @@ class EventSaveGame extends BaseEvent
 		destroy();
 	}
 }
-
 
 class EventWalk extends BaseEvent
 {
@@ -267,11 +361,11 @@ class EventWalk extends BaseEvent
 						popOffDirection();
 					}				
 				}
-				case -1:
-				{
-					popOffDirection();
-					_npc.visible = false;
-				}
+				// case -1:
+				// {
+				// 	popOffDirection();
+				// 	_npc.visible = false;
+				// }
 				default:
 				{
 					popOffDirection();
@@ -292,3 +386,7 @@ class EventWalk extends BaseEvent
 		}
 	}
 }
+
+
+
+

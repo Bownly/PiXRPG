@@ -166,11 +166,11 @@ class TownState extends FlxState
 			}
 			else if (FlxG.keys.anyJustPressed(["L"]))
 			{
-				eventManager.addEvent(new EventClasses.EventItemGet(new ItemClasses.ItemHealing("42 potion", "heal 42 MP", 9, 42)));
-				eventManager.addEvent(new EventClasses.EventItemGet(new ItemClasses.ItemHealing("42 potion", "heal 42 MP", 9, 42)));
-				eventManager.addEvent(new EventClasses.EventItemGet(new ItemClasses.ItemHealing("42 potion", "heal 42 MP", 9, 42)));
-				eventManager.addEvent(new EventClasses.EventItemGet(new ItemClasses.ItemHealing("42 potion", "heal 42 MP", 9, 42)));
-				eventManager.addEvent(new EventClasses.EventItemGet(new ItemClasses.ItemHealing("42 potion", "heal 42 MP", 9, 42)));
+				eventManager.addEvents([new EventClasses.EventItemGet(new ItemClasses.ItemHealing("42 potion", "heal 42 MP", 9, 42))]);
+				eventManager.addEvents([new EventClasses.EventItemGet(new ItemClasses.ItemHealing("42 potion", "heal 42 MP", 9, 42))]);
+				eventManager.addEvents([new EventClasses.EventItemGet(new ItemClasses.ItemHealing("42 potion", "heal 42 MP", 9, 42))]);
+				eventManager.addEvents([new EventClasses.EventItemGet(new ItemClasses.ItemHealing("42 potion", "heal 42 MP", 9, 42))]);
+				eventManager.addEvents([new EventClasses.EventItemGet(new ItemClasses.ItemHealing("42 potion", "heal 42 MP", 9, 42))]);
 				Reg.STATE = Reg.STATE_CUTSCENE;
 			}
 		}
@@ -197,9 +197,9 @@ class TownState extends FlxState
 	{
 		if (Reg.flags["Save"] == 1)
 		{
-			eventManager.addEvent(new EventDialog(new DialogBox(Strings.stringArray[9]), this));
-			eventManager.addEvent(new EventFlag("Save", 0));
-			eventManager.addEvent(new EventSaveGame(2, mapName));
+			eventManager.addEvents([new EventDialog(Strings.stringArray[9], this)]);
+			eventManager.addEvents([new EventFlag("Save", 0)]);
+			eventManager.addEvents([new EventSaveGame(2, mapName)]);
 		}
 
 		return;

@@ -36,9 +36,9 @@ class Town2 extends TownState
 
 	override public function assignEvents():Void
 	{
-		npc1.events = [ new EventDialog(new DialogBox(Strings.stringArray[8]), this),
-						new EventSaveGame(1, mapName)
-						];
+		// npc1.events = [ new EventDialog(new DialogBox(Strings.stringArray[8]), this),
+						// new EventSaveGame(1, mapName)
+						// ];
 	
 	}
 }

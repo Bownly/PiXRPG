@@ -4,6 +4,102 @@
 		"selected_items":
 		[
 			[
+				"Ri",
+				"rivalName"
+			],
+			[
+				"_arr",
+				"_arr	var"
+			],
+			[
+				"_spr",
+				"_sprFaceIcon	flixel.FlxSprite"
+			],
+			[
+				"_sp",
+				"_sprFaceIcon	var"
+			],
+			[
+				"any",
+				"anyJustPressed"
+			],
+			[
+				"_m",
+				"_mapName"
+			],
+			[
+				"pl",
+				"playtime"
+			],
+			[
+				"M",
+				"MenuPens	MenuClasses"
+			],
+			[
+				"pe",
+				"_pen	var"
+			],
+			[
+				"_grpO",
+				"_grpObstacleEffects"
+			],
+			[
+				"is",
+				"isActive	var"
+			],
+			[
+				"leng",
+				"length"
+			],
+			[
+				"MenuMana",
+				"MenuManager	class"
+			],
+			[
+				"BaseMenu",
+				"BaseMenu	class"
+			],
+			[
+				"grp",
+				"grpRender	var"
+			],
+			[
+				"Base",
+				"BaseObstacle	class"
+			],
+			[
+				"event",
+				"eventManager	var"
+			],
+			[
+				"sta",
+				"State	haxe.zip.InflateImpl"
+			],
+			[
+				"Bas",
+				"BaseEnemy	class"
+			],
+			[
+				"ItemD",
+				"ItemDescCoords	var"
+			],
+			[
+				"Picross",
+				"PicrossBoard	class"
+			],
+			[
+				"ch",
+				"checkRowCorrect"
+			],
+			[
+				"_grp",
+				"_grpObstacles	var"
+			],
+			[
+				"Enem",
+				"BaseEnemy	EnemyClasses"
+			],
+			[
 				"cas",
 				"castedMenu"
 			],
@@ -32,16 +128,8 @@
 				"Pen	PenClasses"
 			],
 			[
-				"grp",
-				"_grpCursor	var"
-			],
-			[
 				"x",
 				"xanchor	var"
-			],
-			[
-				"_sp",
-				"_sprBackBG"
 			],
 			[
 				"state",
@@ -52,16 +140,8 @@
 				"EventFlag	EventClasses"
 			],
 			[
-				"BaseMenu",
-				"BaseMenuItem	class"
-			],
-			[
 				"closeString",
 				"_closeString	var"
-			],
-			[
-				"_arr",
-				"_arrSprite	var"
 			],
 			[
 				"length",
@@ -212,16 +292,8 @@
 				"length-1"
 			],
 			[
-				"_grp",
-				"_grpPicrossSquaresBoards	var"
-			],
-			[
 				"_",
 				"_arrSprite	var"
-			],
-			[
-				"_m",
-				"_menu"
 			],
 			[
 				"_gr",
@@ -248,14 +320,6 @@
 				"BaseMenuItem	class"
 			],
 			[
-				"Base",
-				"BaseMenu	class"
-			],
-			[
-				"_spr",
-				"_sprEnemy	var"
-			],
-			[
 				"_e",
 				"_enemyIDs	var"
 			],
@@ -276,10 +340,6 @@
 				"gridPicrossSquares	var"
 			],
 			[
-				"Picross",
-				"PicrossSquare	class"
-			],
-			[
 				"Picro",
 				"PicrossSquare	class"
 			],
@@ -298,10 +358,6 @@
 			[
 				"eve",
 				"eventManager"
-			],
-			[
-				"event",
-				"EventDialog	EventClasses"
 			],
 			[
 				"Dialog",
@@ -444,96 +500,92 @@
 	"buffers":
 	[
 		{
-			"file": "source/FrogPond.hx",
+			"file": "/Users/computer/Documents/Projects/HaxeFlixel/PiX/PicrossRPG/PixRPG/source/MenuClasses.hx",
 			"settings":
 			{
-				"buffer_size": 1194,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"contents": "package;\n\nimport flixel.FlxG;\nimport flixel.FlxObject;\nimport flixel.FlxSprite;\nimport flixel.FlxState;\nimport flixel.FlxSubState;\nimport flixel.group.FlxGroup;\nimport flixel.text.FlxText;\nimport flixel.util.FlxColor;\n\nimport PenClasses;\n\n/**\n * ...\n * @author Bownly\n */\n\n\n\nclass BaseMenuItem\n{\n	public var name:String;\n\n	public function new(Name:String)\n	{\n		name = Name;\n	}\n\n	public function selected()\n	{\n	}\n\n	public function highlighted()\n	{\n	}\n}\n\nclass MenuItemClose extends BaseMenuItem\n{\n	public var menu:BaseMenu;\n\n	public function new(Name:String, Menu:BaseMenu)\n	{\n		menu = Menu;\n		super(Name);\n	}\n\n	override function selected()\n	{\n		menu.close();\n	}\n}\n\n\nclass MenuItemFlag extends MenuItemClose\n{\n	var _flag:EventClasses.EventFlag;\n\n	public function new(Name:String, Menu:BaseMenu, Flag:EventClasses.EventFlag)\n	{\n		_flag = Flag;\n		super(Name, Menu);\n	}\n\n	override public function selected()\n	{\n		_flag.update();\n		super.selected();\n	}\n}\n\nclass MenuItemItem extends BaseMenuItem\n{\n	public var item:ItemClasses.BaseItem;\n	var _menu:MenuInventory;\n\n	public function new(Item:ItemClasses.BaseItem, Inv:MenuInventory)\n	{\n		item = Item;\n		_menu = Inv;\n		super(item.name);\n	}\n\n	override public function selected()\n	{\n		item.use();\n		_menu.refresh(_menu.generateItems());\n		super.selected();\n	}\n}\n\n\nclass MenuItemPen extends BaseMenuItem\n{\n	var _pen:Pen;\n	\n	public function new(P:Pen)\n	{\n		_pen = P;\n		super(_pen.name);\n	}\n\n	override public function selected()\n	{\n		PenManager.equip(_pen);\n		super.selected();\n	}\n}\n\n\nclass MenuItemSubMenu extends BaseMenuItem\n{\n	var _state:FlxState;\n	var _substate:FlxSubState;\n	var _menu:BaseMenu;\n\n	public function new(Name:String, State:FlxState, Sub:FlxSubState, Menu:BaseMenu)\n	{\n		_menu = Menu;\n		_state = State;\n		_substate = Sub;\n		super(Name);\n	}\n\n	override public function selected()\n	{\n		var sub = new MenuSubState(FlxG.width/2, FlxG.height/2, _substate);\n		// var menu = new MenuPause([_menu.coords[0] + 20, _menu.coords[1] + 20], [100, 100], 1, _substate, sub);\n\n		var menu:BaseMenu = null;\n		var x = _menu.coords[0] + _menu.dimens[0]/2;\n		if (Type.getClassName(Type.getClass(_menu)) == \"MenuPens\")\n		{\n			menu = new MenuPens([x, _menu.coords[1]], [100, 100]);\n			var castedMenu = cast(_menu, MenuPens);\n			castedMenu.refresh(castedMenu.itemArray);\n		}\n		else if (Type.getClassName(Type.getClass(_menu)) == \"MenuInventory\")\n			menu = new MenuInventory([x, _menu.coords[1]], \n							[100, 200], \n							1, \"back\");\n		else if (Type.getClassName(Type.getClass(_menu)) == \"MenuPause\")\n			menu = new MenuPause([x, _menu.coords[1]], [100, 100], 1, _substate, sub);\n\n		sub.setMenu(menu);\n\n		_substate.openSubState(sub);		\n		super.selected();\n	}\n\n}\n\n\n\n\nclass BaseMenu extends FlxGroup\n{\n	public var isAlive:Bool = true;\n\n	var _sprBack:FlxSprite;\n	var _sprBackBG:FlxSprite;\n    public var coords:Array<Float>;\n    public var dimens:Array<Float>;\n    var _itemDimens:Int;\n    var _xPad:Int = 8;\n    var _yPad:Int = 8;\n\n	var _grpEverything:FlxTypedGroup<FlxSprite>;\n	var _cursor:FlxSprite;\n	var _selected:Array<Int> = [0, 0];\n	var _arr:Array<Array<BaseMenuItem>>;\n	public var arrItem:Array<BaseMenuItem>;\n	var _arrSprite:Array<Array<FlxText>>;\n	var _closeString:String;\n	var _closeItem:MenuItemClose;\n	var _window:Window;\n\n	public function new(Coords:Array<Float>, Dimens:Array<Float>, ItemDimens:Int, ItemArray:Array<BaseMenuItem>, ?CloseString) \n	{\n\n		super();\n		_arrSprite = new Array<Array<FlxText>>();\n		_grpEverything = new FlxTypedGroup<FlxSprite>();\n		coords = Coords;\n		dimens = Dimens;\n		_itemDimens = ItemDimens;\n		_arr = new Array<Array<BaseMenuItem>>();\n		arrItem = ItemArray;\n\n		if (CloseString != null)\n			_closeString = CloseString;\n	\n		_window = new Window(coords, dimens);\n	\n		_cursor = new FlxSprite(0, 0);\n		_cursor.loadGraphic(\"assets/images/dialog_blinker.png\", true, 10, 10);\n		_cursor.animation.add(\"idle\", [0, 1], 3, true);\n		_cursor.animation.play(\"idle\");\n		_cursor.x = coords[0] + _window.pad;\n		_cursor.y = coords[1] + _window.pad;\n		_grpEverything.add(_cursor);\n\n 		refresh(arrItem);\n	\n		add(_window);\n		add(_grpEverything);\n		\n		for(item in _grpEverything) \n			item.scrollFactor.set();\n	}\n\n	override public function update(elapsed:Float)\n	{\n		super.update(elapsed);\n\n		if (FlxG.keys.anyJustPressed([\"DOWN\", \"S\"]))\n		{\n			if (_selected[1]+1 < _arrSprite.length && _arrSprite[_selected[1]+1][_selected[0]] != null)\n				_selected[1] += 1;\n			else \n				_selected[1] = 0;\n			_cursor.y = _arrSprite[_selected[1]][_selected[0]].y;\n		}\n		else if (FlxG.keys.anyJustPressed([\"UP\", \"W\"]))\n		{\n			if (_selected[1]-1 >= 0 && _arrSprite[_selected[1]-1][_selected[0]] != null)\n				_selected[1] -= 1;\n			else\n			{\n				while (_selected[1]+1 < _arrSprite.length && _arrSprite[_selected[1]+1][_selected[0]] != null)\n					_selected[1] += 1;					\n			}\n			_cursor.y = _arrSprite[_selected[1]][_selected[0]].y;\n		}\n		else if (FlxG.keys.anyJustPressed([\"RIGHT\", \"D\"]))\n		{\n			if (_selected[0] >= _arrSprite[0].length-1)\n				_selected[0] = 0;\n			else if (_arrSprite[_selected[1]][_selected[0]+1] != null)\n				_selected[0] += 1;\n			_cursor.x = _arrSprite[_selected[1]][_selected[0]].x - _cursor.width;\n		}\n		else if (FlxG.keys.anyJustPressed([\"LEFT\", \"A\"]))\n		{\n			if (_selected[0] <= 0 && _arrSprite[_selected[1]][_arrSprite[1].length-1] != null)\n				_selected[0] = _arrSprite[1].length-1;\n			else if (_selected[0] <= 0 && _arrSprite[_selected[1]][_arrSprite[1].length-1] == null)\n				_selected[0] += 0;\n			else \n				_selected[0] -= 1;\n			_cursor.x = _arrSprite[_selected[1]][_selected[0]].x - _cursor.width;\n		}\n\n		if (FlxG.keys.anyJustPressed([\"J\"]))\n			_arr[_selected[1]][_selected[0]].selected();\n		// note: the null check is to disallow backing out of a dialog choice menu\n		else if (FlxG.keys.anyJustPressed([\"K\"]) && _closeString != null)\n			close();\n\n	}\n\n	public function close()\n	{\n		isAlive = false;\n	}\n\n	public function refresh(ItemArray:Array<BaseMenuItem>)\n	{\n		_arr = [];\n		for (i in 0...Math.ceil(ItemArray.length/_itemDimens))\n		{\n			var tempArr:Array<BaseMenuItem> = new Array<BaseMenuItem>();\n			for (j in 0..._itemDimens)\n			{\n				var item:BaseMenuItem = ItemArray[j+(i*_itemDimens)];\n				if (item != null)\n					tempArr.push(item);\n			}\n			if (tempArr != null)\n				_arr.push(tempArr);\n		}\n\n		for (sprites in _arrSprite)\n		{\n			for (spr in sprites)\n			{\n				if (spr != null)\n					spr.visible = false;\n			}\n		}\n\n		_arrSprite = [];\n		for (i in 0..._arr.length)\n		{\n			var tempArr:Array<FlxText> = new Array<FlxText>();\n			for (j in 0..._arr[i].length)\n			{\n				// var item = new FlxText(_sprBack.x + _cursor.width, _sprBack.y, 64, _arr[i][j].name, 8);\n				var item = new FlxText(coords[0] + _cursor.width, coords[1], 64, _arr[i][j].name, 8);\n				item.y += i * item.height + _window.pad*2;\n				item.x += (dimens[0] * (j/_itemDimens)) + _window.pad*2;\n				if (item != null)\n					tempArr.push(item);\n				_grpEverything.add(item);\n			}\n			if (tempArr != null)\n				_arrSprite.push(tempArr);\n		}\n\n		if (_closeString != null)\n		{\n			_closeItem = new MenuItemClose(_closeString, this);\n				_arr.push([_closeItem, null]);\n				// var item = new FlxText(_sprBack.x + _cursor.width, _sprBack.y, 64, _arr[_arr.length-1][0].name, 8);\n				var item = new FlxText(coords[0] + _cursor.width, coords[1], 64, _arr[_arr.length-1][0].name, 8);\n				item.x += _window.pad*2;\n				// while (item.y < _sprBack.y + _sprBack.height - _yPad - item.height)\n				while (item.y < coords[1] + dimens[1] - _yPad - item.height)\n				{\n					item.y += item.height;\n				}\n		\n				_arrSprite.push([item, null]);\n				_grpEverything.add(item);\n		}\n\n		for (spr in _arrSprite)\n		{\n			for (sprite in spr)\n			{\n				if (sprite != null)\n					sprite.scrollFactor.set();\n			}\n		}\n\n		_selected = [0, 0];\n		_cursor.x = _arrSprite[_selected[1]][_selected[0]].x - _cursor.width;\n		_cursor.y = _arrSprite[_selected[1]][_selected[0]].y;\n\n	}\n\n}\n\n\nclass MenuDialogChoices extends BaseMenu\n{\n	public function new(Coords:Array<Float>, Dimens:Array<Float>, ItemDimens:Int, ItemArray:Array<BaseMenuItem>)\n	{\n		super(Coords, Dimens, ItemDimens, ItemArray);\n		setMenus();\n	}\n\n	public function setMenus()\n	{\n		for (item in arrItem)\n		{\n				if (Type.getClassName(Type.getClass(item)) == \"MenuItemFlag\")\n					cast(item, MenuItemFlag).menu = this;\n		}\n	}\n\n	override public function close()\n	{\n		super.close();\n		Reg.STATE = Reg.STATE_CUTSCENE;\n	}\n}\n\n\nclass MenuInventory extends BaseMenu\n{\n	var _itemArray:Array<BaseMenuItem>;\n	var _descText:FlxText;\n\n	public function new(Coords:Array<Float>, Dimens:Array<Float>, ColCount:Int, ?CloseString:String)\n	{	\n		_itemArray = generateItems();\n		super(Coords, Dimens, ColCount, _itemArray, CloseString);\n		_descText = new FlxText(coords[0] + 4, coords[1] - 12, dimens[0], \"Text\", 8);\n		add(_descText);\n		_descText.scrollFactor.set();\n	}\n\n	public function generateItems():Array<BaseMenuItem>\n	{\n		var items:Array<BaseMenuItem> = new Array<BaseMenuItem>();\n		for (item in ItemClasses.InventoryManager._arr)\n		{\n			items.push(new MenuItemItem(item, this));\n		}\n		return items;		\n	}\n\n	override public function update(elapsed:Float)\n	{\n		super.update(elapsed);\n\n		var item:BaseMenuItem = _arr[_selected[1]][_selected[0]];\n\n		if (Type.getClassName(Type.getClass(item)) == \"MenuItemItem\")\n			_descText.text = cast(item, MenuItemItem).item.desc;\n		else  // that pesky MenuItemClose isn't a MenuItemItem!\n			_descText.text = \"Next battle!\";\n\n\n	}\n\n}\n\n\nclass MenuPause extends BaseMenu\n{\n	var _itemArray:Array<BaseMenuItem>;\n\n	public function new(Coords:Array<Float>, Dimens:Array<Float>, ItemDimens:Int, State:FlxState, Sub:FlxSubState)\n	{	\n		_itemArray = [  new MenuItemSubMenu(\"Pens\", State, Sub, new MenuPens(Coords, Dimens)),\n						new MenuItemSubMenu(\"Items\", State, Sub, new MenuInventory(Coords, Dimens, 1, \"back\"))\n		];\n\n		super(Coords, Dimens, ItemDimens, _itemArray, \"close\");\n	}\n}\n\n\nclass MenuPens extends BaseMenu\n{\n	public var itemArray:Array<BaseMenuItem> = [];\n\n	public function new(Coords:Array<Float>, Dimens:Array<Float>)\n	{\n		for (pen in PenClasses.PenManager.arrPens)\n		{\n			if (pen.isUnlocked == true)\n			{\n				itemArray.push(new MenuItemPen(pen));\n			}\n		}\n		super(Coords, Dimens, 1, itemArray, \"back\");\n	}\n\n	override public function refresh(_itemArray)\n	{\n		super.refresh(_itemArray)\n	}\n}\n\n\n\n",
-			"file": "source/MenuClasses.hx",
-			"file_size": 10158,
-			"file_write_time": 1468110330000000,
-			"settings":
-			{
-				"buffer_size": 10239,
+				"buffer_size": 13374,
 				"line_ending": "Unix",
 				"name": "MenuClasses.hx"
 			}
 		},
 		{
-			"file": "source/PenClasses.hx",
+			"file": "/Users/computer/Documents/Projects/HaxeFlixel/PiX/PicrossRPG/PixRPG/source/TownState.hx",
 			"settings":
 			{
-				"buffer_size": 1140,
-				"line_ending": "Unix",
-				"name": "PenClasses.hx"
+				"buffer_size": 5336,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "source/FrogPond.hx",
+			"settings":
+			{
+				"buffer_size": 1755,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/Users/computer/Documents/Projects/HaxeFlixel/PiX/PicrossRPG/PixRPG/source/Town2.hx",
+			"settings":
+			{
+				"buffer_size": 752,
+				"line_ending": "Unix"
 			}
 		},
 		{
 			"file": "source/FrogPond1.hx",
 			"settings":
 			{
-				"buffer_size": 1578,
+				"buffer_size": 1647,
 				"line_ending": "Unix",
 				"name": "FrogPond-1"
 			}
 		},
 		{
-			"file": "source/BattleSubState.hx",
+			"file": "/Users/computer/Documents/Projects/HaxeFlixel/PiX/PicrossRPG/PixRPG/source/Reg.hx",
 			"settings":
 			{
-				"buffer_size": 13694,
+				"buffer_size": 4243,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "source/TownState.hx",
+			"file": "/Users/computer/Documents/Projects/HaxeFlixel/PiX/PicrossRPG/PixRPG/source/Player.hx",
 			"settings":
 			{
-				"buffer_size": 5916,
+				"buffer_size": 4988,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "source/DialogSubState.hx",
+			"file": "/Users/computer/Documents/Projects/HaxeFlixel/PiX/PicrossRPG/PixRPG/source/MenuState.hx",
 			"settings":
 			{
-				"buffer_size": 3914,
+				"buffer_size": 3822,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "source/MenuSubState.hx",
+			"file": "/Users/computer/Documents/Projects/HaxeFlixel/PiX/PicrossRPG/PixRPG/source/ItemClasses.hx",
 			"settings":
 			{
-				"buffer_size": 2048,
+				"buffer_size": 1313,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "source/PicrossBoard.hx",
+			"file": "/Users/computer/Documents/Projects/HaxeFlixel/PiX/PicrossRPG/PixRPG/source/Strings.hx",
 			"settings":
 			{
-				"buffer_size": 5491,
+				"buffer_size": 8468,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "source/Window.hx",
+			"file": "/Users/computer/Documents/Projects/HaxeFlixel/PiX/PicrossRPG/PixRPG/source/DialogSubState.hx",
 			"settings":
 			{
-				"buffer_size": 923,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "source/Strings.hx",
-			"settings":
-			{
-				"buffer_size": 7063,
+				"buffer_size": 3727,
 				"line_ending": "Unix"
 			}
 		}
@@ -566,6 +618,39 @@
 	},
 	"file_history":
 	[
+		"/Users/computer/Documents/Projects/HaxeFlixel/PiX/PicrossRPG/PixRPG/source/NPC.hx",
+		"/Users/computer/Library/Application Support/Sublime Text 2/Packages/User/Preferences.sublime-settings",
+		"/Users/computer/Documents/Projects/HaxeFlixel/PiX/PicrossRPG/PixRPG/source/DialogClasses.hx",
+		"/Users/computer/Documents/Projects/HaxeFlixel/PiX/PicrossRPG/PixRPG/source/EndBoss.hx",
+		"/Users/computer/Documents/Projects/HaxeFlixel/PiX/PicrossRPG/PixRPG/source/DialogChoiceSubState.hx",
+		"/Users/computer/Documents/Projects/HaxeFlixel/PiX/PicrossRPG/PixRPG/source/Window.hx",
+		"/Users/computer/Documents/Projects/HaxeFlixel/PiX/PicrossRPG/PixRPG/source/EventClasses.hx",
+		"/Users/computer/Documents/Projects/HaxeFlixel/PiX/PicrossRPG/PixRPG/source/TiledLevel.hx",
+		"/Users/computer/Documents/Projects/HaxeFlixel/PiX/PicrossRPG/PixRPG/source/Strings.hx",
+		"/Users/computer/Documents/Projects/HaxeFlixel/PiX/PicrossRPG/PixRPG/source/BattleSubState.hx",
+		"/Users/computer/Documents/Projects/HaxeFlixel/PiX/PicrossRPG/PixRPG/source/MenuSubState.hx",
+		"/Users/computer/Documents/Projects/HaxeFlixel/PiX/PicrossRPG/PixRPG/assets/levels/town2.tmx",
+		"/Users/computer/Documents/Projects/HaxeFlixel/PiX/PicrossRPG/PixRPG/assets/levels/frogpond.tmx",
+		"/Users/computer/Documents/Projects/HaxeFlixel/PiX/PicrossRPG/PixRPG/source/Main.hx",
+		"/Users/computer/Documents/Projects/HaxeFlixel/PiX/PicrossRPG/PixRPG/source/Town2.hx",
+		"/Users/computer/Documents/Projects/HaxeFlixel/PiX/PicrossRPG/PiXRPG/source/EnemyClasses.hx",
+		"/Users/computer/Documents/Projects/HaxeFlixel/PiX/PicrossRPG/PiXRPG/source/ObstacleClasses.hx",
+		"/Users/computer/Documents/Projects/HaxeFlixel/PiX/PicrossRPG/PiXRPG/source/PenClasses.hx",
+		"/Users/computer/Documents/Projects/HaxeFlixel/PiX/PicrossRPG/PixRPG/source/PicrossBoard.hx",
+		"/Users/computer/Documents/Projects/HaxeFlixel/PiX/PicrossRPG/PixRPG/source/ItemClasses.hx",
+		"/Users/computer/Documents/Projects/HaxeFlixel/PiX/PicrossRPG/PiXRPG/source/BattleSubState.hx",
+		"/Users/computer/Documents/Projects/HaxeFlixel/PiX/PicrossRPG/PixRPG/source/MenuClasses.hx",
+		"/Users/computer/Documents/Projects/HaxeFlixel/PiX/PicrossRPG/PixRPG/source/MenuClassesOG.hx",
+		"/Users/computer/Documents/Projects/HaxeFlixel/PiX/PicrossRPG/PixRPG/source/MenuState.hx",
+		"/Users/computer/Documents/Projects/HaxeFlixel/PiX/PicrossRPG/PixRPG/source/Player.hx",
+		"/Users/computer/Documents/Projects/HaxeFlixel/PiX/PicrossRPG/PixRPG/source/PicrossSquare.hx",
+		"/Users/computer/Documents/Projects/HaxeFlixel/PiX/PicrossRPG/PiXRPG/source/MenuSubState.hx",
+		"/Users/computer/Documents/Projects/HaxeFlixel/PiX/PicrossRPG/PiXRPG/source/DialogSubState.hx",
+		"/Users/computer/Documents/Projects/HaxeFlixel/PiX/PicrossRPG/PiXRPG/source/TownState.hx",
+		"/Users/computer/Documents/Projects/HaxeFlixel/BoMM/source/Player.hx",
+		"/Users/computer/Documents/Projects/HaxeFlixel/PiX/PicrossRPG/PiXRPG/source/PicrossBoard.hx",
+		"/Users/computer/Documents/Projects/HaxeFlixel/PiX/PicrossRPG/PiXRPG/source/Strings.hx",
+		"/Users/computer/Documents/Projects/HaxeFlixel/PiX/PicrossRPG/PiXRPG/source/Window.hx",
 		"/Users/computer/Documents/Projects/HaxeFlixel/PiX/PicrossRPG/source/EventClasses.hx",
 		"/Users/computer/Documents/Projects/HaxeFlixel/PiX/PicrossRPG/source/DialogClasses.hx",
 		"/Users/computer/Documents/Projects/HaxeFlixel/PiX/PicrossRPG/source/DialogChoiceSubState.hx",
@@ -646,6 +731,85 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"refresh",
+			"trace",
+			"—That thing where you move a square after a battle (groan at this too)\ntrace",
+			"—That thing where you move a square after a battle (groan at this too)\n",
+			"trace",
+			"animation.pla",
+			"tempx",
+			"WHITE",
+			"white",
+			"npc",
+			"goto",
+			"npc",
+			"Reg.",
+			"Reg.Pl",
+			"Reg.",
+			"reg.add",
+			"refresh",
+			"grey",
+			"grpobs",
+			"grpob",
+			"grpobs",
+			"trace",
+			"menu",
+			"length",
+			"new arrmen",
+			"selected()",
+			"isActive = true",
+			"isActive",
+			"close()",
+			"popmenu()",
+			"popmenu",
+			"close()",
+			"popM",
+			"trace",
+			"resetAc",
+			"MenuManager",
+			"MNMあ投げr",
+			"open()",
+			"pushMen",
+			"open",
+			"popmen",
+			"pop",
+			"pushMenu",
+			"close()",
+			"arrmenu",
+			"mario",
+			"refre",
+			"class",
+			"highlight",
+			"highligh",
+			"text",
+			"arrobs",
+			"menui",
+			"MenuDialo",
+			"trace",
+			"+=",
+			"HURT",
+			"_id",
+			"animation",
+			"aniamtion",
+			"animation",
+			"grid",
+			"color",
+			"STATE_V",
+			"for ",
+			"color",
+			"obstacle",
+			"setupboard",
+			"marks",
+			"markSquare",
+			"trace",
+			"_coords",
+			"color",
+			"_id",
+			"boar",
+			"picrossbo",
+			"_id",
+			"enemyID",
+			"battle",
 			"_sprbac",
 			"_coords",
 			"_sprback",
@@ -694,86 +858,7 @@
 			"lng",
 			"text",
 			"colarray",
-			"rowhints",
-			"colarray",
-			"calcColHints",
-			"calcCol",
-			"grpPicross",
-			"_id",
-			"picross",
-			"_grpSprites",
-			"_grpTexts",
-			"becc34",
-			"dialogbox",
-			"npc",
-			"openDialogSubState",
-			"open",
-			"Sub",
-			"sub",
-			"\"J",
-			"J\"",
-			"sub",
-			"state",
-			"npc",
-			"bent",
-			"cutsce",
-			"arrpath",
-			"state",
-			"substa",
-			"dialog",
-			"substa",
-			"dline",
-			"dialogbo",
-			");\n",
-			"16",
-			"int",
-			"subst",
-			"dialogsub",
-			"dialog",
-			"width",
-			"backgroundl",
-			"background",
-			"collidab",
-			"endbo",
-			"linenumb",
-			"dline",
-			"linecount",
-			"index",
-			"npc",
-			"substate",
-			"race",
-			".int",
-			"width",
-			"trace",
-			"tiledtilela",
-			"trace",
-			"level",
-			"state",
-			"objects",
-			"objectsl",
-			"tilemap",
-			"backgroundl",
-			"objectsl",
-			"backgroun",
-			"backgroundl",
-			"backg",
-			"colli",
-			"Floor",
-			"map",
-			"trance",
-			"trace",
-			"update",
-			"u",
-			"upd",
-			"update",
-			"int",
-			"cursor",
-			"trace",
-			"_dim",
-			"_enemyID",
-			"_enemy",
-			"loadgra",
-			"\n			"
+			"rowhints"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -792,50 +877,23 @@
 	"groups":
 	[
 		{
+			"selected": 9,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "source/FrogPond.hx",
+					"file": "/Users/computer/Documents/Projects/HaxeFlixel/PiX/PicrossRPG/PixRPG/source/MenuClasses.hx",
 					"settings":
 					{
-						"buffer_size": 1194,
+						"buffer_size": 13374,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								1194
-							]
-						],
-						"settings":
-						{
-							"haxe-build-id": 0,
-							"syntax": "Packages/Haxe/Haxe.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "source/MenuClasses.hx",
-					"settings":
-					{
-						"buffer_size": 10239,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								10198,
-								10198
+								10366,
+								10366
 							]
 						],
 						"settings":
@@ -846,30 +904,29 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 397.0,
+						"translation.y": 1948.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 2,
-					"file": "source/PenClasses.hx",
+					"buffer": 1,
+					"file": "/Users/computer/Documents/Projects/HaxeFlixel/PiX/PicrossRPG/PixRPG/source/TownState.hx",
 					"settings":
 					{
-						"buffer_size": 1140,
+						"buffer_size": 5336,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								4756,
+								4756
 							]
 						],
 						"settings":
 						{
-							"auto_name": "PenClasses.hx",
 							"haxe-build-id": 0,
 							"syntax": "Packages/Haxe/Haxe.tmLanguage",
 							"translate_tabs_to_spaces": false
@@ -881,19 +938,75 @@
 					"type": "text"
 				},
 				{
-					"buffer": 3,
-					"file": "source/FrogPond1.hx",
+					"buffer": 2,
+					"file": "source/FrogPond.hx",
 					"settings":
 					{
-						"buffer_size": 1578,
+						"buffer_size": 1755,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								1455,
+								1455
+							]
+						],
+						"settings":
+						{
+							"haxe-build-id": 0,
+							"syntax": "Packages/Haxe/Haxe.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 457.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "/Users/computer/Documents/Projects/HaxeFlixel/PiX/PicrossRPG/PixRPG/source/Town2.hx",
+					"settings":
+					{
+						"buffer_size": 752,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								529,
+								529
+							]
+						],
+						"settings":
+						{
+							"haxe-build-id": 0,
+							"syntax": "Packages/Haxe/Haxe.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "source/FrogPond1.hx",
+					"settings":
+					{
+						"buffer_size": 1647,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1310,
+								1309
 							]
 						],
 						"settings":
@@ -904,53 +1017,25 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 401.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "source/BattleSubState.hx",
-					"settings":
-					{
-						"buffer_size": 13694,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								13415,
-								13276
-							]
-						],
-						"settings":
-						{
-							"haxe-build-id": 0,
-							"syntax": "Packages/Haxe/Haxe.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 6855.0,
+						"translation.y": 373.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 5,
-					"file": "source/TownState.hx",
+					"file": "/Users/computer/Documents/Projects/HaxeFlixel/PiX/PicrossRPG/PixRPG/source/Reg.hx",
 					"settings":
 					{
-						"buffer_size": 5916,
+						"buffer_size": 4243,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								2959,
+								2959
 							]
 						],
 						"settings":
@@ -960,25 +1045,25 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 1055.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 6,
-					"file": "source/DialogSubState.hx",
+					"file": "/Users/computer/Documents/Projects/HaxeFlixel/PiX/PicrossRPG/PixRPG/source/Player.hx",
 					"settings":
 					{
-						"buffer_size": 3914,
+						"buffer_size": 4988,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								3115,
-								3115
+								2780,
+								2780
 							]
 						],
 						"settings":
@@ -988,25 +1073,25 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1548.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 7,
-					"file": "source/MenuSubState.hx",
+					"file": "/Users/computer/Documents/Projects/HaxeFlixel/PiX/PicrossRPG/PixRPG/source/MenuState.hx",
 					"settings":
 					{
-						"buffer_size": 2048,
+						"buffer_size": 3822,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1006,
-								776
+								3086,
+								3086
 							]
 						],
 						"settings":
@@ -1016,53 +1101,25 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 421.0,
+						"translation.y": 1160.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 8,
-					"file": "source/PicrossBoard.hx",
+					"file": "/Users/computer/Documents/Projects/HaxeFlixel/PiX/PicrossRPG/PixRPG/source/ItemClasses.hx",
 					"settings":
 					{
-						"buffer_size": 5491,
+						"buffer_size": 1313,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2496,
-								2496
-							]
-						],
-						"settings":
-						{
-							"haxe-build-id": 0,
-							"syntax": "Packages/Haxe/Haxe.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 1.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 9,
-					"file": "source/Window.hx",
-					"settings":
-					{
-						"buffer_size": 923,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								505,
-								505
+								456,
+								456
 							]
 						],
 						"settings":
@@ -1072,25 +1129,25 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 51.0,
+						"translation.y": 304.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 10,
-					"file": "source/Strings.hx",
+					"buffer": 9,
+					"file": "/Users/computer/Documents/Projects/HaxeFlixel/PiX/PicrossRPG/PixRPG/source/Strings.hx",
 					"settings":
 					{
-						"buffer_size": 7063,
+						"buffer_size": 8468,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								3851,
+								3851
 							]
 						],
 						"settings":
@@ -1099,8 +1156,36 @@
 							"syntax": "Packages/Haxe/Haxe.tmLanguage",
 							"translate_tabs_to_spaces": false
 						},
-						"translation.x": 2.0,
-						"translation.y": 0.0,
+						"translation.x": 0.0,
+						"translation.y": 890.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "/Users/computer/Documents/Projects/HaxeFlixel/PiX/PicrossRPG/PixRPG/source/DialogSubState.hx",
+					"settings":
+					{
+						"buffer_size": 3727,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3509,
+								3509
+							]
+						],
+						"settings":
+						{
+							"haxe-build-id": 0,
+							"syntax": "Packages/Haxe/Haxe.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 347.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1139,6 +1224,10 @@
 		]
 	},
 	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 94.0
+	},
 	"replace":
 	{
 		"height": 64.0

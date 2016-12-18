@@ -39,7 +39,6 @@ class PicrossBoard extends FlxGroup
 	{
 		super();
 	
-		// _sprBack = Anchor;
 		coords = Coords;
 		color = Color;
 		dimens = Size;

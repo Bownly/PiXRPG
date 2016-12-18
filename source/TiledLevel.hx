@@ -18,11 +18,12 @@ import haxe.io.Path;
 /**
  * @author Samuel Batista, Bownly
  */
+
 class TiledLevel extends TiledMap
 {
 	// For each "Tile Layer" in the map, you must define a "tileset" property which contains the name of a tile sheet image 
 	// used to draw tiles in that layer (without file extension). The image file must be located in the directory specified bellow.
-	private inline static var c_PATH_LEVEL_TILESHEETS = "assets/levels/";
+	private inline static var c_PATH_LEVEL_TILESHEETS = "assets/images/tiles/";
 	
 	// Array of tilemaps used for collision
 	public var foregroundTiles:FlxGroup;
@@ -192,9 +193,6 @@ class TiledLevel extends TiledMap
 			// 	group.add(player);
 
 			case "npc":
-				// var npc = new NPC(x, y, Std.parseInt(o.properties.get("facing")), Std.parseInt(o.properties.get("species")), 
-									// Std.parseInt(o.properties.get("lineNum")), state, "name");
-				// state.grpNPCs.add(npc);
 				for (npc in state.grpNPCs)
 				{
 					if (o.properties.get("name") == npc.name)
@@ -202,7 +200,7 @@ class TiledLevel extends TiledMap
 						npc.x = x;
 						npc.y = y;
 					}
-				}
+				}			
 				
 			case "entrance":
 				// var entID = Std.parseInt(o.properties.get("name"))
