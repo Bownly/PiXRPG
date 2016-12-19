@@ -1,8 +1,8 @@
 package;
 
 import flixel.FlxG;
+import flixel.input.keyboard.FlxKey;
 import flixel.util.FlxSave;
-
 /**
  * Handy, pre-built Registry class that can be used to store 
  * references to objects and other things for quick-access. Feel
@@ -74,6 +74,17 @@ class Reg
 		"frogpond_door1" => 0,
 		"frogpond_door2" => 0,
 		"frogpond_door3" => 0,
+	];
+
+	public static var keys:Map<String, Array<FlxKey>> = 
+	[
+		"up" => [flixel.input.keyboard.FlxKey.UP, flixel.input.keyboard.FlxKey.W],
+		"down" => [flixel.input.keyboard.FlxKey.DOWN, flixel.input.keyboard.FlxKey.S],
+		"left" => [flixel.input.keyboard.FlxKey.LEFT, flixel.input.keyboard.FlxKey.A],
+		"right" => [flixel.input.keyboard.FlxKey.RIGHT, flixel.input.keyboard.FlxKey.D],
+		"confirm" => [flixel.input.keyboard.FlxKey.J, flixel.input.keyboard.FlxKey.Z],
+		"cancel" => [flixel.input.keyboard.FlxKey.K, flixel.input.keyboard.FlxKey.X],
+		"dpad" => [flixel.input.keyboard.FlxKey.UP, flixel.input.keyboard.FlxKey.W, flixel.input.keyboard.FlxKey.DOWN, flixel.input.keyboard.FlxKey.S, flixel.input.keyboard.FlxKey.LEFT, flixel.input.keyboard.FlxKey.A, flixel.input.keyboard.FlxKey.RIGHT, flixel.input.keyboard.FlxKey.D]
 	];
 
 	public static function goToNextLevel(EntID:Int, MapName:String):Void

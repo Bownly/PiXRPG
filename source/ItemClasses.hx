@@ -55,6 +55,7 @@ class BaseItem
 	public var name:String;
 	public var desc:String;
 	public var iconID:Int;
+	public var canUseOutOfBattle:Bool = false;
 
 	public function new(Name:String, Desc:String, IconID:Int) 
 	{
@@ -65,10 +66,7 @@ class BaseItem
 	}
 
 	public function use()
-	{
 		isUsed = true;
-	}
-
 }
 
 class ItemHealing extends BaseItem
@@ -79,6 +77,7 @@ class ItemHealing extends BaseItem
 	{
 		_val = Val;
 		super(Name, Desc, IconID);
+		canUseOutOfBattle = true;
 	}
 
 	override public function use()

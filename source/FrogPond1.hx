@@ -18,6 +18,7 @@ class FrogPond1 extends TownState
 
 	var npc1:NPC;
 	var npc2:NPC;
+	var npc3:NPC;
 
 	public function new(EntranceID:Int, MapName:String, ?SongName:String, ?Dungeon:Bool) 
 	{
@@ -35,7 +36,10 @@ class FrogPond1 extends TownState
 		}
 		
 		npc2 = new NPC(32, 32, FlxObject.DOWN, 4, this, "");
-		grpNPCs.add(npc2);
+		grpNPCs.add(npc2);	
+
+		npc3 = new NPC(48, 48, FlxObject.DOWN, 3, this, "");
+		grpNPCs.add(npc3);
 		
 		super.create();
 		assignEvents();
@@ -59,9 +63,7 @@ class FrogPond1 extends TownState
 				npc2.events = [new EventDialog(Strings.stringArray[20], this)];
 				
 				npc1.events = [	
-				// new EventDialog(new DialogBox(Strings.stringArray[0]), this),
-				// new EventBattle([new EnemyTest(), new EnemyMush(), new EnemySnail()], this),
-				new EventDialog(Strings.stringArray[17], this, 
+				new EventDialog(Strings.stringArray[4], this, 
 											[new MenuItemDialogChoice(Strings.stringArray[12], 
 												null, new EventFlag("AorB", -1, this)),
 											 new MenuItemDialogChoice(Strings.stringArray[13], 

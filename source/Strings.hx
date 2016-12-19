@@ -110,7 +110,7 @@ class Strings
 		[new DialogLine(0, "Normal")
 		],
 		// 13
-		[new DialogLine(0, "Something is written on the door:\nSolve this puzzle to proceed.")
+		[new DialogLine(0, "Heals 20 MP.\nAnd it tastes great too!")
 		],		
 				// s.split(sub).join(by)
 		// 14

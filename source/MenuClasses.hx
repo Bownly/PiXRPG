@@ -10,6 +10,7 @@ import flixel.group.FlxSpriteGroup;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 
+import DialogClasses;
 import PenClasses;
 import cloner.Cloner;
 
@@ -88,11 +89,11 @@ class MenuItemClose extends BaseMenuItem
 
 class MenuItemDialogChoice extends MenuItemFlag
 {
-	public var dBox:DialogClasses.DialogBox;
+	public var dBox:DialogBox;
 
-	public function new(DBLine:Array<DialogClasses.DialogLine>, Menu:BaseMenu, Flag:EventClasses.EventFlag)
+	public function new(DBLine:Array<DialogLine>, Menu:BaseMenu, Flag:EventClasses.EventFlag)
 	{
-		dBox = new DialogClasses.DialogBox(DBLine);
+		dBox = new DialogBox(DBLine);
 		super(dBox.arrLines[0].line, 0, Menu, Flag);
 	}
 
@@ -207,32 +208,48 @@ class MenuItemPen extends BaseMenuItem
 
 class MenuItemSubMenu extends BaseMenuItem
 {
+	var _coords:Array<Float>;
+	var _dimens:Array<Float>;
+	var _itemDimens:Int;
 	var _state:FlxState;
 	var _substate:FlxSubState;
-	var _menu:BaseMenu;
+	var _menuKind:String;
 
-	public function new(Name:String, IconID:Int, State:FlxState, Sub:FlxSubState, Menu:BaseMenu)
+	public function new(Name:String, IconID:Int, Coords:Array<Float>, Dimens:Array<Float>, 
+						ItemDimens:Int, State:FlxState, Sub:FlxSubState, MenuKind:String)
 	{
 		super(Name);
-		_menu = Menu;
 		iconID = IconID;
+		_coords = Coords;
+		_dimens = Dimens;
+		_itemDimens = ItemDimens;
+
 		_state = State;
 		_substate = Sub;
+		_menuKind = MenuKind;
 	}
 
 	override public function selected()
 	{
-		var menu:BaseMenu = _menu;
-		// var sub = new MenuSubState(FlxG.width/2, FlxG.height/2, menu, _substate);
-		// sub.setMenu(menu);
 
-		_substate.add(_menu);
-		// MenuManager.pushMenu(_menu);
-		_menu.open();
+		switch (_menuKind)
+		{
+			case "Pens":
+			{
+				var _menu = new MenuPens([_coords[0] + 50 + _dimens[0]/2, _coords[1]], _dimens);
+				_substate.add(_menu);
+				_menu.open();
+			}
+			case "Items":
+			{
+				var _menu = new MenuInventory([_coords[0] + _dimens[0]/2, _coords[1]], _dimens, 2, "back", [150, 5]);
+				_substate.add(_menu);
+				_menu.open();				
+			}
+		}
+
 	}
 }
-
-
 
 class MenuManager
 {
@@ -291,6 +308,7 @@ class BaseMenu extends FlxGroup
 	var _grpIcon:FlxTypedGroup<FlxSprite>;
 	var _cursor:FlxSprite;
 	var _selected:Array<Int> = [0, 0];
+	var _wasHighlighted:BaseMenuItem;
 	var _highlighted:BaseMenuItem;
 	var _arr:Array<Array<BaseMenuItem>>;
 	public var arrItem:Array<BaseMenuItem>;
@@ -329,8 +347,11 @@ class BaseMenu extends FlxGroup
 		_cursor.y = coords[1] + _window.pad;
 		_grpEverything.add(_cursor);
 
+
+ 		_highlighted = arrItem[0];
+		_wasHighlighted = _highlighted;
  		refresh(arrItem);
-	
+
 		add(_window);
 		add(_grpEverything);
 		
@@ -347,6 +368,7 @@ class BaseMenu extends FlxGroup
 			{
 				super.update(elapsed);
 
+				_wasHighlighted = _highlighted;
 				if (FlxG.keys.anyJustPressed(["DOWN", "S"]))
 				{
 					if (_selected[1]+1 < _arrSprite.length && _arrSprite[_selected[1]+1][_selected[0]] != null)
@@ -354,7 +376,7 @@ class BaseMenu extends FlxGroup
 					else 
 						_selected[1] = 0;
 					_cursor.y = _arrSprite[_selected[1]][_selected[0]].y;
-					// _highlighted = _arrSprite[_selected[1]][_selected[0]];
+					_highlighted = _arr[_selected[1]][_selected[0]];
 				}
 				else if (FlxG.keys.anyJustPressed(["UP", "W"]))
 				{
@@ -366,7 +388,7 @@ class BaseMenu extends FlxGroup
 							_selected[1] += 1;					
 					}
 					_cursor.y = _arrSprite[_selected[1]][_selected[0]].y;
-					// _highlighted = _arrSprite[_selected[1]][_selected[0]];
+					_highlighted = _arr[_selected[1]][_selected[0]];
 				}
 				else if (FlxG.keys.anyJustPressed(["RIGHT", "D"]))
 				{
@@ -375,7 +397,7 @@ class BaseMenu extends FlxGroup
 					else if (_arrSprite[_selected[1]][_selected[0]+1] != null)
 						_selected[0] += 1;
 					_cursor.x = _arrSprite[_selected[1]][_selected[0]].x - _cursor.width;
-					// _highlighted = _arrSprite[_selected[1]][_selected[0]];
+					_highlighted = _arr[_selected[1]][_selected[0]];
 				}
 				else if (FlxG.keys.anyJustPressed(["LEFT", "A"]))
 				{
@@ -386,7 +408,7 @@ class BaseMenu extends FlxGroup
 					else 
 						_selected[0] -= 1;
 					_cursor.x = _arrSprite[_selected[1]][_selected[0]].x - _cursor.width;
-					// _highlighted = _arrSprite[_selected[1]][_selected[0]];
+					_highlighted = _arr[_selected[1]][_selected[0]];
 				}
 
 				if (FlxG.keys.anyJustPressed(["J"]))
@@ -400,6 +422,7 @@ class BaseMenu extends FlxGroup
 
 	public function close()
 	{
+ 		refresh(arrItem);
 		isAlive = false;
 		isActive = false;
 		MenuManager.popMenu();
@@ -409,7 +432,7 @@ class BaseMenu extends FlxGroup
 	{
 		openTimer = openTimerDuration;
 		isAlive = true;
-		 		refresh(arrItem);
+ 		refresh(arrItem);
 
 		MenuManager.pushMenu(this);
 	}
@@ -483,13 +506,9 @@ class BaseMenu extends FlxGroup
 		}
 
 		_selected = [0, 0];
-		// if (_selected[0] >= _arr.length)
-		// 	_selected[0] = 0;
-		// if (_selected[1] >= _arr[_selected[0]].length)
-		// 	_selected[1] = 0;
-		// trace("selectiond: ", _selected);
-		// trace("_arr:       ", _arr);
-
+		
+		_highlighted = _arr[0][0];
+		
 		_cursor.x = _arrSprite[_selected[1]][_selected[0]].x - _cursor.width - _window.pad/2;
 		_cursor.y = _arrSprite[_selected[1]][_selected[0]].y;
 	}
@@ -551,6 +570,8 @@ class MenuInventory extends BaseMenu
 {
 	var _itemArray:Array<BaseMenuItem>;
 	var _descText:FlxText;
+	var _dsGroup:DialogSpriteGroup;
+	var _face:Int = 0;
 
 	public function new(Coords:Array<Float>, Dimens:Array<Float>, ColCount:Int, ?CloseString:String, ItemDescCoords:Array<Float>)
 	{	
@@ -558,12 +579,16 @@ class MenuInventory extends BaseMenu
 
 		_itemArray = generateItems();
 		super(Coords, customDimens, ColCount, _itemArray, CloseString);
-		var idc = ItemDescCoords;
-		_descText = new FlxText(coords[0] + idc[0], coords[1] + idc[1], dimens[0], "Text", 8);
-		add(_descText);
-		_descText.scrollFactor.set();
 
-		// +4, -12
+		restartDSGroup();
+
+	}
+
+	override public function update(elapsed:Float)
+	{
+		if (_highlighted != _wasHighlighted)
+			restartDSGroup();
+		super.update(elapsed);
 	}
 
 	public function generateItems():Array<BaseMenuItem>
@@ -573,20 +598,24 @@ class MenuInventory extends BaseMenu
 		{
 			items.push(new MenuItemItem(item, this));
 		}
-		return items;		
+		return items;	
+		_highlighted = _arr[0][0];
+		// _wasHighlighted = arrItem[0];
 	}
 
-	override public function update(elapsed:Float)
+	public function restartDSGroup():Void
 	{
-		super.update(elapsed);
-
+		remove(_dsGroup);
+	
+		if (Reg.playerHasHood == true)
+			_face = 5;
+		
 		var item:BaseMenuItem = _arr[_selected[1]][_selected[0]];
-
 		if (Type.getClassName(Type.getClass(item)) == "MenuItemItem")
-			_descText.text = cast(item, MenuItemItem).item.desc;
+			_dsGroup = new DialogSpriteGroup(new DialogBox([new DialogLine(_face, cast(item, MenuItemItem).item.desc)]), false, 60);
 		else  // that pesky MenuItemClose isn't a MenuItemItem!
-			// _descText.text = "Next battle!";
-			_descText.text = _closeString;
+			_dsGroup = new DialogSpriteGroup(new DialogBox([new DialogLine(_face, _closeString)]), false, 60);
+		add(_dsGroup);
 	}
 }
 
@@ -597,10 +626,11 @@ class MenuPause extends BaseMenu
 	public function new(Coords:Array<Float>, Dimens:Array<Float>, ItemDimens:Int, State:FlxState, Sub:FlxSubState)
 	{	
 		_itemArray = [  
-						new MenuItemSubMenu("Pens", 5, State, Sub, new MenuPens([Coords[0] + 50 + Dimens[0]/2, Coords[1]], Dimens)),
-						new MenuItemSubMenu("Items", 9, State, Sub, new MenuInventory([Coords[0] + Dimens[0]/2, Coords[1]], Dimens, 2, "back", [150, 5]))
+						// new MenuItemSubMenu("Pens", 5, State, Sub, new MenuPens([Coords[0] + 50 + Dimens[0]/2, Coords[1]], Dimens)),
+						// new MenuItemSubMenu("Items", 9, State, Sub, new MenuInventory([Coords[0] + Dimens[0]/2, Coords[1]], Dimens, 2, "back", [150, 5]))
+						new MenuItemSubMenu("Pens", 5, Coords, Dimens, ItemDimens, State, Sub, "Pens"),
+						new MenuItemSubMenu("Items", 9, Coords, Dimens, ItemDimens, State, Sub, "Items")
 		];
-
 		super(Coords, Dimens, ItemDimens, _itemArray, "close");
 	}
 }

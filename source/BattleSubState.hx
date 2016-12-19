@@ -70,6 +70,11 @@ class BattleSubState extends FlxSubState
 	
 	var _mcHurtTimer:Float = 0;
 	var _mcHurtDuration:Float = 1.5;
+
+	var _cursorTimer:Float = 0;
+	var _cursorDuration:Float = 0.15;  // static friction
+	var _cursorInterval:Float = 0.1;   // normal friction
+	var _cursorIsMoving:Bool = false;
 	
 	var battleState:Int = 0;
 	var STATE_BATTLE:Int = 0;
@@ -229,9 +234,7 @@ class BattleSubState extends FlxSubState
 			eventManager.addEvents([new EventFlag("tutorial_battle", 1),
 									new EventDialog(Strings.stringArray[4], this)]);
 		}
-
 	}
-	
 	
 	public override function update(elapsed:Float)
 	{
@@ -286,45 +289,8 @@ class BattleSubState extends FlxSubState
 		if (battleState == STATE_BATTLE)
 		{
 			_arrEnemies[_enemyNum].update(elapsed);
-			if (FlxG.keys.anyJustPressed(["UP", "W"]))
-			{
-				if (_sprPen.y <= yanchor + 48)
-					_sprPen.y = yanchor + 48 + (_arrPicrossBoards[_enemyNum].rowArray.length - 1) * 10  // look, ma, no semicolon! 
-				else
-					_sprPen.y -= 10;
-				_arrPicrossBoards[_enemyNum].colRowBold(_sprPen.x, _sprPen.y);
-			}
-			if (FlxG.keys.anyJustPressed(["DOWN", "S"]))
-			{
-				if (_sprPen.y >= yanchor + 48 + (_arrPicrossBoards[_enemyNum].rowArray.length - 1) * 10)
-					_sprPen.y = yanchor + 48;
-				else
-					_sprPen.y += 10;
-				_arrPicrossBoards[_enemyNum].colRowBold(_sprPen.x, _sprPen.y);
-			}		
-			if (FlxG.keys.anyJustPressed(["LEFT", "A"]))
-			{
-				if (_sprPen.x <= xanchor + 48)
-					_sprPen.x = xanchor + 48 + (_arrPicrossBoards[_enemyNum].rowArray.length - 1) * 10;
-				else
-					_sprPen.x -= 10;
-				_arrPicrossBoards[_enemyNum].colRowBold(_sprPen.x, _sprPen.y);
-			}
-			if (FlxG.keys.anyJustPressed(["RIGHT", "D"]))
-			{
-				if (_sprPen.x >= xanchor + 48 + (_arrPicrossBoards[_enemyNum].rowArray.length - 1) * 10)
-					_sprPen.x = xanchor + 48;
-				else
-					_sprPen.x += 10;
-				_arrPicrossBoards[_enemyNum].colRowBold(_sprPen.x, _sprPen.y);
-			}
 
-			if (FlxG.keys.anyJustPressed(["L"]))
-				_arrEnemies[_enemyNum].spawnObstacle();
-			if (FlxG.keys.anyJustPressed(["O"]))
-				_arrEnemies[_enemyNum].removeObstacle();
-			if (FlxG.keys.anyJustPressed(["P"]))
-				camera.shake(0.005, 0.2);
+			playerInputs(elapsed);
 
 			if (_sprPen1 != null) {
 				_sprPen1.x = _sprPen.x - 10;
@@ -359,23 +325,7 @@ class BattleSubState extends FlxSubState
 				_sprPen9.y = _sprPen.y + 10;				
 			}
 
-			// mark a square as good
-			if (FlxG.keys.anyJustPressed(["J", "ENTER", "SPACE"]))
-			{
-				if (markSquare(_sprPen, PicrossSquare.ON) == 1)
-				{
-					_arrEnemies[_enemyNum].onSquareFilled();
-					for (cursor in _grpCursor)
-					{
-						if (cursor != _sprPen)
-							markSquare(cursor, PicrossSquare.SOLVE);
-					}
-				}
-			}
-			
-			// mark a square as marked
-			if (FlxG.keys.anyJustPressed(["K", "BACKSLASH"]))
-				markSquare(_sprPen, PicrossSquare.MARK);
+
 		}
 		
 		else if (battleState == STATE_MENU)
@@ -472,7 +422,7 @@ class BattleSubState extends FlxSubState
 		songLost.stop();
 		super.close();
 	}
-	
+
 	private function markSquare(cursor:FlxSprite, guess:Int):Int
 	{
 		for (cell in _arrPicrossBoards[_enemyNum].grpPicrossSquares)
@@ -511,6 +461,144 @@ class BattleSubState extends FlxSubState
 		return 0;
 	}
 
+	private function playerInputs(elapsed:Float):Void
+	{
+		// cursor movement / dpad stuff
+		if (FlxG.keys.anyJustReleased(Reg.keys["dpad"]))
+		{
+			_cursorTimer = 0;
+			_cursorIsMoving = false;
+		}
+		if (FlxG.keys.anyPressed(Reg.keys["up"]))
+		{
+			_cursorTimer += elapsed;
+			if (_cursorTimer >= _cursorDuration)
+				_cursorIsMoving = true; 
+
+			if ((_cursorIsMoving && _cursorTimer > _cursorInterval)
+				|| FlxG.keys.anyJustPressed(Reg.keys["up"]))
+			{
+				_cursorTimer = 0;
+				if (_sprPen.y <= yanchor + 48)
+					_sprPen.y = yanchor + 48 + (_arrPicrossBoards[_enemyNum].rowArray.length - 1) * 10  // look, ma, no semicolon! 
+				else
+					_sprPen.y -= 10;
+
+				// diagonal stuff
+				if (FlxG.keys.anyPressed(Reg.keys["left"]))
+				{
+					if (_sprPen.x <= xanchor + 48)
+						_sprPen.x = xanchor + 48 + (_arrPicrossBoards[_enemyNum].rowArray.length - 1) * 10;
+					else
+						_sprPen.x -= 10;
+				}
+				else if (FlxG.keys.anyPressed(Reg.keys["right"]))
+				{
+					if (_sprPen.x >= xanchor + 48 + (_arrPicrossBoards[_enemyNum].rowArray.length - 1) * 10)
+						_sprPen.x = xanchor + 48;
+					else
+						_sprPen.x += 10;
+				}
+				_arrPicrossBoards[_enemyNum].colRowBold(_sprPen.x, _sprPen.y);
+			}
+		}
+		else if (FlxG.keys.anyPressed(Reg.keys["down"]))
+		{
+			_cursorTimer += elapsed;
+			if (_cursorTimer >= _cursorDuration)
+				_cursorIsMoving = true; 
+
+			if ((_cursorIsMoving && _cursorTimer > _cursorInterval)
+				|| FlxG.keys.anyJustPressed(Reg.keys["down"]))
+			{	
+				_cursorTimer = 0;
+				if (_sprPen.y >= yanchor + 48 + (_arrPicrossBoards[_enemyNum].rowArray.length - 1) * 10)
+					_sprPen.y = yanchor + 48;
+				else
+					_sprPen.y += 10;
+
+				// diagonal stuff
+				if (FlxG.keys.anyPressed(Reg.keys["left"]))
+				{
+					if (_sprPen.x <= xanchor + 48)
+						_sprPen.x = xanchor + 48 + (_arrPicrossBoards[_enemyNum].rowArray.length - 1) * 10;
+					else
+						_sprPen.x -= 10;
+				}
+				else if (FlxG.keys.anyPressed(Reg.keys["right"]))
+				{
+					if (_sprPen.x >= xanchor + 48 + (_arrPicrossBoards[_enemyNum].rowArray.length - 1) * 10)
+						_sprPen.x = xanchor + 48;
+					else
+						_sprPen.x += 10;
+				}
+
+				_arrPicrossBoards[_enemyNum].colRowBold(_sprPen.x, _sprPen.y);
+			}
+		}		
+		else if (FlxG.keys.anyPressed(Reg.keys["left"]))
+		{
+			_cursorTimer += elapsed;
+			if (_cursorTimer >= _cursorDuration)
+				_cursorIsMoving = true; 
+
+			if ((_cursorIsMoving && _cursorTimer > _cursorInterval)
+				|| FlxG.keys.anyJustPressed(Reg.keys["left"]))
+			{
+				_cursorTimer = 0;
+				if (_sprPen.x <= xanchor + 48)
+					_sprPen.x = xanchor + 48 + (_arrPicrossBoards[_enemyNum].rowArray.length - 1) * 10;
+				else
+					_sprPen.x -= 10;
+				_arrPicrossBoards[_enemyNum].colRowBold(_sprPen.x, _sprPen.y);
+			}
+		}
+		else if (FlxG.keys.anyPressed(Reg.keys["right"]))
+		{
+			_cursorTimer += elapsed;
+			if (_cursorTimer >= _cursorDuration)
+				_cursorIsMoving = true; 
+
+			if ((_cursorIsMoving && _cursorTimer > _cursorInterval)
+				|| FlxG.keys.anyJustPressed(Reg.keys["right"]))
+			{
+				_cursorTimer = 0;
+				if (_sprPen.x >= xanchor + 48 + (_arrPicrossBoards[_enemyNum].rowArray.length - 1) * 10)
+					_sprPen.x = xanchor + 48;
+				else
+					_sprPen.x += 10;
+				_arrPicrossBoards[_enemyNum].colRowBold(_sprPen.x, _sprPen.y);
+			}
+		}
+
+		// // debug stuff TODO: remove in any official builds
+		// if (FlxG.keys.anyJustPressed(["L"]))
+		// 	_arrEnemies[_enemyNum].spawnObstacle();
+		// if (FlxG.keys.anyJustPressed(["O"]))
+		// 	_arrEnemies[_enemyNum].removeObstacle();
+		// if (FlxG.keys.anyJustPressed(["P"]))
+		// 	camera.shake(0.005, 0.2);
+
+		// mark a square as good
+		if (FlxG.keys.anyPressed(["J", "ENTER", "SPACE"]))
+		{
+			if (markSquare(_sprPen, PicrossSquare.ON) == 1)
+			{
+				_arrEnemies[_enemyNum].onSquareFilled();
+				for (cursor in _grpCursor)
+				{
+					if (cursor != _sprPen)
+						markSquare(cursor, PicrossSquare.SOLVE);
+				}
+			}
+		}
+		
+		// mark a square as marked
+		if (FlxG.keys.anyPressed(["K", "BACKSLASH"]))
+			markSquare(_sprPen, PicrossSquare.MARK);
+
+	}
+
 	private function setUpBoard():Void
 	{
 		// _enemyID = _enemyIDs[_enemyNum];
@@ -542,7 +630,6 @@ class BattleSubState extends FlxSubState
 		}
 
 		_arrPicrossBoards[_enemyNum].flipActive();
-
 	}
 
 	private function setUpMenu():Void
