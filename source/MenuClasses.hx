@@ -61,6 +61,7 @@ class BaseMenuItem
 	{
 		var icon = new FlxSprite();
 		icon.loadGraphic(AssetPaths.item_icons__png, true, 8, 8);
+		icon.y += 1;
 		icon.animation.add("idle", [iconID, iconID], 2, true);
 		icon.animation.play("idle");
 		icon.visible = true;
@@ -490,7 +491,7 @@ class BaseMenu extends FlxGroup
 			_arr.push([_closeItem, null]);
 
 			var grp = _closeItem.renderLine([coords[0] + _cursor.width + _window.pad*2, coords[1]]);
-			while (grp.y < coords[1] + dimens[1] - _yPad - ITEM_GAP)
+			while (grp.y < coords[1] + dimens[1] - ITEM_GAP)
 				grp.y += ITEM_GAP;
 			_arrSprite.push([grp, null]);
 
@@ -623,13 +624,11 @@ class MenuPause extends BaseMenu
 {
 	var _itemArray:Array<BaseMenuItem>;
 
-	public function new(Coords:Array<Float>, Dimens:Array<Float>, ItemDimens:Int, State:FlxState, Sub:FlxSubState)
+	public function new(Coords:Array<Float>, Dimens:Array<Float>, ItemDimens:Int, SubMenuDimens:Array<Float>, State:FlxState, Sub:FlxSubState)
 	{	
-		_itemArray = [  
-						// new MenuItemSubMenu("Pens", 5, State, Sub, new MenuPens([Coords[0] + 50 + Dimens[0]/2, Coords[1]], Dimens)),
-						// new MenuItemSubMenu("Items", 9, State, Sub, new MenuInventory([Coords[0] + Dimens[0]/2, Coords[1]], Dimens, 2, "back", [150, 5]))
-						new MenuItemSubMenu("Pens", 5, Coords, Dimens, ItemDimens, State, Sub, "Pens"),
-						new MenuItemSubMenu("Items", 9, Coords, Dimens, ItemDimens, State, Sub, "Items")
+		// dimens are kinda arbitrary
+		_itemArray = [  new MenuItemSubMenu("Pens", 5, [Coords[0], 0], [100, SubMenuDimens[1]], ItemDimens, State, Sub, "Pens"),
+						new MenuItemSubMenu("Items", 9, [Coords[0], 0], [100, SubMenuDimens[1]], ItemDimens, State, Sub, "Items")
 		];
 		super(Coords, Dimens, ItemDimens, _itemArray, "close");
 	}

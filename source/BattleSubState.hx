@@ -72,9 +72,13 @@ class BattleSubState extends FlxSubState
 	var _mcHurtDuration:Float = 1.5;
 
 	var _cursorTimer:Float = 0;
-	var _cursorDuration:Float = 0.15;  // static friction
+	var _cursorDuration:Float = 0.20;  // static friction
 	var _cursorInterval:Float = 0.1;   // normal friction
 	var _cursorIsMoving:Bool = false;
+
+	var _markTimer:Float = 0;
+	var _markDuration:Float = 0.15;
+	var _markerMoving:Bool = true;
 	
 	var battleState:Int = 0;
 	var STATE_BATTLE:Int = 0;
@@ -580,7 +584,7 @@ class BattleSubState extends FlxSubState
 		// 	camera.shake(0.005, 0.2);
 
 		// mark a square as good
-		if (FlxG.keys.anyPressed(["J", "ENTER", "SPACE"]))
+		if (FlxG.keys.anyPressed(Reg.keys["confirm"]))
 		{
 			if (markSquare(_sprPen, PicrossSquare.ON) == 1)
 			{
@@ -594,9 +598,19 @@ class BattleSubState extends FlxSubState
 		}
 		
 		// mark a square as marked
-		if (FlxG.keys.anyPressed(["K", "BACKSLASH"]))
-			markSquare(_sprPen, PicrossSquare.MARK);
+		if (FlxG.keys.anyPressed(Reg.keys["dpad"]))
+			_markerMoving = true;
 
+		if (FlxG.keys.anyJustPressed(Reg.keys["cancel"]))
+		{
+			markSquare(_sprPen, PicrossSquare.MARK);
+			_markerMoving = false;
+		}
+		else if (FlxG.keys.anyPressed(Reg.keys["cancel"]) && _markerMoving)
+		{
+			markSquare(_sprPen, PicrossSquare.MARK);
+			_markerMoving = false;
+		}
 	}
 
 	private function setUpBoard():Void

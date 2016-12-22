@@ -11,11 +11,11 @@
    </properties>
   </object>
   <object id="8" name="1" type="entrance" x="128" y="16" width="16" height="16"/>
-  <object id="9" name="npc" type="NPC" x="112" y="32" width="16" height="16">
+  <object id="9" name="npc" type="NPC" x="112" y="16" width="16" height="16">
    <properties>
     <property name="facing" type="int" value="1"/>
     <property name="lineNum" type="int" value="11"/>
-    <property name="name" value="22real"/>
+    <property name="name" value="rival"/>
     <property name="species" type="int" value="2"/>
    </properties>
   </object>

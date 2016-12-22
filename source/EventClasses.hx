@@ -267,26 +267,7 @@ class EventNPCTrigger extends BaseEvent
 	}
 }
 
-class EventSaveGame extends BaseEvent
-{
-	var _mapName:String;
-	var _entID:Int;
-
-	public function new(EntID:Int, MapName:String)
-	{
-		_mapName = MapName;
-		_entID = EntID;
-		super();
-	}
-
-	override public function update()
-	{
-		Reg.saveGame(_entID, _mapName);
-		destroy();
-	}
-}
-
-class EventWalk extends BaseEvent
+class EventNPCWalk extends BaseEvent
 {
 	var _npc:NPC;
 	var _path:Array<Array<Int>>;
@@ -387,6 +368,23 @@ class EventWalk extends BaseEvent
 	}
 }
 
+class EventSaveGame extends BaseEvent
+{
+	var _mapName:String;
+	var _entID:Int;
 
+	public function new(EntID:Int, MapName:String)
+	{
+		_mapName = MapName;
+		_entID = EntID;
+		super();
+	}
+
+	override public function update()
+	{
+		Reg.saveGame(_entID, _mapName);
+		destroy();
+	}
+}
 
 

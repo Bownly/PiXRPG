@@ -159,12 +159,12 @@ class TownState extends FlxState
 
 		if (Reg.STATE != Reg.STATE_CUTSCENE)
 		{
-			if (FlxG.keys.anyJustPressed(["K", "ENTER"]))
+			if (FlxG.keys.anyJustPressed(Reg.keys["menu"]))
 			{
 				var sub = new MenuSubState(FlxG.width/2, FlxG.height/2, this);
 				this.openSubState(sub);
 			}
-			else if (FlxG.keys.anyJustPressed(["L"]))
+			else if (FlxG.keys.anyJustPressed(["O"]))
 			{
 				eventManager.addEvents([new EventClasses.EventItemGet(new ItemClasses.ItemHealing("a potion", "heals 5 MP\nWait, only 5? Must be past its expiration\ndate.", 9, 5))]);
 				eventManager.addEvents([new EventClasses.EventItemGet(new ItemClasses.ItemHealing("b potion", "heals 10 MP\nAh, the classic bargain bin potion.", 9, 10))]);

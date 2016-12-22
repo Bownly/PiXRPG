@@ -19,10 +19,11 @@ class MenuSubState extends FlxSubState
 
 	private var _sprBack:FlxSprite;
 	private var _sprBackBG:FlxSprite;
+    private var _txtName:FlxText;
     private var _txtLevel:FlxText;
     private var _txtHP:FlxText;
     private var _txtMP:FlxText;
-    private var _txtXP:FlxText;
+    private var _txtGP:FlxText;
     public var _menu:BaseMenu;
 	var _grpEverything:FlxTypedGroup<FlxText>;
 
@@ -37,25 +38,31 @@ class MenuSubState extends FlxSubState
 		
 		_grpEverything = new FlxTypedGroup<FlxText>();
 		
-		var xanchor = Std.int(FlxG.width / 2 - 64 / 2);
-		var yanchor = Std.int(FlxG.height / 2 - 96 / 2);
+		var winW:Int = 64;
+		var winH:Int = 96;
+		var xanchor = 2;
+		var yanchor = Std.int(2);
 
-		var statsWindow = new Window([xanchor, yanchor], [64, 96]);
+		var statsWindow = new Window([xanchor, yanchor], [winW, winH]);
 		xanchor += statsWindow.pad*2;
 		yanchor += statsWindow.pad*2;
 
-		_txtLevel = new FlxText(xanchor, yanchor + 8, 64, "Stats:\n\nLvl: " + Reg.pLV, 8);
-		_txtHP = new FlxText(xanchor, _txtLevel.y + _txtLevel.height, 64, "HP: 999", 8);
-		_txtMP = new FlxText(xanchor, _txtHP.y + _txtHP.height, 64, "MP: " + Reg.pMP, 8);
-		_txtXP = new FlxText(xanchor, _txtMP.y + _txtMP.height, 64, "XP: " + Reg.pXP, 8);
-		
+		_txtName = new FlxText(xanchor, yanchor, winW, Strings.stringVars["%pname%"]);
+		_txtLevel = new FlxText(xanchor, _txtName.y + _txtName.height, winW, "LP: " + Player.lvl, 8);
+		_txtHP = new FlxText(xanchor, _txtLevel.y + _txtLevel.height, winW, "HP: 999", 8);
+		_txtMP = new FlxText(xanchor, _txtHP.y + _txtHP.height, winW, "MP: " + Player.mp, 8);
+		_txtGP = new FlxText(xanchor, _txtMP.y + _txtMP.height, winW, "GP: " + Player.gp, 8);
+
+		xanchor -= statsWindow.pad*2;
+		yanchor += winH;
 
 		if (Menu != null)
 			// setMenu(Menu);
 			trace("TODO: clean up this code later");
 		else
 		{
-			_menu = new MenuPause([0, 0], [100, 100], 1, _state, this);
+			// 80 and 46 are dimensions determined through trial and error
+			_menu = new MenuPause([xanchor, yanchor], [80, 44], 1, [80+xanchor, 44+yanchor], _state, this);
 			_menu.isAlive = true;
 			add(_menu);
 			// MenuManager.pushMenu(_menu);
@@ -65,10 +72,11 @@ class MenuSubState extends FlxSubState
 		MenuManager.setSubState(this);
 
 		add(statsWindow);
+		_grpEverything.add(_txtName);
 		_grpEverything.add(_txtLevel);
 		_grpEverything.add(_txtHP);
 		_grpEverything.add(_txtMP);
-		_grpEverything.add(_txtXP);
+		_grpEverything.add(_txtGP);
 		add(_grpEverything);
 		
 		for(text in _grpEverything) 

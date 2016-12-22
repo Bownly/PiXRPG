@@ -21,6 +21,7 @@ class Player extends FlxSprite
 	public static var mp:Int = 60;
 	public static var maxmp:Int = 60;
 	public static var xp:Int = 0;
+	public static var gp:Int = 0;
 	public static var MAXXP:Int = 100;	
 
 	public var isMoving:Bool;	

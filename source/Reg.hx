@@ -84,6 +84,7 @@ class Reg
 		"right" => [flixel.input.keyboard.FlxKey.RIGHT, flixel.input.keyboard.FlxKey.D],
 		"confirm" => [flixel.input.keyboard.FlxKey.J, flixel.input.keyboard.FlxKey.Z],
 		"cancel" => [flixel.input.keyboard.FlxKey.K, flixel.input.keyboard.FlxKey.X],
+		"menu" => [flixel.input.keyboard.FlxKey.L, flixel.input.keyboard.FlxKey.C],
 		"dpad" => [flixel.input.keyboard.FlxKey.UP, flixel.input.keyboard.FlxKey.W, flixel.input.keyboard.FlxKey.DOWN, flixel.input.keyboard.FlxKey.S, flixel.input.keyboard.FlxKey.LEFT, flixel.input.keyboard.FlxKey.A, flixel.input.keyboard.FlxKey.RIGHT, flixel.input.keyboard.FlxKey.D]
 	];
 
@@ -139,7 +140,8 @@ class Reg
 		curItem = "";
 
 		// set location (map + entrance) and start the game
-		FlxG.switchState(new FrogPond1(1, "frogpond-1.tmx"));
+		// FlxG.switchState(new FrogPond1(1, "frogpond-1.tmx"));
+		FlxG.switchState(new NamePlayerState());
 	}	
 
 	public static function muteToggle():Void

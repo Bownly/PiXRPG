@@ -59,7 +59,7 @@ class PicrossBoard extends FlxGroup
 			gridPicrossSquares.push(arr);
 		}
 
-		// sets up the values of the randomized grid
+		// sets up the values of the randomized grid and the hint texts
 		for (i in 0...dimens)
 		{
 			rowArray = [];
@@ -77,7 +77,9 @@ class PicrossBoard extends FlxGroup
 			}
 			rowHints.push(calcRowHints(rowArray));
 
-			var txt:FlxText = new FlxText(coords[0], coords[1] + 46 + i * 10, 48, rowHints[i], 8);
+			// 70 is a rough estimate of the offset between the battle window edge and the leftmost picross square
+			// yeah, it's lazy, but it works
+			var txt:FlxText = new FlxText(coords[0] - 70, coords[1] + 46 + i * 10, 48 + 70, rowHints[i], 8);
 			txt.alignment = "right";
 			arrRowHints.push(txt);
 			grpTexts.add(txt);
@@ -100,8 +102,6 @@ class PicrossBoard extends FlxGroup
 			{
 				var pSquare:PicrossSquare;
 				// the if statements are to determine what the pattern of the squares' basecolors.
-				// var halfway:Int = Math.ceil(dimens/2);
-				// if ((X >= halfway && Y < halfway) || (Y >= halfway && X < halfway))
 				if (((X%10 >= 5) && (Y%10 >= 5)) || ((X%10 <= 4) && (Y%10 <= 4)))
 					pSquare = new PicrossSquare(coords[0] + 48 + X * 10, coords[1] + 48 + Y * 10, color+1, X, Y, colArray[Y][X]);
 				else

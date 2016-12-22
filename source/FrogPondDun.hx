@@ -21,6 +21,7 @@ class FrogPondDun extends TownState
 	var door1:NPC;
 	var door2:NPC;
 	var door3:NPC;
+	var npcia:NPC;
 
 	public function new(EntranceID:Int, MapName:String, ?SongName:String, ?Dungeon:Bool) 
 	{
@@ -31,6 +32,9 @@ class FrogPondDun extends TownState
 	{
 		grpNPCs = new FlxTypedGroup<NPC>();
 		
+		npcia = new NPC(32, 32, FlxObject.DOWN, 1, this, "cia");
+		grpNPCs.add(npcia);
+
 		chest1 = new Chest(224, 224, this, "frogpond_chest1");
 		chest2 = new Chest(240, 240, this, "frogpond_chest2");
 		grpNPCs.add(chest1);
@@ -59,6 +63,8 @@ class FrogPondDun extends TownState
 	
 	override public function assignEvents():Void
 	{
+
+		npcia.events = [new EventDialog(Strings.stringArray[21], this)];
 
 		if (Reg.flags["frogpond_chest1"] == 0)
 		{

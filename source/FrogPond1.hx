@@ -31,8 +31,8 @@ class FrogPond1 extends TownState
 		
 		if (Reg.flags["first_wakeup"] == 0)
 		{
-			npc1 = new NPC(32, 32, FlxObject.DOWN, 4, this, "22real");
-			grpNPCs.add(npc1);
+			npc1 = new NPC(32, 32, FlxObject.RIGHT, 3, this, "rival");
+			// grpNPCs.add(npc1);
 		}
 		
 		npc2 = new NPC(32, 32, FlxObject.DOWN, 4, this, "");
@@ -47,37 +47,32 @@ class FrogPond1 extends TownState
 	
 	override public function assignEvents():Void
 	{
-		if (Reg.flags["AorB"] == 1)
-		{
-			eventManager.addEvents([new EventDialog(Strings.stringArray[18], this)]);
-			eventManager.addEvents([new EventFlag("AorB", 0)]);
-		}
-		else if (Reg.flags["AorB"] == -1)
-		{
-			eventManager.addEvents([new EventDialog(Strings.stringArray[19], this)]);
-			eventManager.addEvents([new EventFlag("AorB", 0)]);
-		}
 
-		else if (Reg.flags["first_wakeup"] == 0)
+		if (Reg.flags["first_wakeup"] == 0)
 		{
+				// eventManager.addEvents([new EventDialog(Strings.stringArray[0], this),
+				// 						new EventNPCWalk(npc1, [[FlxObject.LEFT, 6],
+				// 												[FlxObject.DOWN, 0]]),
+				// 						new EventNPCRemove(npc1),
+				// 						new EventFlag("first_wakeup", 1)
+				// 						]);
+
 				npc2.events = [new EventDialog(Strings.stringArray[20], this)];
 				
 				npc1.events = [	
-				new EventDialog(Strings.stringArray[4], this, 
-											[new MenuItemDialogChoice(Strings.stringArray[12], 
-												null, new EventFlag("AorB", -1, this)),
-											 new MenuItemDialogChoice(Strings.stringArray[13], 
-											 	null, new EventFlag("AorB", 1)),
-											 new MenuItemDialogChoice(Strings.stringArray[14], 
-											 	null, new EventFlag("AorB", -1, this)),
-											 new MenuItemDialogChoice(Strings.stringArray[15], 
-											 	null, new EventFlag("AorB", -1, this)),
-											 new MenuItemDialogChoice(Strings.stringArray[16], 
-											 	null, new EventFlag("AorB", -1, this))
-											]),
-				new EventWalk(npc1, [[FlxObject.DOWN, 1]]),
-				new EventNPCRemove(npc1),
-				new EventFlag("first_wakeup", 1)
+				// new EventDialog(Strings.stringArray[4], this, 
+				// 							[new MenuItemDialogChoice(Strings.stringArray[12], 
+				// 								null, new EventFlag("AorB", -1, this)),
+				// 							 new MenuItemDialogChoice(Strings.stringArray[13], 
+				// 							 	null, new EventFlag("AorB", 1)),
+				// 							 new MenuItemDialogChoice(Strings.stringArray[14], 
+				// 							 	null, new EventFlag("AorB", -1, this)),
+				// 							 new MenuItemDialogChoice(Strings.stringArray[15], 
+				// 							 	null, new EventFlag("AorB", -1, this)),
+				// 							 new MenuItemDialogChoice(Strings.stringArray[16], 
+				// 							 	null, new EventFlag("AorB", -1, this))
+				// 							]),
+				
 			];
 
 		}

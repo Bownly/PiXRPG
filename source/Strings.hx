@@ -25,28 +25,36 @@ class Strings
 	public static var stringArray:Array<Array<DialogLine>> = [
 
 		// 0
-		[new DialogLine(0, Reg.pName + ", get up!\nHow could you sleep in on today of all days?"),
+		[new DialogLine(0, "%pname%, get up!\nHow could you sleep in on today of all days?"),
 		new DialogLine(0, "Hurry up, you don't want to be late! You\nknow how impatient Elder Froggo can get!"),
 		],
 		// 1
-		[new DialogLine(0, "Hey, " + Reg.pName + ", you look lost.\nStill half asleep, huh?\n" + Reg.rivalName + " already ran ahead. He's such an eager kid."),
+		[new DialogLine(0, "Hey, %pname%, you look lost.\nStill half asleep, huh?\n" + Reg.rivalName + " just ran through here a moment ago."),
 		new DialogLine(1, "Huh? \"Where'd he go?\""),
-		new DialogLine(0, "To Elder Froggo's house across the pond, obviously!\nYou'd best follow his lead and head there yourself."),
+		new DialogLine(0, "Up ahead to Elder Froggo's house, obviously!\nYou'd best follow his lead and head there yourself."),
 		],
 		// 2
-		[new DialogLine(0, "Not so fast, bud. Elder Froggo is waiting for you.")
+		[new DialogLine(0, "Not so fast, bud. Elder Froggo is waiting for you at his house.")
 		],
 		// 3
-		[new DialogLine(25, Reg.pName + "! " + Reg.rivalName + "!\nI'm so proud of the both of you. You're about\nto embark on the final stage of your\ntraining: your pilgrimage to the capitol!"),
-		new DialogLine(26, "blah blah blah blah blah blah"),
-		new DialogLine(27, "blah blah blah blah blah blah"),
+		[new DialogLine(25, "%pname%! " + Reg.rivalName + "!\nThe day has finally arrived for you to become full-fledged magicians."),
+		new DialogLine(26, "You're now both of age to receive your hoods. As is tradition, you have to go through the trial cave to get them."),
+		new DialogLine(27, "The entrance to the cave is through that exit to your left. Good luck."),
 		new DialogLine(28, "blah blah blah blah blah blah"),
 		new DialogLine(29, "blah blah blah blah blah blah"),
-		new DialogLine(25, "Oh, and before you go, I suggest you\npractice your skills on my test dummy.")
+		new DialogLine(25, "Oh, and before you go, you might want to review the fundamentals of magic with my training dummy.")
 		],
 		// 4
-		[new DialogLine(50, "Here's a tutorial on how to play!:"),
-		new DialogLine(50, "Look up the rules for picross if you don't\nknow them!")
+		[new DialogLine(50, "Hi ho! This is the battle screen! Up in the\ncorner is a display of your MP (Mental\nPoints) and your opponent's MP!"),
+		new DialogLine(50, "The goal of a battle is to reduce your\nopponent's MP to zero! The opponent's\nmental state is represented by the puzzle in the center!"),
+		new DialogLine(50, "In order to reduce your opponent's MP, you must solve that puzzle!"),
+		new DialogLine(50, "Each square in the grid can either be ON or\nOFF! The numbers indicate how many\nconsecutive squares in each column or row\nshould turned be ON!"),
+		new DialogLine(50, "When you fully solve a row or column, the\ncorresponding numbers will turn grey!"),
+		new DialogLine(50, "Fill in squares with the \"J\" button and mark ones you suspect should remain OFF with\nthe \"K\" button!"),
+		new DialogLine(50, "But be careful! If you incorrectly turn ON a\nsquare, the stress will cause you to lose\nsome MP!"),
+		new DialogLine(50, "Also, note that some opponents may\nstruggle in an attempt to thwart your\npuzzle solving efforts! They won't all be\npushovers like I am!"),
+		new DialogLine(50, "Wew! That's a lot of info! Just give it a shot\nand you'll figure it out!"),
+
 		],
 
 		// 5
@@ -158,6 +166,14 @@ class Strings
 		new DialogLine(22, "Lorem ipsum dolor sit amet, consectetur\nadipiscing elit, sed do eiusmod tempor\nincididunt ut labore et dolore magna aliqua."),
 		new DialogLine(23, "Lorem ipsum dolor sit amet, consectetur\nadipiscing elit, sed do eiusmod tempor\nincididunt ut labore et dolore magna aliqua."),
 		new DialogLine(24, "Lorem ipsum dolor sit amet, consectetur\nadipiscing elit, sed do eiusmod tempor\nincididunt ut labore et dolore magna aliqua."),
+		],
+
+		// 21
+		[new DialogLine(30, "I'm CIA."),
+		new DialogLine(30, "If I take that hood off, will you die?"),
+		new DialogLine(5, "It would be extremely painful..."),
+		new DialogLine(30, "You're a big guy."),
+		new DialogLine(5, "...For you."),
 		],
 
 	];
