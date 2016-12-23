@@ -38,7 +38,7 @@ class InventoryManager
 
 	public static function addItem(item:BaseItem) 
 	{
-		if (arr.length >= 6)
+		if (arr.length >= 24)
 		{
 			trace("inventory too full");
 		}

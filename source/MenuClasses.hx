@@ -69,7 +69,7 @@ class BaseMenuItem
 	}
 	private function addText(Anchor:Array<Float>)
 	{
-		var item = new FlxText(Anchor[0], 0, 64, name, 8);
+		var item = new FlxText(Anchor[0], 0, 80, name, 8);
 		grpRender.add(item);
 	}	
 }
@@ -237,13 +237,13 @@ class MenuItemSubMenu extends BaseMenuItem
 		{
 			case "Pens":
 			{
-				var _menu = new MenuPens([_coords[0] + 50 + _dimens[0]/2, _coords[1]], _dimens);
+				var _menu = new MenuPens(_coords, _dimens);
 				_substate.add(_menu);
 				_menu.open();
 			}
 			case "Items":
 			{
-				var _menu = new MenuInventory([_coords[0] + _dimens[0]/2, _coords[1]], _dimens, 2, "back", [150, 5]);
+				var _menu = new MenuInventory(_coords, _dimens, 2, "back", [150, 5]);
 				_substate.add(_menu);
 				_menu.open();				
 			}
@@ -303,7 +303,8 @@ class BaseMenu extends FlxGroup
     var _xPad:Int = 8;
     var _yPad:Int = 8;
     var _iconBuffer:Int = 12;
-    var ITEM_GAP:Int = 12;
+
+    static public var ITEM_GAP:Int = 12;
 
 	var _grpEverything:FlxTypedGroup<FlxSprite>;
 	var _grpIcon:FlxTypedGroup<FlxSprite>;
@@ -348,10 +349,9 @@ class BaseMenu extends FlxGroup
 		_cursor.y = coords[1] + _window.pad;
 		_grpEverything.add(_cursor);
 
-
  		_highlighted = arrItem[0];
 		_wasHighlighted = _highlighted;
- 		refresh(arrItem);
+ 		refresh(arrItem);		
 
 		add(_window);
 		add(_grpEverything);
@@ -491,8 +491,9 @@ class BaseMenu extends FlxGroup
 			_arr.push([_closeItem, null]);
 
 			var grp = _closeItem.renderLine([coords[0] + _cursor.width + _window.pad*2, coords[1]]);
-			while (grp.y < coords[1] + dimens[1] - ITEM_GAP)
-				grp.y += ITEM_GAP;
+			// while (grp.y <= coords[1] + dimens[1] + _window.pad*2)
+			// 	grp.y += ITEM_GAP;
+			grp.y = coords[1] + dimens[1] - ITEM_GAP - _window.pad*2;
 			_arrSprite.push([grp, null]);
 
 			_grpEverything.add(grp);
@@ -510,7 +511,7 @@ class BaseMenu extends FlxGroup
 		
 		_highlighted = _arr[0][0];
 		
-		_cursor.x = _arrSprite[_selected[1]][_selected[0]].x - _cursor.width - _window.pad/2;
+		_cursor.x = _arrSprite[_selected[1]][_selected[0]].x - _cursor.width;
 		_cursor.y = _arrSprite[_selected[1]][_selected[0]].y;
 	}
 }
@@ -579,7 +580,7 @@ class MenuInventory extends BaseMenu
 		var customDimens:Array<Float> = [200, Dimens[1]];
 
 		_itemArray = generateItems();
-		super(Coords, customDimens, ColCount, _itemArray, CloseString);
+		super(Coords, Dimens, ColCount, _itemArray, CloseString);
 
 		restartDSGroup();
 
@@ -624,13 +625,15 @@ class MenuPause extends BaseMenu
 {
 	var _itemArray:Array<BaseMenuItem>;
 
-	public function new(Coords:Array<Float>, Dimens:Array<Float>, ItemDimens:Int, SubMenuDimens:Array<Float>, State:FlxState, Sub:FlxSubState)
+	public function new(Coords:Array<Float>, Dimens:Array<Float>, ItemDimens:Int, SubMenuAnchor:Array<Float>, State:FlxState, Sub:FlxSubState)
 	{	
-		// dimens are kinda arbitrary
-		_itemArray = [  new MenuItemSubMenu("Pens", 5, [Coords[0], 0], [100, SubMenuDimens[1]], ItemDimens, State, Sub, "Pens"),
-						new MenuItemSubMenu("Items", 9, [Coords[0], 0], [100, SubMenuDimens[1]], ItemDimens, State, Sub, "Items")
+		// item menu's x dimen is the width from its origin to the end of the screen - MenuSubState's wpad val
+		// pens menu's x dimen is kinda arbitrary
+		// y dimens are calculated by BaseMenu.ITEM_GAP (12) * (BaseMenuItem count) + Window.pad*4
+		_itemArray = [  new MenuItemSubMenu("Items", 9, SubMenuAnchor, [FlxG.width - SubMenuAnchor[0] - 16, 140], ItemDimens, State, Sub, "Items"),
+						new MenuItemSubMenu("Pens", 5, SubMenuAnchor, [100, 80], ItemDimens, State, Sub, "Pens")
 		];
-		super(Coords, Dimens, ItemDimens, _itemArray, "close");
+		super(Coords, Dimens, ItemDimens, _itemArray, "Close");
 	}
 }
 

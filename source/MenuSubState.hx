@@ -23,6 +23,7 @@ class MenuSubState extends FlxSubState
     private var _txtLevel:FlxText;
     private var _txtHP:FlxText;
     private var _txtMP:FlxText;
+    private var _txtXP:FlxText;
     private var _txtGP:FlxText;
     public var _menu:BaseMenu;
 	var _grpEverything:FlxTypedGroup<FlxText>;
@@ -38,31 +39,36 @@ class MenuSubState extends FlxSubState
 		
 		_grpEverything = new FlxTypedGroup<FlxText>();
 		
-		var winW:Int = 64;
-		var winH:Int = 96;
-		var xanchor = 2;
-		var yanchor = Std.int(2);
+		var winW:Int = 76;  // mostly arbitrary number that ends up looking good
+		var winH:Int = 80;  // BaseMenu.ITEM_GAP (12) * (BaseMenuItem count) + Window.pad*4
+		var wpad = 16;
+		// var wpad = wpad;
+		// var wpad = wpad;
 
-		var statsWindow = new Window([xanchor, yanchor], [winW, winH]);
-		xanchor += statsWindow.pad*2;
-		yanchor += statsWindow.pad*2;
+		var statsWindow = new Window([wpad, wpad], [winW, winH]);
 
-		_txtName = new FlxText(xanchor, yanchor, winW, Strings.stringVars["%pname%"]);
-		_txtLevel = new FlxText(xanchor, _txtName.y + _txtName.height, winW, "LP: " + Player.lvl, 8);
-		_txtHP = new FlxText(xanchor, _txtLevel.y + _txtLevel.height, winW, "HP: 999", 8);
-		_txtMP = new FlxText(xanchor, _txtHP.y + _txtHP.height, winW, "MP: " + Player.mp, 8);
-		_txtGP = new FlxText(xanchor, _txtMP.y + _txtMP.height, winW, "GP: " + Player.gp, 8);
+		_txtName = new FlxText(wpad + statsWindow.pad*2, wpad + statsWindow.pad*2, winW, Strings.stringVars["%pname%"]);
+		_txtLevel = new FlxText(_txtName.x, _txtName.y + BaseMenu.ITEM_GAP, winW, "LP: " + Player.lvl, 8);
+		_txtHP = new FlxText(_txtName.x, _txtLevel.y + BaseMenu.ITEM_GAP, winW, "HP: 999/999", 8);
+		_txtMP = new FlxText(_txtName.x, _txtHP.y + BaseMenu.ITEM_GAP, winW, "MP: " + Player.mp + "/" + Player.maxmp, 8);
+		_txtXP = new FlxText(_txtName.x, _txtMP.y + BaseMenu.ITEM_GAP, winW, "XP: " + Player.xp, 8);
+		_txtGP = new FlxText(_txtName.x, _txtXP.y + BaseMenu.ITEM_GAP, winW, "GP: " + Player.gp, 8);
 
-		xanchor -= statsWindow.pad*2;
-		yanchor += winH;
+		// wpad -= statsWindow.pad*2;
+		// wpad += (winH + statsWindow.pad*2);
+		// wpad = wpad + statsWindow.pad*2;
+		// wpad = wpad + statsWindow.pad*2;
 
 		if (Menu != null)
 			// setMenu(Menu);
 			trace("TODO: clean up this code later");
 		else
 		{
-			// 80 and 46 are dimensions determined through trial and error
-			_menu = new MenuPause([xanchor, yanchor], [80, 44], 1, [80+xanchor, 44+yanchor], _state, this);
+			var win2H = 44;
+			_menu = new MenuPause(  [wpad, wpad + (winH + wpad)], 
+									[winW, win2H], 1, 
+									[wpad*2 + winW, wpad], 
+									_state, this);
 			_menu.isAlive = true;
 			add(_menu);
 			// MenuManager.pushMenu(_menu);
@@ -76,6 +82,7 @@ class MenuSubState extends FlxSubState
 		_grpEverything.add(_txtLevel);
 		_grpEverything.add(_txtHP);
 		_grpEverything.add(_txtMP);
+		_grpEverything.add(_txtXP);
 		_grpEverything.add(_txtGP);
 		add(_grpEverything);
 		
@@ -88,6 +95,8 @@ class MenuSubState extends FlxSubState
 	
 	public override function update(elapsed:Float)
 	{
+		_txtMP.text = "MP: " + Player.mp + "/" + Player.maxmp;
+
 		if (_menu.isAlive == false || !_menu.exists)
 			this.close();
 		super.update(elapsed);
