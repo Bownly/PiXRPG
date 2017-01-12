@@ -69,9 +69,11 @@ class MenuSubState extends FlxSubState
 									[winW, win2H], 1, 
 									[wpad*2 + winW, wpad], 
 									_state, this);
+		// _menu = new MenuInventory([wpad, wpad + (winH + wpad)], 
+		// 					[winW, win2H], 
+		// 					2, [4, -12], this);
 			_menu.isAlive = true;
 			add(_menu);
-			// MenuManager.pushMenu(_menu);
 			_menu.open();
 		}
 
@@ -87,9 +89,7 @@ class MenuSubState extends FlxSubState
 		add(_grpEverything);
 		
 		for(text in _grpEverything) 
-		{
 			text.scrollFactor.set();
-        }
 
 	}
 	

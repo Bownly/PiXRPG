@@ -145,7 +145,55 @@ class ObsEraser extends BaseObstacle
 	}
 }
 
+// Frog
+class ObsLily extends BaseObstacle
+{
+	var _coords:Array<Float>;
+	var _board:PicrossBoard;
+	var _square:PicrossSquare;
+	var _enemy:EnemyClasses.BaseEnemy;
 
+	public function new(Board:PicrossBoard, Enemy:EnemyClasses.BaseEnemy)
+	{
+		_board = Board;
+		_square = _board.grpPicrossSquares.getRandom();
+		_coords = [_square.x, _square.y];
+		_enemy = Enemy;
+		super([_coords[0], _coords[1]-50]);
+		loadGraphic(AssetPaths.lilypad__png, true, 20, 20);
+		x -= 5;
+		animation.add("fall", [0, 1], 4, true);
+		animation.add("splat", [0, 1, 0, 1, 0], 3, false);
+		animation.play("fall");
+		scrollFactor.set();	
+	}
+
+	override public function update(elapsed:Float)
+	{
+
+		super.update(elapsed);
+		if (y < _coords[1]-6) 
+			y+=1;
+		else
+		{
+			if (animation.name != "splat")
+			{
+				animation.play("splat");
+				_square.status = PicrossSquare.OFF;
+				_square.animation.play("mark");
+				_square.isActive = true;
+				_board.checkColCorrect(_square.colID);
+				_board.checkRowCorrect(_square.rowID);
+			}
+			if (animation.finished == true)
+			{
+				this.visible = false;
+				this.alive = false;
+				_enemy.removeObstacle();
+			}
+		}
+	}
+}
 
 // some kind of obstacle that splats down on the board, and has to be "wiped" off by the cursor; also vanishes after x seconds
 

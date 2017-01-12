@@ -17,6 +17,7 @@ class BaseEnemy
 {
 	public var id:Int;
 	public var dimens:Int;
+	public var mp:Int;
 	public var color:Int;
 	// public var arrObstacles:Array<BaseObstacle>;
 	public var grpObs:FlxTypedGroup<BaseObstacle>;
@@ -32,6 +33,7 @@ class BaseEnemy
 		dimens = S;
 		color = C;
 		// arrObstacles = [];
+		mp = Std.int(dimens*dimens/2);
 	}
 
 	public function update(elapsed:Float) {}
@@ -51,8 +53,9 @@ class EnemyTest extends BaseEnemy
 	{
 		super();
 		id = 6;
-		dimens = 15;
+		dimens = 4;
 		color = 4;
+		// mp = 8;
 	}
 }
 
@@ -161,14 +164,14 @@ class EnemySnail extends BaseEnemy
 		id = 2;
 		dimens = 5;
 		color = 6;
-		attackFreq = 5;
+		attackFreq = 15;
 	}
 
 	override public function update(elapsed:Float)
 	{
 		timerAttack += elapsed;
 
-		if (timerAttack >= 3)
+		if (timerAttack >= 9)
 		{
 			spawnObstacle();
 			timerAttack = 0;
@@ -189,7 +192,7 @@ class EnemySnail extends BaseEnemy
 
 	override public function spawnObstacle()
 	{
-		var drop = new ObsEraser(board, this);
+		var drop = new ObsLily(board, this);
 		grpObs.add(drop);
 	}
 }

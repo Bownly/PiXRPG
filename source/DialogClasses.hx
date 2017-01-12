@@ -64,7 +64,7 @@ class DialogSpriteGroup extends FlxGroup
 		endLine = dBox.arrLines.length - 1;		
 		setCurLine();
 
-		var iconsize = 48;
+		var iconsize = Reg.ICONSIZE;
 		var h = iconsize;
 		var w = FlxG.width - iconsize;
 		var xanchor:Float = 0;

@@ -47,6 +47,11 @@ class FrogPond1 extends TownState
 	
 	override public function assignEvents():Void
 	{
+		if (Reg.flags["save"] == 1)
+		{
+			eventManager.addEvents([new EventSaveGame(2, mapName),
+									new EventFlag("save", 0)]);
+		}
 
 		if (Reg.flags["first_wakeup"] == 0)
 		{
@@ -57,23 +62,29 @@ class FrogPond1 extends TownState
 				// 						new EventFlag("first_wakeup", 1)
 				// 						]);
 
-				npc2.events = [new EventDialog(Strings.stringArray[20], this)];
+				npc2.events = [ 
+					new EventBattle([new EnemyTest()], this),
+					new EventDialog(Strings.stringArray[22], this),
+					new EventDialog(Strings.stringArray[23], this),
+					new EventDialog(Strings.stringArray[24], this),
+					new EventDialog(Strings.stringArray[25], this),
+					new EventDialog(Strings.stringArray[26], this),
+					new EventDialog(Strings.stringArray[27], this),
+					new EventDialog(Strings.stringArray[28], this),
+					new EventDialog(Strings.stringArray[29], this)
+				];
 				
-				npc1.events = [	
-				// new EventDialog(Strings.stringArray[4], this, 
-				// 							[new MenuItemDialogChoice(Strings.stringArray[12], 
-				// 								null, new EventFlag("AorB", -1, this)),
-				// 							 new MenuItemDialogChoice(Strings.stringArray[13], 
-				// 							 	null, new EventFlag("AorB", 1)),
-				// 							 new MenuItemDialogChoice(Strings.stringArray[14], 
-				// 							 	null, new EventFlag("AorB", -1, this)),
-				// 							 new MenuItemDialogChoice(Strings.stringArray[15], 
-				// 							 	null, new EventFlag("AorB", -1, this)),
-				// 							 new MenuItemDialogChoice(Strings.stringArray[16], 
-				// 							 	null, new EventFlag("AorB", -1, this))
-				// 							]),
-				
-			];
+				npc3.events = [	
+					new EventDialog(Strings.stringArray[30], this),
+					new EventDialog(Strings.stringArray[31], this),
+					new EventDialog(Strings.stringArray[12], this, 
+									[new MenuItemDialogChoice(Strings.stringArray[13], 
+										null, new EventFlag("save", 1)),
+									 new MenuItemDialogChoice(Strings.stringArray[14], 
+									 	null, new EventFlag("save", 0))
+									]),
+			
+				];
 
 		}
 		

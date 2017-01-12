@@ -85,10 +85,6 @@ class FrogPond extends TownState
 																		new EventFlag("fight_dummy", -1))
 												])]
 		];
-
-		// gotta add the event-referencing events afterwards
-		// _events["talk_to_dummy"] = 
-		
 	}
 
 }

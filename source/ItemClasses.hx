@@ -67,6 +67,12 @@ class BaseItem
 
 	public function use()
 		isUsed = true;
+
+	public function toss()
+	{
+		isUsed = true;
+		InventoryManager.removeItem();
+	}
 }
 
 class ItemHealing extends BaseItem
@@ -86,6 +92,8 @@ class ItemHealing extends BaseItem
 		super.use();
 		InventoryManager.removeItem();
 	}
+
+	
 
 }
 

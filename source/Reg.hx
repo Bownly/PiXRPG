@@ -36,20 +36,21 @@ class Reg
 	 */
 	public static var saves:Array<FlxSave> = [];
 	
+	public static inline var ICONSIZE:Int = 48;
+	public static inline var SAVE_NAME:String = "Save file";
+
 	
 	public static var STATE:Int = 0;
-	public static var STATE_NORMAL:Int = 0;
-	public static var STATE_CUTSCENE:Int = 1;
+	public static inline var STATE_NORMAL:Int = 0;
+	public static inline var STATE_CUTSCENE:Int = 1;
 
-	public static var pName:String = "Main character";
-	public static var rivalName:String = "Rival Kid";
-	public static var curItem:String = ";)";
+	// public static var curItem:String = ";)";
 
 	public static var pLV:Int = 1;
 	public static var pMP:Int = 60;
 	public static var pXP:Int = 0;
 	public static var maxXP:Int = 100;
-	public static var playerHasHood:Bool = false;
+	// public static var playerHasHood:Bool = false;
 	
 	public static var encounterCounter:Int = 0;
 
@@ -58,34 +59,39 @@ class Reg
 	public static var postDialogBattleFlag:Bool = false;
 	public static var isMuted:Bool = false;
 
-	public static var SAVE_NAME:String = "Save file";
 
 	public static var flags:Map<String, Int> =
 	[
+		"playerHasHood"   => 0,
+		"save"            => 0,
 		"tutorial_battle" => 0,
-		"first_wakeup" => 0,
-		"AorB" => 0,
-		"a" => 0,
-		"b" => 0,
-		"fight_dummy" => 0,
+		"first_wakeup"    => 0,
+		"AorB"            => 0,
+		"a"               => 0,
+		"b"               => 0,
+		"fight_dummy"     => 0,
 		"frogpond_chest1" => 0,
 		"frogpond_chest2" => 0,
 		"frogpond_chest3" => 0,
-		"frogpond_door1" => 0,
-		"frogpond_door2" => 0,
-		"frogpond_door3" => 0,
+		"frogpond_door1"  => 0,
+		"frogpond_door2"  => 0,
+		"frogpond_door3"  => 0,
+		"frogpond_door4"  => 0,
+		"frogpond_door5"  => 0,
 	];
 
 	public static var keys:Map<String, Array<FlxKey>> = 
 	[
-		"up" => [flixel.input.keyboard.FlxKey.UP, flixel.input.keyboard.FlxKey.W],
-		"down" => [flixel.input.keyboard.FlxKey.DOWN, flixel.input.keyboard.FlxKey.S],
-		"left" => [flixel.input.keyboard.FlxKey.LEFT, flixel.input.keyboard.FlxKey.A],
-		"right" => [flixel.input.keyboard.FlxKey.RIGHT, flixel.input.keyboard.FlxKey.D],
+		"up"      => [flixel.input.keyboard.FlxKey.UP, flixel.input.keyboard.FlxKey.W],
+		"down"    => [flixel.input.keyboard.FlxKey.DOWN, flixel.input.keyboard.FlxKey.S],
+		"vert"    => [flixel.input.keyboard.FlxKey.UP, flixel.input.keyboard.FlxKey.W, flixel.input.keyboard.FlxKey.DOWN, flixel.input.keyboard.FlxKey.S],
+		"left"    => [flixel.input.keyboard.FlxKey.LEFT, flixel.input.keyboard.FlxKey.A],
+		"right"   => [flixel.input.keyboard.FlxKey.RIGHT, flixel.input.keyboard.FlxKey.D],
+		"horz"    => [flixel.input.keyboard.FlxKey.LEFT, flixel.input.keyboard.FlxKey.A, flixel.input.keyboard.FlxKey.RIGHT, flixel.input.keyboard.FlxKey.D],
 		"confirm" => [flixel.input.keyboard.FlxKey.J, flixel.input.keyboard.FlxKey.Z],
-		"cancel" => [flixel.input.keyboard.FlxKey.K, flixel.input.keyboard.FlxKey.X],
-		"menu" => [flixel.input.keyboard.FlxKey.L, flixel.input.keyboard.FlxKey.C],
-		"dpad" => [flixel.input.keyboard.FlxKey.UP, flixel.input.keyboard.FlxKey.W, flixel.input.keyboard.FlxKey.DOWN, flixel.input.keyboard.FlxKey.S, flixel.input.keyboard.FlxKey.LEFT, flixel.input.keyboard.FlxKey.A, flixel.input.keyboard.FlxKey.RIGHT, flixel.input.keyboard.FlxKey.D]
+		"cancel"  => [flixel.input.keyboard.FlxKey.K, flixel.input.keyboard.FlxKey.X],
+		"menu"    => [flixel.input.keyboard.FlxKey.L, flixel.input.keyboard.FlxKey.C],
+		"dpad"    => [flixel.input.keyboard.FlxKey.UP, flixel.input.keyboard.FlxKey.W, flixel.input.keyboard.FlxKey.DOWN, flixel.input.keyboard.FlxKey.S, flixel.input.keyboard.FlxKey.LEFT, flixel.input.keyboard.FlxKey.A, flixel.input.keyboard.FlxKey.RIGHT, flixel.input.keyboard.FlxKey.D]
 	];
 
 	public static function goToNextLevel(EntID:Int, MapName:String):Void
@@ -108,6 +114,7 @@ class Reg
 	{
 		var save:FlxSave = new FlxSave();
 		save.bind(SAVE_NAME);
+		Strings.stringVars["%pname%"] = save.data.pname;
 		Player.mp = save.data.mp;
 		Player.maxmp = save.data.maxmp;
 		Player.xp = save.data.xp;
@@ -131,13 +138,13 @@ class Reg
 		ItemClasses.InventoryManager.removeAllItems();
 
 		// set mc stats
-		playerHasHood = false;
+		// playerHasHood = false;
 
 		// set playtime
 		playTime = 0;
 
 		// set misc
-		curItem = "";
+		// curItem = "";
 
 		// set location (map + entrance) and start the game
 		// FlxG.switchState(new FrogPond1(1, "frogpond-1.tmx"));
@@ -163,6 +170,7 @@ class Reg
 
 		// set mc stats
 		save.bind(SAVE_NAME);
+		save.data.pname = Strings.stringVars["%pname%"];
 		save.data.mp = Player.mp;
 		save.data.maxmp = Player.maxmp;
 		save.data.xp = Player.xp;
@@ -182,16 +190,11 @@ class Reg
 		save.data.flags = Reg.flags;
 
 		save.flush();
-
 	}
-
-
 
 	public static function resetEncounterCounter():Void
 	{
-
 		encounterCounter = FlxG.random.int(8, 12);
-
 	}
 	
 

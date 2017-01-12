@@ -33,28 +33,28 @@ class FrogPondDun extends TownState
 		grpNPCs = new FlxTypedGroup<NPC>();
 		
 		npcia = new NPC(32, 32, FlxObject.DOWN, 1, this, "cia");
-		grpNPCs.add(npcia);
+		// grpNPCs.add(npcia);
 
 		chest1 = new Chest(224, 224, this, "frogpond_chest1");
 		chest2 = new Chest(240, 240, this, "frogpond_chest2");
-		grpNPCs.add(chest1);
-		grpNPCs.add(chest2);
+		// grpNPCs.add(chest1);
+		// grpNPCs.add(chest2);
 		
 
 		if (Reg.flags["frogpond_door1"] == 0)
 		{
-			door1 = new NPC(224, 224, FlxObject.DOWN, 7, this, "frogpond_door1");
+			door1 = new NPC(224, 224, FlxObject.DOWN, 9, this, "frogpond_door1");
 			grpNPCs.add(door1);
 		}
 		if (Reg.flags["frogpond_door2"] == 0)
 		{
-			door2 = new NPC(224, 224, FlxObject.DOWN, 7, this, "frogpond_door2");
+			door2 = new NPC(224, 224, FlxObject.DOWN, 9, this, "frogpond_door2");
 			grpNPCs.add(door2);
 		}
 		if (Reg.flags["frogpond_door3"] == 0)
 		{
-			door3 = new NPC(224, 224, FlxObject.DOWN, 7, this, "frogpond_door3");
-			grpNPCs.add(door3);
+			door3 = new NPC(224, 224, FlxObject.DOWN, 9, this, "frogpond_door3");
+			// grpNPCs.add(door3);
 		}
 
 		super.create();
@@ -95,13 +95,14 @@ class FrogPondDun extends TownState
 							];
 		else if (Reg.flags["frogpond_door1"] == 1) 
 		{
+			// eventManager.addEvents([new EventDialog(Strings.stringArray[0], this)]);
 			eventManager.addEvents([new EventNPCRemove(door1)]);
 			eventManager.addEvents([new EventFlag("frogpond_door1", 2)]);
 		}
 		else if (door1 != null && door1.visible == true)
 			eventManager.addEvents([new EventNPCRemove(door1)]);
 
-
+		// door 2
 		if (Reg.flags["frogpond_door2"] == 0)
 		{
 			door2.events = [new EventDialog(Strings.stringArray[15], this),
@@ -110,6 +111,7 @@ class FrogPondDun extends TownState
 							];
 		}
 
+		// door 3
 		if (Reg.flags["frogpond_door3"] == 0)
 		{
 			door3.events = [new EventDialog(Strings.stringArray[14], this),

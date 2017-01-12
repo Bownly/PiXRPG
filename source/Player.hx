@@ -27,7 +27,7 @@ class Player extends FlxSprite
 	public var isMoving:Bool;	
 	public var canMove:Bool = true;
 
-	var hasHood:Bool = false;
+	var hasHood:Int = 0;
 	
 	var _state:TownState;
 
@@ -35,20 +35,20 @@ class Player extends FlxSprite
 	{
 		super(X, Y);
 		
-		hasHood = Reg.playerHasHood;
+		hasHood = Reg.flags["playerHasHood"];
 
 		_state = State;
 		facing = Facing;
 		
 		loadGraphic(AssetPaths.mctest__png, true, 16, 16);
-		animation.add("up_false", [10, 11], 3, true);
-		animation.add("dn_false", [12, 13], 3, true);
-		animation.add("lf_false", [14, 15], 3, true);
-		animation.add("rt_false", [16, 17], 3, true);
-		animation.add("up_true", [0, 1], 3, true);
-		animation.add("dn_true", [2, 3], 3, true);
-		animation.add("lf_true", [4, 5], 3, true);
-		animation.add("rt_true", [6, 7], 3, true);
+		animation.add("up_0", [10, 11], 3, true);
+		animation.add("dn_0", [12, 13], 3, true);
+		animation.add("lf_0", [14, 15], 3, true);
+		animation.add("rt_0", [16, 17], 3, true);
+		animation.add("up_1", [0, 1], 3, true);
+		animation.add("dn_1", [2, 3], 3, true);
+		animation.add("lf_1", [4, 5], 3, true);
+		animation.add("rt_1", [6, 7], 3, true);
 		
 		setFacing(facing);
 	}
@@ -99,7 +99,7 @@ class Player extends FlxSprite
 			// Check for WASD or arrow key presses and move accordingly
 			if (!isMoving)
 			{
-				if (FlxG.keys.anyPressed(["UP", "W"]))
+				if (FlxG.keys.anyPressed(Reg.keys["up"]))
 				{
 					facing = FlxObject.UP;
 					canMove = collisionCheck(facing);
@@ -107,7 +107,7 @@ class Player extends FlxSprite
 						moveTo(FlxObject.UP);
 					animation.play("up_" + hasHood);
 				}
-				else if (FlxG.keys.anyPressed(["DOWN", "S"]))
+				else if (FlxG.keys.anyPressed(Reg.keys["down"]))
 				{
 					facing = FlxObject.DOWN;
 					canMove = collisionCheck(facing);
@@ -115,7 +115,7 @@ class Player extends FlxSprite
 						moveTo(FlxObject.DOWN);
 					animation.play("dn_" + hasHood);
 				}
-				else if (FlxG.keys.anyPressed(["LEFT", "A"]))
+				else if (FlxG.keys.anyPressed(Reg.keys["left"]))
 				{
 					facing = FlxObject.LEFT;
 					canMove = collisionCheck(facing);
@@ -123,7 +123,7 @@ class Player extends FlxSprite
 						moveTo(FlxObject.LEFT);
 					animation.play("lf_" + hasHood);
 				}
-				else if (FlxG.keys.anyPressed(["RIGHT", "D"]))
+				else if (FlxG.keys.anyPressed(Reg.keys["right"]))
 				{
 					facing = FlxObject.RIGHT;
 					canMove = collisionCheck(facing);
@@ -133,7 +133,7 @@ class Player extends FlxSprite
 				}
 				
 				// interaction
-				if (FlxG.keys.anyJustPressed(["J", "SPACE"]))
+				if (FlxG.keys.anyJustPressed(Reg.keys["confirm"]))
 				{
 					interactionCheck(facing);
 				}
@@ -144,8 +144,11 @@ class Player extends FlxSprite
 				}
 				if (FlxG.keys.anyJustPressed(["H"]))
 				{
-					hasHood = !hasHood;
-					Reg.playerHasHood = !Reg.playerHasHood;
+					if (Reg.flags["playerHasHood"] == 0)
+						Reg.flags["playerHasHood"] = 1;
+					else
+						Reg.flags["playerHasHood"] = 0;
+					hasHood = Reg.flags["playerHasHood"];
 				}
 				
 

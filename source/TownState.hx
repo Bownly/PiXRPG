@@ -166,8 +166,8 @@ class TownState extends FlxState
 			}
 			else if (FlxG.keys.anyJustPressed(["O"]))
 			{
-				eventManager.addEvents([new EventClasses.EventItemGet(new ItemClasses.ItemHealing("Old potion", "heals 5 MP\nWait, only 5? Must be past its expiration\ndate.", 9, 5))]);
-				eventManager.addEvents([new EventClasses.EventItemGet(new ItemClasses.ItemHealing("Cheap potion", "heals 10 MP\nAh, the classic bargain bin potion.", 9, 10))]);
+				eventManager.addEvents([new EventClasses.EventItemGet(new ItemClasses.ItemHealing("WWWWWWWW", "heals 5 MP\nWait, only 5? Must be past its expiration\ndate.", 9, 5))]);
+				eventManager.addEvents([new EventClasses.EventItemGet(new ItemClasses.ItemHealing("WWWWWWWW", "heals 10 MP\nAh, the classic bargain bin potion.", 9, 10))]);
 				eventManager.addEvents([new EventClasses.EventItemGet(new ItemClasses.ItemHealing("Good potion", "heals 15 MP\nAnd it tastes great too.", 9, 15))]);
 				eventManager.addEvents([new EventClasses.EventItemGet(new ItemClasses.ItemHealing("d potion", "heals 69 MP\nHehehe.", 9, 69))]);
 				eventManager.addEvents([new EventClasses.EventItemGet(new ItemClasses.ItemHealing("e potion", "heals 100 MP\nNow that's a lotta MP!", 9, 100))]);

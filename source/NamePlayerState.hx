@@ -28,6 +28,8 @@ class NamePlayerState extends FlxState
 	var _grpLetters:FlxTypedGroup<FlxText>;
 	var _arrLetters:Array<Array<FlxText>>;
 
+	var MAX_LENGTH:Int = 8;
+
 	/**
 	 * Function that is called up when to state is created to set it up. 
 	 */
@@ -155,10 +157,10 @@ class NamePlayerState extends FlxState
 			
 		if (FlxG.keys.anyJustPressed(Reg.keys["confirm"]))
 		{
-			if (!_doneSelected && _txtName.text.length < 6)
+			if (!_doneSelected && _txtName.text.length < MAX_LENGTH)
 				_txtName.text += _arrLetters[_selected[0]][_selected[1]].text;
-			else if (!_doneSelected && _txtName.text.length == 6)
-				_txtName.text = _txtName.text.substr(0, 5) + _arrLetters[_selected[0]][_selected[1]].text;
+			else if (!_doneSelected && _txtName.text.length == MAX_LENGTH)
+				_txtName.text = _txtName.text.substr(0, MAX_LENGTH-1) + _arrLetters[_selected[0]][_selected[1]].text;
 			else if (_doneSelected)
 				done();
 		}
