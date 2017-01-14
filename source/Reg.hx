@@ -82,16 +82,17 @@ class Reg
 
 	public static var keys:Map<String, Array<FlxKey>> = 
 	[
-		"up"      => [flixel.input.keyboard.FlxKey.UP, flixel.input.keyboard.FlxKey.W],
-		"down"    => [flixel.input.keyboard.FlxKey.DOWN, flixel.input.keyboard.FlxKey.S],
-		"vert"    => [flixel.input.keyboard.FlxKey.UP, flixel.input.keyboard.FlxKey.W, flixel.input.keyboard.FlxKey.DOWN, flixel.input.keyboard.FlxKey.S],
-		"left"    => [flixel.input.keyboard.FlxKey.LEFT, flixel.input.keyboard.FlxKey.A],
-		"right"   => [flixel.input.keyboard.FlxKey.RIGHT, flixel.input.keyboard.FlxKey.D],
-		"horz"    => [flixel.input.keyboard.FlxKey.LEFT, flixel.input.keyboard.FlxKey.A, flixel.input.keyboard.FlxKey.RIGHT, flixel.input.keyboard.FlxKey.D],
-		"confirm" => [flixel.input.keyboard.FlxKey.J, flixel.input.keyboard.FlxKey.Z],
-		"cancel"  => [flixel.input.keyboard.FlxKey.K, flixel.input.keyboard.FlxKey.X],
-		"menu"    => [flixel.input.keyboard.FlxKey.L, flixel.input.keyboard.FlxKey.C],
-		"dpad"    => [flixel.input.keyboard.FlxKey.UP, flixel.input.keyboard.FlxKey.W, flixel.input.keyboard.FlxKey.DOWN, flixel.input.keyboard.FlxKey.S, flixel.input.keyboard.FlxKey.LEFT, flixel.input.keyboard.FlxKey.A, flixel.input.keyboard.FlxKey.RIGHT, flixel.input.keyboard.FlxKey.D]
+		"up"        => [flixel.input.keyboard.FlxKey.UP, flixel.input.keyboard.FlxKey.W],
+		"down"      => [flixel.input.keyboard.FlxKey.DOWN, flixel.input.keyboard.FlxKey.S],
+		"vert"      => [flixel.input.keyboard.FlxKey.UP, flixel.input.keyboard.FlxKey.W, flixel.input.keyboard.FlxKey.DOWN, flixel.input.keyboard.FlxKey.S],
+		"left"      => [flixel.input.keyboard.FlxKey.LEFT, flixel.input.keyboard.FlxKey.A],
+		"right"     => [flixel.input.keyboard.FlxKey.RIGHT, flixel.input.keyboard.FlxKey.D],
+		"horz"      => [flixel.input.keyboard.FlxKey.LEFT, flixel.input.keyboard.FlxKey.A, flixel.input.keyboard.FlxKey.RIGHT, flixel.input.keyboard.FlxKey.D],
+		"confirm"   => [flixel.input.keyboard.FlxKey.J, flixel.input.keyboard.FlxKey.Z],
+		"cancel"    => [flixel.input.keyboard.FlxKey.K, flixel.input.keyboard.FlxKey.X],
+		"conf/canc" => [flixel.input.keyboard.FlxKey.J, flixel.input.keyboard.FlxKey.Z, flixel.input.keyboard.FlxKey.K, flixel.input.keyboard.FlxKey.X],
+		"menu"      => [flixel.input.keyboard.FlxKey.L, flixel.input.keyboard.FlxKey.C],
+		"dpad"      => [flixel.input.keyboard.FlxKey.UP, flixel.input.keyboard.FlxKey.W, flixel.input.keyboard.FlxKey.DOWN, flixel.input.keyboard.FlxKey.S, flixel.input.keyboard.FlxKey.LEFT, flixel.input.keyboard.FlxKey.A, flixel.input.keyboard.FlxKey.RIGHT, flixel.input.keyboard.FlxKey.D]
 	];
 
 	public static function goToNextLevel(EntID:Int, MapName:String):Void

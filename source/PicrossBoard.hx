@@ -33,6 +33,7 @@ class PicrossBoard extends FlxGroup
 	public var arrRowHints:Array<FlxText> = new Array<FlxText>();
 	public var arrColHints:Array<FlxText> = new Array<FlxText>();
 	public var gridPicrossSquares:Array<Array<PicrossSquare>> = new Array<Array<PicrossSquare>>();
+	public var selected:Array<Int> = [0,0];
 
 	
 	public function new(Size:Int, Color:Int, Coords:Array<Int>, ?Anchor:FlxSprite) 
@@ -65,7 +66,7 @@ class PicrossBoard extends FlxGroup
 			rowArray = [];
 			for (j in 0...dimens)
 			{
-				var rand:Int = FlxG.random.int(0, 5);
+				var rand:Int = FlxG.random.int(0, 4);
 				if (rand > 1)
 				{
 					rowArray.push(1);

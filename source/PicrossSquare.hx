@@ -9,8 +9,9 @@ import flixel.FlxSprite;
 class PicrossSquare extends FlxSprite
 {
 
-	static public var ON:Int = 1;
+	static public var IDLE:Int = -1;
 	static public var OFF:Int = 0;
+	static public var ON:Int = 1;
 	static public var MARK:Int = 2;
 	static public var SOLVE:Int = 3;
 	
@@ -22,7 +23,7 @@ class PicrossSquare extends FlxSprite
 	var _color:Int = 0;
 	public var colID:Int;
 	public var rowID:Int;
-	public var status:Int = 0;  // 0 = off, 1 = on, 2 == marked
+	public var status:Int = 0;  // 0 = off, 1 = on, 2 = marked
 	public var answer:Int = 2;
 	public var isActive:Bool = true;
 	
@@ -51,8 +52,8 @@ class PicrossSquare extends FlxSprite
 			{
 				if (animation.curAnim.name == "mark")
 				{
-					animation.play("off");
-					status = OFF;
+					// animation.play("off");
+					// status = OFF;
 					return NOTHING;
 				}
 				else if (answer == ON)
@@ -71,15 +72,20 @@ class PicrossSquare extends FlxSprite
 			}
 			else if (Guess == MARK)
 			{
-				if (animation.curAnim.name == "mark")
+				animation.play("mark");
+				return NOTHING;
+			}
+			else if (Guess == OFF)
+			{
+				if (animation.curAnim.name != "on")
 				{
 					animation.play("off");
-					status = OFF;
+					status = OFF;					
 				}
-				else
-				{
-					animation.play("mark");
-				}
+				return NOTHING;	
+			}
+			else if (Guess == IDLE)
+			{
 				return NOTHING;
 			}
 			// this is for a larger cursor size, if I decide to add that

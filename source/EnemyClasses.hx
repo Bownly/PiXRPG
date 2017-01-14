@@ -36,7 +36,9 @@ class BaseEnemy
 		mp = Std.int(dimens*dimens/2);
 	}
 
-	public function update(elapsed:Float) {}
+	public function update(elapsed:Float) {
+		mp = board.winCount - board.curCount;
+	}
 	public function spawnObstacle() {}
 	public function removeObstacle() {}
 	public function removeAllObstacles() {}
@@ -53,7 +55,7 @@ class EnemyTest extends BaseEnemy
 	{
 		super();
 		id = 6;
-		dimens = 4;
+		dimens = 15;
 		color = 4;
 		// mp = 8;
 	}

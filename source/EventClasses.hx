@@ -214,6 +214,26 @@ class EventFlag extends BaseEvent
 	// }
 }
 
+class EventHealPlayer extends BaseEvent
+{
+	var _amt:Int;
+
+	public function new(?NewMP:Int)
+	{
+		super();
+		if (NewMP > 0)
+			_amt = NewMP;
+		else
+			_amt = Player.maxmp;
+	}
+
+	override public function update()
+	{
+		Player.healMP(_amt);
+		destroy();
+	}	
+}
+
 class EventItemGet extends BaseEvent
 {
 	var _item:ItemClasses.BaseItem;

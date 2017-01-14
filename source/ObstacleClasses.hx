@@ -129,6 +129,8 @@ class ObsEraser extends BaseObstacle
 			if (animation.name != "splat")
 			{
 				animation.play("splat");
+				if (_square.status == PicrossSquare.ON)
+					_board.curCount--;
 				_square.status = PicrossSquare.OFF;
 				_square.animation.play("off");
 				_square.isActive = true;
@@ -179,6 +181,8 @@ class ObsLily extends BaseObstacle
 			if (animation.name != "splat")
 			{
 				animation.play("splat");
+				if (_square.status == PicrossSquare.ON)
+					_board.curCount--;
 				_square.status = PicrossSquare.OFF;
 				_square.animation.play("mark");
 				_square.isActive = true;

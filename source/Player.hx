@@ -156,7 +156,7 @@ class Player extends FlxSprite
 		}
 	}
 
-	public static function AddXP(Val:Int):Void
+	public static function addXP(Val:Int):Void
 	{
 		xp += Val;
 		if (xp > MAXXP)
@@ -179,6 +179,47 @@ class Player extends FlxSprite
 			lvl = 2;
 		}
 		mp = 30 + (lvl) * 30;
+	}
+	
+	public function collisionCheck(Direction:Int):Bool
+	{
+		var xx:Int = 0;
+		var yy:Int = 0;
+		
+		switch (facing)
+		{
+			case FlxObject.UP:
+				yy = -16;
+			case FlxObject.DOWN:
+				yy = 16;
+			case FlxObject.LEFT:
+				xx = -16;
+			case FlxObject.RIGHT:
+				xx = 16;
+		}
+
+		var map = _state.level;
+		if (map.collidableTileMap.getTile(Math.floor((x +xx) / TILE_SIZE), Math.floor((y + yy) / TILE_SIZE)) > 0)
+			return false;
+
+		
+		for (npc in _state.grpNPCs)
+		{
+			if (npc.visible == true && npc.y == y + yy && npc.x == x + xx)
+				return false;				
+		}
+
+		if (!Reg.postDialogBattleFlag)
+			Reg.encounterCounter -= _state.encounterDecrementer;
+
+		return true;
+	}
+
+	public static function healMP(Val:Int):Void
+	{
+		mp += Val;
+		if (mp > maxmp)
+			mp = maxmp;
 	}
 
 	public static function setStats(LVL:Int, MP:Int, XP:Int):Void
@@ -229,41 +270,6 @@ class Player extends FlxSprite
 			isMoving = true;
 		}
 	}
-	
-	public function collisionCheck(Direction:Int):Bool
-	{
-		var xx:Int = 0;
-		var yy:Int = 0;
-		
-		switch (facing)
-		{
-			case FlxObject.UP:
-				yy = -16;
-			case FlxObject.DOWN:
-				yy = 16;
-			case FlxObject.LEFT:
-				xx = -16;
-			case FlxObject.RIGHT:
-				xx = 16;
-		}
-
-		var map = _state.level;
-		if (map.collidableTileMap.getTile(Math.floor((x +xx) / TILE_SIZE), Math.floor((y + yy) / TILE_SIZE)) > 0)
-			return false;
-
-		
-		for (npc in _state.grpNPCs)
-		{
-			if (npc.visible == true && npc.y == y + yy && npc.x == x + xx)
-				return false;				
-		}
-
-		if (!Reg.postDialogBattleFlag)
-			Reg.encounterCounter -= _state.encounterDecrementer;
-
-		return true;
-	}
-	
 	public function interactionCheck(Direction:Int):Void
 	{
 		var xx:Int = 0;

@@ -64,19 +64,20 @@ class FrogPond1 extends TownState
 
 				npc2.events = [ 
 					new EventBattle([new EnemyTest()], this),
-					new EventDialog(Strings.stringArray[22], this),
-					new EventDialog(Strings.stringArray[23], this),
-					new EventDialog(Strings.stringArray[24], this),
-					new EventDialog(Strings.stringArray[25], this),
-					new EventDialog(Strings.stringArray[26], this),
-					new EventDialog(Strings.stringArray[27], this),
-					new EventDialog(Strings.stringArray[28], this),
-					new EventDialog(Strings.stringArray[29], this)
+					// new EventDialog(Strings.stringArray[22], this),
+					// new EventDialog(Strings.stringArray[23], this),
+					// new EventDialog(Strings.stringArray[24], this),
+					// new EventDialog(Strings.stringArray[25], this),
+					// new EventDialog(Strings.stringArray[26], this),
+					// new EventDialog(Strings.stringArray[27], this),
+					// new EventDialog(Strings.stringArray[28], this),
+					// new EventDialog(Strings.stringArray[29], this)
 				];
 				
 				npc3.events = [	
-					new EventDialog(Strings.stringArray[30], this),
-					new EventDialog(Strings.stringArray[31], this),
+					// new EventDialog(Strings.stringArray[30], this),
+					// new EventDialog(Strings.stringArray[31], this),
+					new EventHealPlayer(),
 					new EventDialog(Strings.stringArray[12], this, 
 									[new MenuItemDialogChoice(Strings.stringArray[13], 
 										null, new EventFlag("save", 1)),

@@ -15,6 +15,8 @@ class Window extends FlxGroup
 {
 
 	public var pad:Int = 2;
+	public var coords:Array<Float>;
+	public var dimens:Array<Float>;
 	var _sprBack:FlxSprite;
 	var _sprBackBG:FlxSprite;
 
@@ -22,14 +24,14 @@ class Window extends FlxGroup
 	{
 		super();
 
-		var coords = Coords;
-		var _dimens = Dimens;
+		coords = Coords;
+		dimens = Dimens;
 
 		if (Pad != null)
 			pad = Pad;
 
 
-		_sprBackBG = new FlxSprite().makeGraphic(Std.int(_dimens[0]), Std.int(_dimens[1]), FlxColor.WHITE);
+		_sprBackBG = new FlxSprite().makeGraphic(Std.int(dimens[0]), Std.int(dimens[1]), FlxColor.WHITE);
 		_sprBackBG.x = coords[0];
 		_sprBackBG.y = coords[1];
 		_sprBackBG.scrollFactor.set(0, 0);

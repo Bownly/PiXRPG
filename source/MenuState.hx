@@ -1,6 +1,5 @@
 package;
 
-import flixel.addons.editors.ogmo.FlxOgmoLoader;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;

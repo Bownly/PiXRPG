@@ -259,9 +259,8 @@ class Strings
 		],
 
 		// 31
-		[
-		 new DialogLine(faces["kekdoor"], "Like us, they’re a magical people, but their\nmagic is of a different ilk. Whereas our\nmagic stems from mentality and perception,\ntheir magic has more of a druidic leaning."),
-		 new DialogLine(faces["kekdoor"], "It’s said that they often commune with\nnature and can help people \"save\",\nwhatever that means. ")
+		[new DialogLine(faces["kekdoor"], "Like us, they’re a magical people, but their\nmagic is of a different ilk. Whereas our\nmagic stems from mentality and perception,\ntheir magic has more of a druidic leaning."),
+		 new DialogLine(faces["kekdoor"], "It’s said that they can channel nature spirites to heal people and to \"save\", whatever that means. ")
 		],
 
 
