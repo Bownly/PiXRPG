@@ -14,7 +14,9 @@ class Chest extends NPC
 	
 	public function new(X:Float=0, Y:Float=0, State:TownState, Flag:String) 
 	{
-		super(X, Y, FlxObject.DOWN, 5+Reg.flags[Flag], State, Flag);
+		// the first chest sprite is the 10th npc, hence the 10 value below
+		var _species = 10 + Reg.flags[Flag];
+		super(X, Y, FlxObject.DOWN, _species, State, Flag);
 	}
 	
 	
@@ -28,9 +30,9 @@ class Chest extends NPC
 	private function setAnim():Void
 		animation.play(""+Reg.flags[name]);
 	
-	override private function setGraphics():Void
+	override private function setupGraphics():Void
 	{
-		var o = 8;  // number of sprites per char
+		var o = 10;  // number of sprites per char
 		loadGraphic(AssetPaths.NPC__png, true, 16, 16);
 		animation.add("0", [0 + o * _species], 3, true);
 		animation.add("1", [0 + o * (_species + 1)], 3, true);

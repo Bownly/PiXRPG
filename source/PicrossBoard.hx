@@ -18,31 +18,33 @@ class PicrossBoard extends FlxGroup
 	public var grpPicrossSquares:FlxTypedGroup<PicrossSquare>;
 
 	public var coords:Array<Int>;
-	public var color:Int;
+	public var color:Array<Int>;
 
 	public var isActive:Bool;
 	
-	public var dimens:Int;
+	public var dimens:Array<Int>;
+	public var squareCount:Int;
 	public var winCount:Int = 0;
 	public var curCount:Int = 0;
 	
 	public var rowArray:Array<Int> = new Array<Int>();
 	public var colArray:Array<Array<Int>> = new Array<Array<Int>>();
-	public var rowHints:Array<String> = new Array<String>();
-	public var colHints:Array<String> = new Array<String>();
+	public var rowHintStrings:Array<String> = new Array<String>();
+	public var colHintStrings:Array<String> = new Array<String>();
 	public var arrRowHints:Array<FlxText> = new Array<FlxText>();
 	public var arrColHints:Array<FlxText> = new Array<FlxText>();
 	public var gridPicrossSquares:Array<Array<PicrossSquare>> = new Array<Array<PicrossSquare>>();
 	public var selected:Array<Int> = [0,0];
 
 	
-	public function new(Size:Int, Color:Int, Coords:Array<Int>, ?Anchor:FlxSprite) 
+	public function new(Dimens:Array<Int>, Color:Array<Int>, SquareCount:Int, Coords:Array<Int>, ?Anchor:FlxSprite) 
 	{
 		super();
 	
-		coords = Coords;
+		dimens = Dimens;
 		color = Color;
-		dimens = Size;
+		squareCount = SquareCount;
+		coords = Coords;
 	
 		grpTexts = new FlxTypedGroup<FlxText>();
 		grpSprites = new FlxTypedGroup<FlxSprite>();
@@ -52,65 +54,101 @@ class PicrossBoard extends FlxGroup
 		add(grpTexts);
 		add(grpPicrossSquares);
 
-		for (i in 0...dimens)
+		// creates a grid of empty PicrossSquares
+		for (j in 0...dimens[0])
 		{
 			var arr = new Array<PicrossSquare>();
-			for (j in 0...dimens)
-				arr.push(new PicrossSquare(0, 0, 0, 0, 0, 0));
+			for (i in 0...dimens[1])
+			{
+				var tempColor = color[0];
+				if (((i%10 >= 5) && (j%10 >= 5)) || ((i%10 <= 4) && (j%10 <= 4)))
+					tempColor = color[1];
+				var pSquare = new PicrossSquare(coords[0] + 48 + i * 10, coords[1] + 48 + j * 10, tempColor, i, j, 0);
+				arr.push(pSquare);
+				grpPicrossSquares.add(pSquare);
+			}
 			gridPicrossSquares.push(arr);
 		}
 
-		// sets up the values of the randomized grid and the hint texts
-		for (i in 0...dimens)
+		// fills up the grid with "ON" squares
+		var tempCount:Int = 0;
+		while (tempCount < squareCount)
 		{
-			rowArray = [];
-			for (j in 0...dimens)
+			var x:Int = FlxG.random.int(0, dimens[1]-1);
+			var y:Int = FlxG.random.int(0, dimens[0]-1);
+			if (gridPicrossSquares[y][x].answer == PicrossSquare.OFF)
 			{
-				var rand:Int = FlxG.random.int(0, 4);
-				if (rand > 1)
-				{
-					rowArray.push(1);
-					winCount++;
-				}
-				else
-					rowArray.push(0);
-
+				tempCount++;
+				gridPicrossSquares[y][x].switchAnswer(PicrossSquare.ON);
 			}
-			rowHints.push(calcRowHints(rowArray));
+		}
+
+		// sets up the hint Strings and FlxTexts
+		for (i in 0...dimens[0])
+		{
+			rowHintStrings.push(calcRowHintStrings(gridPicrossSquares[i]));
 
 			// 70 is a rough estimate of the offset between the battle window edge and the leftmost picross square
 			// yeah, it's lazy, but it works
-			var txt:FlxText = new FlxText(coords[0] - 70, coords[1] + 46 + i * 10, 48 + 70, rowHints[i], 8);
+			var txt:FlxText = new FlxText(coords[0] - 70, coords[1] + 46 + i * 10, 48 + 70, rowHintStrings[i], 8);
 			txt.alignment = "right";
 			arrRowHints.push(txt);
 			grpTexts.add(txt);
-			colArray.push(rowArray);
 		}
-		for (i in 0...dimens)
+		for (i in 0...dimens[1])
 		{
-			colHints.push(calcColHints(colArray, i));
+			colHintStrings.push(calcColHintStrings(gridPicrossSquares, i));
 
-			var txt:FlxText = new FlxText(coords[0] + 48 + i * 10, coords[1] + 48, 14, colHints[i], 8);
+			var txt:FlxText = new FlxText(coords[0] + 48 + i * 10, coords[1] + 48, 14, colHintStrings[i], 8);
 			txt.y -= txt.height;
 			arrColHints.push(txt);
 			grpTexts.add(txt);
 		}
+
+
+
+
+
+
+		// // sets up the values of the randomized grid and the hint texts
+		// for (i in 0...dimens[0])
+		// {
+
+		// 	rowHintStrings.push(calcRowHintStrings(rowArray));
+
+		// 	// 70 is a rough estimate of the offset between the battle window edge and the leftmost picross square
+		// 	// yeah, it's lazy, but it works
+		// 	var txt:FlxText = new FlxText(coords[0] - 70, coords[1] + 46 + i * 10, 48 + 70, rowHintStrings[i], 8);
+		// 	txt.alignment = "right";
+		// 	arrRowHints.push(txt);
+		// 	grpTexts.add(txt);
+		// 	colArray.push(rowArray);
+		// }
+		// for (i in 0...dimens[1])
+		// {
+		// 	colHintStrings.push(calcColHintStrings(colArray, i));
+
+		// 	var txt:FlxText = new FlxText(coords[0] + 48 + i * 10, coords[1] + 48, 14, colHintStrings[i], 8);
+		// 	txt.y -= txt.height;
+		// 	arrColHints.push(txt);
+		// 	grpTexts.add(txt);
+		// }
 		
-		// sets up the actual grid of PicrossSquares
-		for (X in 0...rowArray.length)
-		{
-			for (Y in 0...colArray.length)
-			{
-				var pSquare:PicrossSquare;
-				// the if statements are to determine what the pattern of the squares' basecolors.
-				if (((X%10 >= 5) && (Y%10 >= 5)) || ((X%10 <= 4) && (Y%10 <= 4)))
-					pSquare = new PicrossSquare(coords[0] + 48 + X * 10, coords[1] + 48 + Y * 10, color+1, X, Y, colArray[Y][X]);
-				else
-					pSquare = new PicrossSquare(coords[0] + 48 + X * 10, coords[1] + 48 + Y * 10, color, X, Y, colArray[Y][X]);
-				gridPicrossSquares[Y][X] = pSquare;
-				grpPicrossSquares.add(pSquare);
-			}
-		}
+		// // sets up the actual grid of PicrossSquares
+		// for (X in 0...rowArray.length)
+		// {
+		// 	for (Y in 0...colArray.length)
+		// 	{
+		// 		var pSquare:PicrossSquare;
+		// 		// the if statements are to determine what the pattern of the squares' basecolors.
+		// 		if (((X%10 >= 5) && (Y%10 >= 5)) || ((X%10 <= 4) && (Y%10 <= 4)))
+		// 			pSquare = new PicrossSquare(coords[0] + 48 + X * 10, coords[1] + 48 + Y * 10, color+1, X, Y, colArray[Y][X]);
+		// 		else
+		// 			pSquare = new PicrossSquare(coords[0] + 48 + X * 10, coords[1] + 48 + Y * 10, color, X, Y, colArray[Y][X]);
+		// 		gridPicrossSquares[Y][X] = pSquare;
+		// 		grpPicrossSquares.add(pSquare);
+		// 	}
+		// }
 		
 		// sets all of the elements to stay centered to the current camera location
 		for(text in grpTexts) 
@@ -130,21 +168,19 @@ class PicrossBoard extends FlxGroup
 		}
 		
 		active = false;
-
 	}
 
-	override public function update(elapsed:Float)
-	{
+	override public function update(elapsed:Float) {
 		super.update(elapsed);
 	}
 
-	private function calcRowHints(Row:Array<Int>):String
+	private function calcRowHintStrings(Row:Array<PicrossSquare>):String
 	{
 		var count:Int = 0;
 		var str:String = "";
 		for (cell in Row)
 		{
-			if (cell == 1)
+			if (cell.answer == 1)
 				count++;
 			else
 			{
@@ -160,7 +196,7 @@ class PicrossBoard extends FlxGroup
 		return str;
 	}
 	
-	private function calcColHints(Col:Array<Array<Int>>, I:Int):String
+	private function calcColHintStrings(Col:Array<Array<PicrossSquare>>, I:Int):String
 	{
 		var count:Int = 0;
 		var str:String = "";
@@ -169,7 +205,7 @@ class PicrossBoard extends FlxGroup
 		str = "";
 		for (row in Col)
 		{
-			if (row[i] == 1)
+			if (row[i].answer == 1)
 				count++;
 			else
 			{
@@ -207,9 +243,9 @@ class PicrossBoard extends FlxGroup
 
 	public function checkRowCorrect(RowID:Int):Bool
 	{
-		for (i in 0...dimens)
+		for (i in 0...dimens[1])
 		{
-			if (colArray[RowID][i] != gridPicrossSquares[RowID][i].status)
+			if (gridPicrossSquares[RowID][i].answer != gridPicrossSquares[RowID][i].status)
 			{
 				arrRowHints[RowID].setFormat(arrRowHints[RowID].size, FlxColor.WHITE);
 				return false;
@@ -221,9 +257,9 @@ class PicrossBoard extends FlxGroup
 
 	public function checkColCorrect(ColID:Int):Bool
 	{
-		for (row in 0...dimens)
+		for (row in 0...dimens[0])
 		{
-			if (colArray[row][ColID] != gridPicrossSquares[row][ColID].status)
+			if (gridPicrossSquares[row][ColID].answer != gridPicrossSquares[row][ColID].status)
 			{
 				arrColHints[ColID].setFormat(arrColHints[ColID].size, FlxColor.WHITE);
 				return false;

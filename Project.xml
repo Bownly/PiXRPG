@@ -2,7 +2,7 @@
 <project>
 	<!------------------------------APPLICATION SETTINGS---------------------------->
 	
-	<app title="PiXRPG" file="PiXRPG" main="Main" version="0.0.1" company="HaxeFlixel" />
+	<app title="PiX RPG" file="PiX RPG" main="Main" version="0.0.1" company="HaxeFlixel" />
 	
 	<!--The flixel preloader is not accurate in Chrome. You can use it regularly if you embed the swf into a html file
 	<!--or you can set the actual size of your file manually at "FlxPreloaderBase-onUpdate-bytesTotal"!-->
@@ -17,7 +17,7 @@
 	<window width="640" height="480" fps="60" background="#000000" hardware="true" vsync="true" />
 	
 	<!--Web-specific-->
-	<window if="web" orientation="portrait"  />
+	<window if="web" orientation="portrait" />
 	
 	<!--Desktop-specific-->
 	<window if="desktop" orientation="landscape" fullscreen="false" resizable="true" />
@@ -33,7 +33,7 @@
 	
 	<!--------------------------------LIBRARIES------------------------------------->
 	<!--<haxelib name="openfl-html5"-->
-<set name="no-custom-backend" value="openfl-bitfive" />	<haxelib name="flixel"/>
+	<set name="no-custom-backend" value="openfl-bitfive" />	<haxelib name="flixel"/>
 	
 	<!--In case you want to use the addons package-->
 	<haxelib name="flixel-addons" />

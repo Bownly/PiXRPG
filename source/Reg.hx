@@ -3,6 +3,7 @@ package;
 import flixel.FlxG;
 import flixel.input.keyboard.FlxKey;
 import flixel.util.FlxSave;
+import maps.*;
 /**
  * Handy, pre-built Registry class that can be used to store 
  * references to objects and other things for quick-access. Feel
@@ -39,45 +40,61 @@ class Reg
 	public static inline var ICONSIZE:Int = 48;
 	public static inline var SAVE_NAME:String = "Save file";
 
-	
 	public static var STATE:Int = 0;
 	public static inline var STATE_NORMAL:Int = 0;
 	public static inline var STATE_CUTSCENE:Int = 1;
-
-	// public static var curItem:String = ";)";
 
 	public static var pLV:Int = 1;
 	public static var pMP:Int = 60;
 	public static var pXP:Int = 0;
 	public static var maxXP:Int = 100;
-	// public static var playerHasHood:Bool = false;
 	
 	public static var encounterCounter:Int = 0;
 
 	public static var playTime:Int = 0;
 	
-	public static var postDialogBattleFlag:Bool = false;
 	public static var isMuted:Bool = false;
 
 
 	public static var flags:Map<String, Int> =
 	[
-		"playerHasHood"   => 0,
-		"save"            => 0,
-		"tutorial_battle" => 0,
-		"first_wakeup"    => 0,
-		"AorB"            => 0,
-		"a"               => 0,
-		"b"               => 0,
-		"fight_dummy"     => 0,
-		"frogpond_chest1" => 0,
-		"frogpond_chest2" => 0,
-		"frogpond_chest3" => 0,
-		"frogpond_door1"  => 0,
-		"frogpond_door2"  => 0,
-		"frogpond_door3"  => 0,
-		"frogpond_door4"  => 0,
-		"frogpond_door5"  => 0,
+		"dummy"             => 0,
+		"p_hood"            => 0,
+		"save"              => 0,
+		"no_encounters_yet" => 0,
+		"tutorial_battle"   => 0,
+		"first_wakeup"      => 0,  // 0 = start game; 1 = went downstairs; 2 = talked to dad
+		"first_froggo"      => 0,  // 0 = hasn't met Froggo; 1 = has met him
+		"frogponddun"       => 0,  // 0 = dun not done; 1 = dun done
+		"fight_dummy"       => 0,
+		"owl_clan_attack"   => 0,  // 0 = pre-attack; 1 = post-attack; 2 = return home; 3 = return to The Pond; 4 = done
+		"frogpond_obs1"     => 0,
+		"frogpond_obs2"     => 0,
+		"frogpond_obs3"     => 0,
+		"frogpond_obs4"     => 0,
+		"frogpond_chest1"   => 0,
+		"frogpond_chest2"   => 0,
+		"frogpond_chest3"   => 0,
+		"frogpond_chest4"   => 0,
+		"frogpond_chest5"   => 0,
+		"frogpond_door1"    => 0,
+		"frogpond_door2"    => 0,
+		"frogpond_door3"    => 0,
+		"frogpond_door4"    => 0,
+		"frogpond_door5"    => 0,
+		"frogpond_door6"    => 0,
+		"frogpond_door7"    => 0,
+		"frogpond_door8"    => 0,
+		"frogpond_door9"    => 0,
+		"frogpond_door10"   => 0,
+		"frogpond_mimic1"   => 0,
+		"frogpond_mimic2"   => 0,
+		"frogpond_mimic3"   => 0,
+		"frogpond_mimic4"   => 0,
+		"frogpond_mimic5"   => 0,
+		"frogpond_mimic6"   => 0,
+		"frogpond_mimic7"   => 0,
+		"frogpond_mimic8"   => 0,
 	];
 
 	public static var keys:Map<String, Array<FlxKey>> = 
@@ -98,10 +115,18 @@ class Reg
 	public static function goToNextLevel(EntID:Int, MapName:String):Void
 	{
 		switch MapName {
+			case "worldmap.tmx": FlxG.switchState(new WorldMap(EntID, "worldmap.tmx"));
+		    case "mchouse.tmx": FlxG.switchState(new MCHouse(EntID, "mchouse.tmx"));
+		    case "mchouse-1.tmx": FlxG.switchState(new MCHouse1(EntID, "mchouse-1.tmx"));
 		    case "frogpond.tmx": FlxG.switchState(new FrogPond(EntID, "frogpond.tmx"));
-		    case "frogpond-1.tmx": FlxG.switchState(new FrogPond1(EntID, "frogpond-1.tmx"));
+		    case "frogpond-house-1.tmx": FlxG.switchState(new FrogPondHouse1(EntID, "frogpond-house-1.tmx"));
+		    case "frogpond-house-2.tmx": FlxG.switchState(new FrogPondHouse2(EntID, "frogpond-house-2.tmx"));
+		    case "frogpond-house-3.tmx": FlxG.switchState(new FrogPondHouse3(EntID, "frogpond-house-3.tmx"));
+		    case "frogpond-house-4.tmx": FlxG.switchState(new FrogPondHouse4(EntID, "frogpond-house-4.tmx"));
 		    case "frogpond-dungeon.tmx": FlxG.switchState(new FrogPondDun(EntID, "frogpond-dungeon.tmx"));
-		    case "town1.tmx": FlxG.switchState(new FrogPond(EntID, "town1.tmx"));
+		    case "frogpond-dungeon-1.tmx": FlxG.switchState(new FrogPondDun1(EntID, "frogpond-dungeon-1.tmx"));
+		    case "frogpond-dungeon-2.tmx": FlxG.switchState(new FrogPondDun2(EntID, "frogpond-dungeon-2.tmx"));
+		    case "town1.tmx": FlxG.switchState(new TownState(EntID, "town1.tmx"));
 		    case "town2.tmx": FlxG.switchState(new Town2(EntID, "town2.tmx"));
 		    case "town3.tmx": FlxG.switchState(new TownState(EntID, "town3.tmx"));
 		    case "town4.tmx": FlxG.switchState(new TownState(EntID, "town4.tmx"));
@@ -193,7 +218,7 @@ class Reg
 		save.flush();
 	}
 
-	public static function resetEncounterCounter():Void
+	public static function resetEncounterCounter(lower:Int, upper:Int):Void
 	{
 		encounterCounter = FlxG.random.int(8, 12);
 	}

@@ -69,7 +69,10 @@ class BaseMenuItem
 	}
 	private function addText(Anchor:Array<Float>)
 	{
-		var item = new FlxText(Anchor[0], 0, 80, name, 8);
+		// commented out line was the original width. I made it longer for dialog options.
+		// the new value seems to not break anything, so I'll get away with being lazy for now.
+		// var item = new FlxText(Anchor[0], 0, 80, name, 8);
+		var item = new FlxText(Anchor[0], 0, FlxG.width - Reg.ICONSIZE*2, name, 8);
 		grpRender.add(item);
 	}	
 }
@@ -112,7 +115,7 @@ class MenuItemFlag extends MenuItemClose
 
 	override public function selected()
 	{
-		_flag.update();
+		_flag.update(FlxG.elapsed);
 		super.selected();
 	}
 }

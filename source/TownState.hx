@@ -28,12 +28,14 @@ import MenuClasses;
 class TownState extends FlxState
 {
 	public var encounterDecrementer:Int = 0;
+	public var encounterLowerBound:Int = 0;
+	public var encounterUpperBound:Int = 0;
 
 	public var eventManager:EventClasses.EventManager;
 	
 	public var player:Player;
 	public var grpNPCs:FlxTypedGroup<NPC> = new FlxTypedGroup<NPC>();
-	public var grpExits:FlxTypedGroup<Exit>;
+	public var grpExits:FlxTypedGroup<Exit> = new FlxTypedGroup<Exit>();
 	
 	public var width:Int;
 	public var height:Int;
@@ -46,6 +48,7 @@ class TownState extends FlxState
 	// tiled stuff
 	public var level:TiledLevel;
 	public var entranceID:Int = 0;
+	public var playerDir:String = "S";
 	public var mapName:String;
 	public var edgeExitNextEntID:Int;
 	public var edgeExitNextMapName:String;
@@ -54,7 +57,6 @@ class TownState extends FlxState
 
 	override public function new(EntranceID:Int, MapName:String, ?SongName:String, ?Dungeon:Bool)
 	{
-
 		entranceID = EntranceID;
 		mapName = MapName;
 		super();
@@ -63,24 +65,16 @@ class TownState extends FlxState
 
 	override public function create():Void
 	{
-
 		eventManager = new EventClasses.EventManager(this);
-
-		if (mapName == "worldmap.tmx")
-			encounterDecrementer = 1;
-
-		songTownsong = FlxG.sound.load("assets/music/townsong.wav");
+		// songTownsong = FlxG.sound.load("assets/music/townsong.wav");
 		
-		Reg.resetEncounterCounter();
+		Reg.resetEncounterCounter(encounterLowerBound, encounterUpperBound);
+		
+		player = new Player(0, 0, FlxObject.DOWN, this);
 		
 		FlxG.camera.bgColor = 0xffffffff;
-				
-		grpExits = new FlxTypedGroup<Exit>();
-		
-		player = new Player(240, 240, FlxObject.DOWN, this);
-		
-		FlxG.camera.follow(player);
-		
+		FlxG.camera.follow(player);		
+		// FlxG.camera.pixelPerfectRender = false;
 		FlxG.mouse.visible = false;		
 		super.create();
 
@@ -92,15 +86,16 @@ class TownState extends FlxState
 		// Add backgrounds
 		add(level.backgroundLayer);
 
-		// Load player objects
+		// Load level objects
 		add(level.objectsLayer);
 
 		// Add foreground tiles after adding level objects, so these tiles render on top of player
-		add(level.foregroundTiles);
 		add(grpExits);
 		add(player);
 		add(grpNPCs);
+		add(level.foregroundLayer);
 
+		SoundManager.play("townsong");
 	}
 	
 	/**
@@ -114,19 +109,18 @@ class TownState extends FlxState
 
 	override public function update(elapsed:Float):Void
 	{
-		eventManager.update();
+		eventManager.update(elapsed);
 
-		if (subState == null && !Reg.isMuted)
-			songTownsong.play(false);
-		else
-			songTownsong.pause();
+		// SoundManager.play("townsong");
+
+		// if (subState == null && !Reg.isMuted)
+		// 	songTownsong.play(false);
+		// else
+		// 	songTownsong.pause();
 						
 
-		if (player.x == width || player.x == 0
-			|| player.y == height || player.y == 0)
-		{
+		if (player.x == width || player.x == 0 || player.y == height || player.y == 0)
 			Reg.goToNextLevel(edgeExitNextEntID, edgeExitNextMapName);
-		}
 
 		// start battle!!!!
 		if (player.isMoving == false && Reg.encounterCounter <= 0)
@@ -152,8 +146,8 @@ class TownState extends FlxState
 			if (val > 4)
 				val = 1;
 			
-			songTownsong.pause();
-			sub = new BattleSubState(calculateEncounter(val));
+			// songTownsong.pause();
+			sub = new BattleSubState(this, calculateEncounter(val));
 			this.openSubState(sub);
 		}
 

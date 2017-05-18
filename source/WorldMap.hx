@@ -1,4 +1,5 @@
 package;
+
 import flixel.FlxG;
 import flixel.FlxObject;
 
@@ -8,33 +9,27 @@ import flixel.FlxObject;
  */
 class WorldMap extends TownState
 {
-
-	var playerX:Float;
-	var playerY:Float;
-	
-	public function new(PlayerX:Float, PlayerY:Float) 
+	public function new(EntranceID:Int, MapName:String, ?SongName:String, ?Dungeon:Bool) 
 	{
-		super();
-		playerX = PlayerX;
-		playerY = PlayerY;
-		levelName = "assets/levels/world_map.oel";
-		tileName = "assets/images/tiles_worldmap.png";
-		nonCollidableTiles = [0, 1, 2, 3, 4, 5, 6];
-		encounterDecrementer = 1;
+		super(EntranceID, MapName, SongName, Dungeon);
+
+		if (Reg.flags["frogponddun"] == 0)
+			encounterDecrementer = 0;
+		else
+			encounterDecrementer = 1;
+
+		encounterLowerBound = 8;
+		encounterUpperBound = 12;
 	}
 	
 	override public function create():Void 
 	{
 		super.create();
-		// _player.setPosition(playerX, playerY + 16);
-		// _player.setFacing(FlxObject.DOWN);
-
-		add(encounterMap);
-		songTownsong = FlxG.sound.load("assets/music/za_warudo_map.wav");
+		SoundManager.play("worldmap");
 	}
 	
-	override function update():Void
+	override function update(elapsed:Float):Void
 	{
-		super.update();
+		super.update(elapsed);
 	}
 }

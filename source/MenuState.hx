@@ -73,7 +73,10 @@ class MenuState extends FlxState
 		add(_txtControls);
 		
 		FlxG.mouse.visible = false;		
-		super.create();	}
+		super.create();	
+
+		SoundManager.initialize();
+	}
 	
 	/**
 	 * Function that is called when this state is destroyed - you might want to 
@@ -137,6 +140,8 @@ class MenuState extends FlxState
 				_txtSelection1.setFormat(8, colorSelected);
 			case (2):
 				_txtSelection2.setFormat(8, colorSelected);
+			case (3):
+				_txtSelection3.setFormat(8, colorSelected);
 		}
 	}
 

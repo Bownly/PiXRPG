@@ -44,6 +44,10 @@ class PicrossSquare extends FlxSprite
 		animation.play("off");
 	}
 	
+	public function switchAnswer(Ans:Int):Void {
+		answer = Ans;
+	}
+
 	public function turnOnOrOff(Guess:Int):Int
 	{			
 		if (isActive)
@@ -115,7 +119,6 @@ class PicrossSquare extends FlxSprite
 		else
 			return NOTHING;
 	}
-	
 	
 	public function playAnimation():Void
 	{

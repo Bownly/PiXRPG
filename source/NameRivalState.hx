@@ -14,7 +14,7 @@ import flixel.math.FlxMath;
 /**
  * A FlxState which can be used for the game's menu.
  */
-class NamePlayerState extends FlxState
+class NameRivalState extends FlxState
 {
 	var colorDefault = 0xffffff;
 	var colorSelected = 0x0099FF;
@@ -52,14 +52,14 @@ class NamePlayerState extends FlxState
 		var xanchor:Float = 0;
 		var yanchor:Float = 48;  // arbitray spacing number determined to look good
 
-		_txtInstructions = new FlxText(xanchor, yanchor, FlxG.width, "Enter your name:", 8);
+		_txtInstructions = new FlxText(xanchor, yanchor, FlxG.width, "Enter your brother's name:", 8);
 		_txtInstructions.setFormat(8, colorDefault, "center");
 		yanchor += _txtInstructions.height;
 
 		_sprCharacter = new FlxSprite(FlxG.width / 2 - 8, _txtInstructions.y - 24);
-		_sprCharacter.loadGraphic(AssetPaths.mctest__png, true, 16, 16);
-		_sprCharacter.animation.add("dn_0", [12, 13], 3, true);
-		_sprCharacter.animation.play("dn_0");
+		_sprCharacter.loadGraphic(AssetPaths.NPC__png, true, 16, 16);
+		_sprCharacter.animation.add("idle", [22, 23], 3, true);
+		_sprCharacter.animation.play("idle");
 
 		_txtName = new FlxText(xanchor, yanchor, FlxG.width, "", 8);
 		_txtName.setFormat(16, colorDefault, "center");
@@ -194,15 +194,14 @@ class NamePlayerState extends FlxState
 
 	function done():Void
 	{
-		// record pname
+		// record rival's name
 		if (_txtName.text == "")
-			Strings.stringVars["%pname%"] = "Pepe";
+			Strings.stringVars["%rivalname%"] = "Adam";
 		else
-			Strings.stringVars["%pname%"] = _txtName.text;
+			Strings.stringVars["%rivalname%"] = _txtName.text;
 
 		// goto next state
-		FlxG.switchState(new NameRivalState());
-
+		Reg.goToNextLevel(1, "mchouse-1.tmx");
 
 	}
 

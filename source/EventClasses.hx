@@ -26,7 +26,7 @@ class EventManager
 		_state = S;
 	}
 
-	public function update()
+	public function update(elapsed:Float)
 	{
 		if (_arr.length > 0) 
 		{
@@ -34,7 +34,7 @@ class EventManager
 			if (_arr[0].isAlive == false)
 				_arr.shift();
 			else
-				_arr[0].update();
+				_arr[0].update(elapsed);
 		}
 		else
 		{
@@ -66,9 +66,7 @@ class BaseEvent
 		isAlive = true;
 	}
 
-	public function update()
-	{
-	}
+	public function update(elapsed:Float) {}
 
 	public function destroy()
 	{
@@ -88,7 +86,7 @@ class EventAddEvent extends BaseEvent
 		_eManager = EManager;
 	}
 
-	override public function update()
+	override public function update(elapsed:Float)
 	{
 		for (event in _events)
 			_eManager.addEvents([event]);
@@ -112,18 +110,18 @@ class EventBattle extends BaseEvent
 		_winFlagVal = WinFlagVal;
 	}
 
-	override public function update()
+	override public function update(elapsed:Float)
 	{
 		destroy();
 		if (_winFlag != null) {
-			var sub = new BattleSubState(_enemies, _winFlag, _winFlagVal);
+			var sub = new BattleSubState(_state, _enemies, _winFlag, _winFlagVal);
 			_state.openSubState(sub);
 		}
 		else {
-			var sub = new BattleSubState(_enemies);			
+			var sub = new BattleSubState(_state, _enemies);			
 			_state.openSubState(sub);
 		}
-		super.update();
+		super.update(elapsed);
 	}
 }
 
@@ -137,10 +135,9 @@ class EventCurItemChange extends BaseEvent
 		super();
 	}
 
-	override public function update()
+	override public function update(elapsed:Float)
 	{
 		Strings.stringVars["%item%"] = _name;
-		trace("item name: ", Strings.stringVars["%item%"]);
 		destroy();
 	}
 }
@@ -157,35 +154,13 @@ class EventDialog extends BaseEvent
 		_state = State;
 	}
 
-	override public function update()
+	override public function update(elapsed:Float)
 	{
 		destroy();
 		var sub = new DialogSubState(_dialogBox);
 		_state.openSubState(sub);
-		super.update();
+		super.update(elapsed);
 	}
-}
-
-class EventDialogMenu extends BaseEvent
-{
-	var _menu:MenuClasses.BaseMenu;
-	// var _state:TownState;
-
-	public function new(Menu:MenuClasses.BaseMenu, ?State:TownState)
-	{
-		super();
-
-		// _menu = Menu;
-		// _state = State;
-	}
-
-	// override public function update()
-	// {
-		// destroy();
-		// var sub = new DialogSubState(_dialogBox);
-		// _state.openSubState(sub);
-		// super.update();
-	// }
 }
 
 class EventFlag extends BaseEvent
@@ -202,7 +177,7 @@ class EventFlag extends BaseEvent
 		_state = State;
 	}
 
-	override public function update()
+	override public function update(elapsed:Float)
 	{
 		Reg.flags[_flag] = _val;
 		destroy();
@@ -227,7 +202,7 @@ class EventHealPlayer extends BaseEvent
 			_amt = Player.maxmp;
 	}
 
-	override public function update()
+	override public function update(elapsed:Float)
 	{
 		Player.healMP(_amt);
 		destroy();
@@ -244,11 +219,50 @@ class EventItemGet extends BaseEvent
 		super();
 	}
 
-	override public function update()
+	override public function update(elapsed:Float)
 	{
 		ItemClasses.InventoryManager.arr.push(_item);
 		destroy();
 	}
+}
+
+class EventNPCAdd extends BaseEvent
+{
+	var _npc:NPC;
+	var _group:FlxTypedGroup<NPC>;
+
+	public function new(Npc:NPC, Group:FlxTypedGroup<NPC>)
+	{
+		super();
+		_npc = Npc;
+		_group = Group;
+	}
+
+	override public function update(elapsed:Float)
+	{
+		// _group.add(_npc);
+		_npc.visible = true;
+		destroy();
+	}
+}
+
+class EventNPCKillOrNot extends BaseEvent
+{
+	var _dead:Bool;
+	var _npc:NPC;
+
+	public function new(Npc:NPC, Dead:Bool)
+	{
+		super();
+		_npc = Npc;
+		_dead = Dead;
+	}
+
+	override public function update(elapsed:Float)
+	{
+		_npc.setDead(_dead);
+		destroy();
+	}	
 }
 
 class EventNPCRemove extends BaseEvent
@@ -261,9 +275,28 @@ class EventNPCRemove extends BaseEvent
 		_npc = Npc;
 	}
 
-	override public function update()
+	override public function update(elapsed:Float)
 	{
 		_npc.visible = false;
+		destroy();
+	}
+}
+
+class EventNPCSetCanTurn extends BaseEvent
+{
+	var _npc:NPC;
+	var _canTurn:Bool;
+
+	public function new(Npc:NPC, CanTurn:Bool)
+	{
+		super();
+		_npc = Npc;
+		_canTurn = CanTurn;
+	}
+
+	override public function update(elapsed:Float)
+	{
+		_npc.setCanTurn(_canTurn);
 		destroy();
 	}
 }
@@ -280,7 +313,7 @@ class EventNPCTrigger extends BaseEvent
 		_dir = Dir;
 	}
 
-	override public function update()
+	override public function update(elapsed:Float)
 	{
 		_npc.triggered(_dir);
 		destroy();
@@ -289,25 +322,34 @@ class EventNPCTrigger extends BaseEvent
 
 class EventNPCWalk extends BaseEvent
 {
-	var _npc:NPC;
+	var _npc:Entity;
 	var _path:Array<Array<Int>>;
+	var _animated:Bool = true;
 	private static inline var MOVEMENT_SPEED:Int = 1;
 	public var baseX:Float;
 	public var baseY:Float;
 
 	// public var isMoving:Bool;
 
-	public function new(Npc:NPC, Path:Array<Array<Int>>)
+	public function new(Npc:Entity, Path:Array<Array<Int>>, ?Animated:Bool)
 	{
 		super();
 		_npc = Npc;
 		_path = Path;
-		baseX = _npc.x;
-		baseY = _npc.y;
+		if (Animated)
+			_animated = Animated;
+		baseX = 0;
+		baseY = 0;
 	}
 
-	override public function update()
+	override public function update(elapsed:Float)
 	{
+		// have to reinitialize the values here to ensure that they are correct at the time of the event's activation
+		if (baseX == 0)
+			baseX = _npc.x;
+		if (baseY == 0)
+			baseY = _npc.y;
+
 		if (_path.length > 0)
 		{
 			Reg.STATE = Reg.STATE_CUTSCENE;
@@ -315,58 +357,41 @@ class EventNPCWalk extends BaseEvent
 			{
 				case FlxObject.UP:
 				{
+					if (_animated)
+						_npc.setFacing(FlxObject.UP);
 					// if not done moving
 					if (Std.int(Math.abs(baseY - _npc.y)) != _path[0][1] * 16)
-					{
 						_npc.y -= MOVEMENT_SPEED;
-						_npc.animation.play("up");
-					}
 					else
-					{
 						popOffDirection();
-					}
 				}
 				case FlxObject.DOWN:
 				{
+					if (_animated)
+						_npc.setFacing(FlxObject.DOWN);						
 					if (Std.int(Math.abs(baseY - _npc.y)) != _path[0][1] * 16)
-					{
 						_npc.y += MOVEMENT_SPEED;
-						_npc.animation.play("dn");
-					}
 					else
-					{
 						popOffDirection();
-					}
 				}
 				case FlxObject.LEFT:
 				{
+					if (_animated)
+						_npc.setFacing(FlxObject.LEFT);
 					if (Std.int(Math.abs(baseX - _npc.x)) != _path[0][1] * 16)
-					{
 						_npc.x -= MOVEMENT_SPEED;
-						_npc.animation.play("lf");
-					}
 					else
-					{
 						popOffDirection();
-					}				
 				}
 				case FlxObject.RIGHT:
 				{
+					if (_animated)
+						_npc.setFacing(FlxObject.RIGHT);
 					if (Std.int(Math.abs(baseX - _npc.x)) != _path[0][1] * 16)
-					{
 						_npc.x += MOVEMENT_SPEED;
-						_npc.animation.play("rt");
-					}
 					else
-					{
 						popOffDirection();
-					}				
 				}
-				// case -1:
-				// {
-				// 	popOffDirection();
-				// 	_npc.visible = false;
-				// }
 				default:
 				{
 					popOffDirection();
@@ -382,9 +407,7 @@ class EventNPCWalk extends BaseEvent
 		baseX = _npc.x;
 		baseY = _npc.y;
 		if (_path.length == 0)
-		{
 			destroy();
-		}
 	}
 }
 
@@ -400,11 +423,36 @@ class EventSaveGame extends BaseEvent
 		super();
 	}
 
-	override public function update()
+	override public function update(elapsed:Float)
 	{
 		Reg.saveGame(_entID, _mapName);
 		destroy();
 	}
 }
+
+class EventZaWarudo extends BaseEvent
+{
+	var _timer:Float;
+
+	public function new(Duration:Float)
+	{
+		_timer = Duration;
+		super();  // 時よ止まれ
+	}
+
+	override public function update(elapsed:Float)
+	{
+		_timer -= elapsed;
+		if (_timer <= 0)
+			destroy();  // そして時は動き出す
+		super.update(elapsed);
+	}
+}
+
+
+
+
+
+
 
 

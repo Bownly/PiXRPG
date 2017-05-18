@@ -48,7 +48,7 @@ class CreditsState extends FlxState
 		_txtLD = new FlxText(0, _txtTwitter.y, 0, "mini Ludum Dare 63", 8);
 		_txtLD.x = FlxG.width - _txtLD.width;
 		
-		_txtCredits= new FlxText(8, _txtTitle.y + _txtTitle.height + 16, FlxG.width - 8, "-Some tiles modified from art by Sharm from http://opengameart.org/content/tiny-16-basic \n-Some other tiles and NPC art lifted and modified from a GBC DBZ game and various NES/GBC Dragon Quest games\n-Most enemy sprites taken from another game that I'm working on and were arted by @Mishuun\n-Music by cgMusic\n-Sound by YOU! (I cut out sounds to save time. Please make your own audible sfx when you play.)", 8);
+		_txtCredits= new FlxText(8, _txtTitle.y + _txtTitle.height + 16, FlxG.width - 8, "\n-Music by cgMusic\n-Sound by YOU! (I cut out sounds to save time. Please make your own audible sfx when you play.)", 8);
 		
 		_txtControls = new FlxText(0, 0, FlxG.width, "J = care, K = not care, WASD/Arrows = stay still, m = mute");
 		_txtControls.alignment = "center";
@@ -57,7 +57,6 @@ class CreditsState extends FlxState
 		add(_txtTitle);
 		add(_txtFurigana);
 		add(_txtTwitter);
-		add(_txtLD);
 		add(_txtControls);
 		
 		FlxG.mouse.visible = false;		

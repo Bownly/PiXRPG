@@ -30,6 +30,7 @@ class TiledLevel extends TiledMap
 	public var objectsLayer:FlxGroup;
 	// public var backgroundLayer:FlxGroup;
 	public var backgroundLayer:FlxTypedGroup<FlxTilemap>;
+	public var foregroundLayer:FlxTypedGroup<FlxTilemap>;
 	private var collidableTileLayers:Array<FlxTilemap>;
 	public var collidableTileMap:FlxTilemap;
 	
@@ -48,6 +49,7 @@ class TiledLevel extends TiledMap
 		objectsLayer = new FlxGroup();
 		// backgroundLayer = new FlxGroup();
 		backgroundLayer = new FlxTypedGroup<FlxTilemap>();
+		foregroundLayer = new FlxTypedGroup<FlxTilemap>();
 		
 		FlxG.camera.setScrollBoundsRect(0, 0, fullWidth, fullHeight, true);
 		
@@ -85,23 +87,22 @@ class TiledLevel extends TiledMap
 				var tilemap:FlxTilemap = new FlxTilemap();
 				tilemap.loadMapFromArray(tileLayer.tileArray, width, height, processedPath,
 					tileSet.tileWidth, tileSet.tileHeight, OFF, tileSet.firstGID, 1, 1);
-				
+				tilemap.useScaleHack = false;
 					
 				if (tileLayer.properties.contains("collidable"))
 				{
 					collidableTileMap = tilemap;
 					state.tileMap = tilemap;
 				}
-				// else
-				// {		
-					if (tileLayer.name == "Encounters")
-					{
-						state.encounterMap = tileLayer;
-					}
-					// else
-				backgroundLayer.add(tilemap); 
-				
-				// }
+
+				if (tileLayer.name == "Encounters")
+					state.encounterMap = tileLayer;
+
+				if (tileLayer.properties.contains("overhead"))
+					foregroundLayer.add(tilemap); 
+				else
+					backgroundLayer.add(tilemap); 
+
 				if (tileLayer.properties.contains("edgeExitNextMapName"))
 				{
 					state.edgeExitNextMapName = tileLayer.properties.get("edgeExitNextMapName");
@@ -195,7 +196,7 @@ class TiledLevel extends TiledMap
 			case "npc":
 				for (npc in state.grpNPCs)
 				{
-					if (o.properties.get("name") == npc.name)
+					if (o.name == npc.name)
 					{
 						npc.x = x;
 						npc.y = y;
@@ -208,7 +209,16 @@ class TiledLevel extends TiledMap
 				if (entID == state.entranceID)
 				{
 					state.player.x = x;
-					state.player.y = y;					
+					state.player.y = y;
+					var face:Int = 0;
+					switch o.properties.get("playerfacing")
+					{
+						case "N": face = FlxObject.UP;
+						case "S": face = FlxObject.DOWN;
+						case "W": face = FlxObject.LEFT;
+						case "E": face = FlxObject.RIGHT;
+					}
+					state.player.setFacing(face);					
 				}
 
 			case "exit":

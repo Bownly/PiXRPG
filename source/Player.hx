@@ -11,10 +11,9 @@ import flixel.ui.FlxButton;
  * @author Bownly
  */
 
-class Player extends FlxSprite
+class Player extends Entity
 {
 	private static inline var TILE_SIZE:Int = 16;
-	// private static inline var MOVEMENT_SPEED:Float = 1.33333;
 	private static inline var MOVEMENT_SPEED:Float = 2;
 
 	public static var lvl:Int = 1;
@@ -29,13 +28,13 @@ class Player extends FlxSprite
 
 	var hasHood:Int = 0;
 	
-	var _state:TownState;
+	// var _state:TownState;
 
 	public function new(X:Float, Y:Float, Facing:Int, State:TownState)
 	{
-		super(X, Y);
+		super(X, Y, Facing, State);
 		
-		hasHood = Reg.flags["playerHasHood"];
+		hasHood = Reg.flags["p_hood"];
 
 		_state = State;
 		facing = Facing;
@@ -57,15 +56,9 @@ class Player extends FlxSprite
 	{
 
 		if (FlxG.keys.anyJustPressed(["Z"]))
-		{
 			Reg.STATE = 0;
-			trace("Reg.STATE", Reg.STATE);
-		}
 		if (FlxG.keys.anyJustPressed(["X"]))
-		{
 			Reg.STATE = 1;
-			trace("Reg.STATE", Reg.STATE);
-		}
 
 		if (Reg.STATE == Reg.STATE_NORMAL)
 		{
@@ -138,22 +131,55 @@ class Player extends FlxSprite
 					interactionCheck(facing);
 				}
 
+				// todo: debug stuff, remove before shipping
 				if (FlxG.keys.anyJustPressed(["P"]))
 				{
 					FlxG.switchState(new MenuState());
 				}
 				if (FlxG.keys.anyJustPressed(["H"]))
 				{
-					if (Reg.flags["playerHasHood"] == 0)
-						Reg.flags["playerHasHood"] = 1;
+					if (Reg.flags["p_hood"] == 0)
+						Reg.flags["p_hood"] = 1;
 					else
-						Reg.flags["playerHasHood"] = 0;
-					hasHood = Reg.flags["playerHasHood"];
+						Reg.flags["p_hood"] = 0;
+					hasHood = Reg.flags["p_hood"];
 				}
-				
+				if (FlxG.keys.anyJustPressed(["Q"]))
+				{
+					Reg.flags["owl_clan_attack"] += 1;
+					trace("flag incremented: " + Reg.flags["owl_clan_attack"]);
+				}
+				if (FlxG.keys.anyJustPressed(["E"]))
+				{
+					Reg.flags["frogponddun"] = 1;
+					trace("dun done ");
+				}
+				if (FlxG.keys.anyJustPressed(["N"]))
+				{
+					if (FlxG.sound.list.length > 0)
+					{
+						if (FlxG.sound.list.members[0].playing == false)
+						{
+							trace("list: " + FlxG.sound.list.members[0].playing);
+							trace("list: " + FlxG.sound.list);
+							FlxG.sound.play("assets/music/townsong.wav");
+						}
+						else
+							trace("should see this");
+					}
+					else
+					{
+						FlxG.sound.play("assets/music/townsong.wav");
+						trace("now playing");			
+					}
+				}
+
 
 			}
 		}
+		else if (Reg.STATE == Reg.STATE_CUTSCENE)
+			super.update(elapsed);  
+
 	}
 
 	public static function addXP(Val:Int):Void
@@ -163,21 +189,13 @@ class Player extends FlxSprite
 			xp = MAXXP;
 		
 		if (xp >= 100)
-		{
 			lvl = 5;
-		}
 		else if (xp >= 55)
-		{
 			lvl = 4;
-		}
 		else if (xp >= 25)
-		{
 			lvl = 3;
-		}
 		else if (xp >= 10)
-		{
 			lvl = 2;
-		}
 		mp = 30 + (lvl) * 30;
 	}
 	
@@ -199,7 +217,7 @@ class Player extends FlxSprite
 		}
 
 		var map = _state.level;
-		if (map.collidableTileMap.getTile(Math.floor((x +xx) / TILE_SIZE), Math.floor((y + yy) / TILE_SIZE)) > 0)
+		if (map.collidableTileMap.getTile(Math.floor((x + xx) / TILE_SIZE), Math.floor((y + yy) / TILE_SIZE)) > 0)
 			return false;
 
 		
@@ -208,10 +226,7 @@ class Player extends FlxSprite
 			if (npc.visible == true && npc.y == y + yy && npc.x == x + xx)
 				return false;				
 		}
-
-		if (!Reg.postDialogBattleFlag)
-			Reg.encounterCounter -= _state.encounterDecrementer;
-
+		Reg.encounterCounter -= _state.encounterDecrementer;
 		return true;
 	}
 
@@ -222,19 +237,7 @@ class Player extends FlxSprite
 			mp = maxmp;
 	}
 
-	public static function setStats(LVL:Int, MP:Int, XP:Int):Void
-	{
-		lvl = LVL;
-		mp = MP;
-		xp = XP;
-	}
-
-	public static function resetStats():Void
-	{
-		setStats(1, 30, 0);
-	}
-	
-	public function setFacing(Dir:Int):Void
+	override public function setFacing(Dir:Int):Void
 	{
 		switch (Dir)
 		{
@@ -261,6 +264,17 @@ class Player extends FlxSprite
 		}
 	}
 	
+	public static function setStats(LVL:Int, MP:Int, XP:Int):Void
+	{
+		lvl = LVL;
+		mp = MP;
+		xp = XP;
+	}
+
+	public static function resetStats():Void
+		setStats(1, 30, 0);
+	
+
 	public function moveTo(Direction:Int):Void
 	{
 		// Only change direction if not already moving
@@ -275,25 +289,36 @@ class Player extends FlxSprite
 		var xx:Int = 0;
 		var yy:Int = 0;
 		
-		
+		var tempFace:Int = 0;
 		switch (facing)
 		{
 			case FlxObject.UP:
+			{
 				yy = -16;
+				tempFace = FlxObject.DOWN;
+			}
 			case FlxObject.DOWN:
+			{
 				yy = 16;
+				tempFace = FlxObject.UP;
+			}	
 			case FlxObject.LEFT:
+			{
 				xx = -16;
+				tempFace = FlxObject.RIGHT;
+			}
 			case FlxObject.RIGHT:
+			{
 				xx = 16;
+				tempFace = FlxObject.LEFT;
+			}
 		}
 		
 		for (item in _state.grpNPCs)
 		{
-			
 			if (item.y == y + yy && item.x == x + xx)
 			{
-				item.triggered(facing);
+				item.triggered(tempFace);
 				return;
 			}
 		}

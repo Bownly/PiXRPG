@@ -175,7 +175,7 @@ class ObsLily extends BaseObstacle
 
 		super.update(elapsed);
 		if (y < _coords[1]-6) 
-			y+=1;
+			y++;
 		else
 		{
 			if (animation.name != "splat")

@@ -16,32 +16,54 @@ import ObstacleClasses;
 class BaseEnemy
 {
 	public var id:Int;
-	public var dimens:Int;
+	public var dimens:Array<Int>;
+	public var maxMP:Int;
 	public var mp:Int;
-	public var color:Int;
+	public var color:Array<Int>;
 	// public var arrObstacles:Array<BaseObstacle>;
-	public var grpObs:FlxTypedGroup<BaseObstacle>;
-	public var board:PicrossBoard;
+	public var _grpObs:FlxTypedGroup<BaseObstacle>;
+	public var _board:PicrossBoard;
 	public var timerAttack:Float = 0;
 	public var attackFreq:Int = 1;
 	public var squareCount:Int = 0;
+	public var damage:Int = 10;
 
 
-	public function new(?ID:Int, ?S:Int, ?C:Int) 
+	public function new(?ID:Int, ?S:Array<Int>, ?C:Array<Int>, ?D:Int, ?M:Int) 
 	{
 		id = ID;
-		dimens = S;
-		color = C;
-		// arrObstacles = [];
-		mp = Std.int(dimens*dimens/2);
+		if (S != null)
+			dimens = S;
+		else
+			dimens = [1, 1];
+		if (C != null)
+			color = C;
+		else
+			color = [8,9];
+		if (D > -1)
+			damage = D;
+		else
+			damage = 5;
+		if (M > 0)
+			maxMP = M;
+		else
+			maxMP = 5;
+		// mp = Std.int(dimens*dimens/2);
 	}
 
 	public function update(elapsed:Float) {
-		mp = board.winCount - board.curCount;
+		mp = maxMP - _board.curCount;
 	}
 	public function spawnObstacle() {}
 	public function removeObstacle() {}
 	public function removeAllObstacles() {}
+
+	public function setBoard(B:PicrossBoard) {
+		_board = B;
+	}
+	public function setGrpObs(G:FlxTypedGroup<BaseObstacle>) {
+		_grpObs = G;
+	}
 
 	public function onSquareFilled() {
 		squareCount++;
@@ -53,25 +75,21 @@ class EnemyTest extends BaseEnemy
 {
 	public function new()
 	{
-		super();
-		id = 6;
-		dimens = 15;
-		color = 4;
-		// mp = 8;
+		super(6, [10, 15], [4, 13], 0, 80);
 	}
 }
 
 class EnemyDoor extends BaseEnemy
 {
-	public function new(?Dimens:Int)
+	public function new(?Dimens:Array<Int>)
 	{
-		super();
-		id = 7;
-		if (Dimens > 0)
+		// id = 7;
+		if (Dimens != null)
 			dimens = Dimens;
 		else
-			dimens = 4;
-		color = 2;
+			dimens = [5, 4];
+		// color = 2;
+		super(7, dimens, [2,3], 5);
 	}
 }
 
@@ -82,8 +100,8 @@ class EnemyMush extends BaseEnemy
 	{
 		super();
 		id = 0;
-		dimens = 4;
-		color = 4;
+		dimens = [4, 4];
+		color = [4, 5];
 		attackFreq = 5;
 	}
 
@@ -117,31 +135,31 @@ class EnemyMush extends BaseEnemy
 		var obstacleHP:Int = 2;
 		if (FlxG.random.int(0, 1) == 0)
 		{
-			var vial = new ObsHintHider([board.grpPicrossSquares.getRandom(0).x, board.coords[1]], obstacleHP, true);
-			grpObs.add(vial);
+			var vial = new ObsHintHider([_board.grpPicrossSquares.getRandom(0).x, _board.coords[1]], obstacleHP, true);
+			_grpObs.add(vial);
 		}
 		else
 		{
-			var vial = new ObsHintHider([board.coords[0], board.grpPicrossSquares.getRandom().y], obstacleHP, false);
-			grpObs.add(vial);
+			var vial = new ObsHintHider([_board.coords[0], _board.grpPicrossSquares.getRandom().y], obstacleHP, false);
+			_grpObs.add(vial);
 		}
 	}
 
 	override public function removeObstacle()
 	{
-		// var obs = grpObs.getFirstExisting();
-		for (obs in grpObs)
+		// var obs = _grpObs.getFirstExisting();
+		for (obs in _grpObs)
 		{
 			if (obs != null && obs.tryRemove() == true)
-				grpObs.remove(obs);
+				_grpObs.remove(obs);
 		}
 	}
 
 	override public function removeAllObstacles()
 	{
-		for (obs in grpObs)
+		for (obs in _grpObs)
 		{
-			grpObs.remove(obs);
+			_grpObs.remove(obs);
 		}
 	}
 }
@@ -152,8 +170,8 @@ class EnemyBee extends BaseEnemy
 	{
 		super();
 		id = 1;
-		dimens = 5;
-		color = 2;
+		dimens = [5, 5];
+		color = [2, 3];
 	}
 }
 
@@ -164,8 +182,8 @@ class EnemySnail extends BaseEnemy
 	{
 		super();
 		id = 2;
-		dimens = 5;
-		color = 6;
+		dimens = [5, 5];
+		color = [6, 7];
 		attackFreq = 15;
 	}
 
@@ -194,8 +212,8 @@ class EnemySnail extends BaseEnemy
 
 	override public function spawnObstacle()
 	{
-		var drop = new ObsLily(board, this);
-		grpObs.add(drop);
+		var drop = new ObsLily(_board, this);
+		_grpObs.add(drop);
 	}
 }
 
@@ -205,11 +223,51 @@ class EnemyFlower extends BaseEnemy
 	{
 		super();
 		id = 3;
-		dimens = 6;
-		color = 8;
+		dimens = [6, 6];
+		color = [8, 9];
 	}
 }
 
+class EnemyOwl extends BaseEnemy
+{
+	public function new()
+	{
+		super();
+		id = 4;
+		dimens = [7, 7];
+		color = [12, 9];
+		attackFreq = 15;
+	}
+
+	override public function update(elapsed:Float)
+	{
+		timerAttack += elapsed;
+
+		if (timerAttack >= 9)
+		{
+			spawnObstacle();
+			timerAttack = 0;
+		}
+
+		super.update(elapsed);
+	}
+
+	override public function onSquareFilled()
+	{
+		super.onSquareFilled();
+		if (squareCount % attackFreq == 0)
+		{
+			spawnObstacle();
+			timerAttack = 0;
+		}
+	}
+
+	override public function spawnObstacle()
+	{
+		var drop = new ObsLily(_board, this);
+		_grpObs.add(drop);
+	}
+}
 
 
 

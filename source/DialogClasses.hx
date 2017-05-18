@@ -45,11 +45,13 @@ class DialogSpriteGroup extends FlxGroup
 
 	var _sprBack:FlxSprite;
     var _txtDialog:FlxText;
+    var _txtDummy:FlxText;
     var _sprBlinker:FlxSprite;
     var _sprFaceIcon:FlxSprite;
 	var _curLine:String;
+	var _curLineMaster:String;
 	var _lineTimer:Float = 0;
-	var _scrollSpeed:Int = 45;
+	var _scrollSpeed:Int = 5;
 	var _canControl:Bool = true;
 
 	// public function new(Coords:Array<Float>, Dimens:Array<Float>, DB:DialogBox) 
@@ -62,7 +64,6 @@ class DialogSpriteGroup extends FlxGroup
 			_scrollSpeed = ScrollSpeed;
 
 		endLine = dBox.arrLines.length - 1;		
-		setCurLine();
 
 		var iconsize = Reg.ICONSIZE;
 		var h = iconsize;
@@ -80,14 +81,21 @@ class DialogSpriteGroup extends FlxGroup
 
 		window = new Window([xanchor, yanchor], [w, h]);
 
-		_txtDialog = new FlxText(xanchor + window.pad*2, yanchor + window.pad*2, w - _sprFaceIcon.width, "", 8);
-
-
+		// the 20 subtracted from the width below is an arbitrary number that looks good and accounts for the blinker
+		_txtDialog = new FlxText(xanchor + window.pad*2, yanchor + window.pad*2, w - 20, "", 8);
 		_txtDialog.scrollFactor.set();
+		_txtDialog.wordWrap = false;
+		// _txtDialog.visible = false;
 		_sprFaceIcon.scrollFactor.set();
+		_txtDummy = new FlxText(xanchor + window.pad*2, yanchor + window.pad*2, w - 20, "", 8);
+		_txtDummy.visible = false;
+		_txtDummy.wordWrap = false;
 		
+		setCurLine();
+
 		add(window);
 		add(_txtDialog);
+		add(_txtDummy);
 		add(_sprFaceIcon);
 
 		if (_canControl)
@@ -108,22 +116,44 @@ class DialogSpriteGroup extends FlxGroup
 	{
 		super.update(elapsed);
 
-		if (_txtDialog.text != _curLine)
+		if (_curLine.length > 0)
 		{
-			_lineTimer += elapsed * _scrollSpeed;
+			_lineTimer += elapsed * (1/_scrollSpeed);
+			var len = _curLine.indexOf(" ", 0) + 1;  // len = index of cur string + next word
+			if (len == 0)  // aka if the indexOf returned -1 aka if there are no more spaces left in the string
+				_txtDummy.text = _txtDialog.text + _curLine;
+			else
+				_txtDummy.text = _txtDialog.text + _curLine.substr(0, len);
+
+			if (_txtDummy.textField.textWidth >= _txtDummy.width)
+			{
+				if (_txtDialog.text.substr(_txtDialog.text.length-1, 1) == " ")  // if a space is activating the wordwrap
+				{
+					_txtDialog.text = _txtDialog.text.substr(0, _txtDialog.text.length-1);  // remove the space
+					_txtDialog.text += "\n";  // and replace it with a newline
+				}
+			}
 			_sprFaceIcon.animation.play("idle");
+			if (_lineTimer >= 0)
+			{
+				_txtDialog.text += _curLine.substr(0, 1);
+				_curLine = _curLine.substr(1);
+				_lineTimer = 0;
+			}
 		}
 		else
 			_sprFaceIcon.animation.play("stop");
 
-		_txtDialog.text = _curLine.substr(0, Std.int(_lineTimer));
+		// _txtDialog.text = _curLine.substr(0, Std.int(_lineTimer));
 
 		if (_canControl && FlxG.keys.anyJustPressed(["J", "SPACE", "W", "A", "S", "D", "UP", "DOWN", "LEFT", "RIGHT", "K"]))
 		{
 
-			if (_txtDialog.text != _curLine)
+			if (_curLine.length > 0)
 			{
-				_txtDialog.text = _curLine;	
+				_txtDialog.text = _curLineMaster;	
+				_txtDialog.wordWrap = true;
+				_curLine = _curLine.substr(_curLine.length-1, 0);
 				_lineTimer = 1000;
 			}
 			else
@@ -156,9 +186,12 @@ class DialogSpriteGroup extends FlxGroup
 
 	public function setCurLine():Void
 	{
+		_txtDialog.wordWrap = false;
 		_curLine = dBox.arrLines[lineNumber].line;
 		for (key in Strings.stringVars.keys())
 			_curLine = _curLine.split(key).join(Strings.stringVars[key]);
+		_curLineMaster = _curLine;
+		_txtDialog.text = "";
 	}
 }
 

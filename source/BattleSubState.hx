@@ -21,6 +21,7 @@ import MenuClasses;
  */
 class BattleSubState extends FlxSubState
 {
+	var _state:TownState;
 
 	var _sprBack:FlxSprite;
 	var window:Window;
@@ -28,10 +29,10 @@ class BattleSubState extends FlxSubState
 	var yanchor:Int;
 	var w:Float = 200;
 	var h:Float = 200;
-    var _txtMP:FlxText;
-    var _txtEnemyMP:FlxText;
-    var _txtMessage:FlxText;
-    var _txtVS:FlxText;
+	var _txtMP:FlxText;
+	var _txtEnemyMP:FlxText;
+	var _txtMessage:FlxText;
+	var _txtVS:FlxText;
 	var _sprPlayer:FlxSprite;
 	var _sprEnemy:FlxSprite;
 	var _sprPen:FlxSprite;
@@ -65,7 +66,7 @@ class BattleSubState extends FlxSubState
 	var _enemyID:Int;
 	var _enemyIDs:Array<Int>;
 	var _arrEnemies:Array<BaseEnemy>;
-	var _dimens:Int;
+	var _dimens:Array<Int>;
 	var _winCount:Int = 0;
 	var _curCount:Int = 0;
 	
@@ -77,7 +78,7 @@ class BattleSubState extends FlxSubState
 
 	var _cursorTimerVert:Float = 0;
 	var _cursorTimerHorz:Float = 0;
-	var _cursorDuration:Float = 0.2;  // static friction
+	var _cursorDuration:Float = 0.2;   // static friction
 	var _cursorInterval:Float = 0.1;   // normal friction
 	var _cursorIsMovingVert:Bool = false;
 	var _cursorIsMovingHorz:Bool = false;
@@ -105,10 +106,11 @@ class BattleSubState extends FlxSubState
 	var songFanfare:FlxSound = FlxG.sound.load("assets/music/victoly_fanfare.wav");
 	var songLost:FlxSound = FlxG.sound.load("assets/music/lost_the_battle.wav");
 	
-	public function new(Enemies:Array<BaseEnemy>, ?WinFlag:String, ?WinFlagVal:Int) 
+	public function new(State:TownState, Enemies:Array<BaseEnemy>, ?WinFlag:String, ?WinFlagVal:Int) 
 	{
 		super();
 
+		_state = State;
 		_arrEnemies = Enemies;
 		_winFlag = WinFlag;
 		_winFlagVal = WinFlagVal;
@@ -136,12 +138,13 @@ class BattleSubState extends FlxSubState
 		_sprPlayer.animation.add("dead_1", [8, 9], 4, true);
 		_sprPlayer.animation.add("idle_0", [12, 13], 4, true);
 		_sprPlayer.animation.add("dead_0", [18, 19], 4, true);
-		_sprPlayer.animation.play("idle_" + Reg.flags["playerHasHood"]);
+		_sprPlayer.animation.play("idle_" + Reg.flags["p_hood"]);
 		
 		_txtVS = new FlxText(_sprPlayer.x + _sprPlayer.width, _sprPlayer.y + 8, 16, "vs", 8);
 
-		_txtEnemyMP = new FlxText(window.coords[0] + window.dimens[0], yanchor, 64, "MP: " + _arrEnemies[0].mp, 8);
-		_txtEnemyMP.x -= _txtEnemyMP.width + 4;  // 4 is for padding between text and window edge
+
+		_txtEnemyMP = new FlxText(xanchor, _txtVS.y + _txtVS.height, 64, "MP: " + _arrEnemies[0].mp, 8);
+		_txtEnemyMP.x += 0;  // random padding, will change whenever I fix the ui in general
 		_txtEnemyMP.alignment = "right";
 		_sprPen = new FlxSprite(xanchor + 48, yanchor + 48);
 		_sprPen.loadGraphic("assets/images/picross_hair.png", true, 9, 9);
@@ -211,10 +214,10 @@ class BattleSubState extends FlxSubState
 
 		for (e in _arrEnemies)
 		{
-			var picross = new PicrossBoard(e.dimens, e.color, [xanchor, yanchor]);
+			var picross = new PicrossBoard(e.dimens, e.color, e.maxMP, [xanchor, yanchor]);
 	   		_arrPicrossBoards.push(picross);
-	   		e.board = picross;
-	   		e.grpObs = _grpObstacles;
+	   		e.setBoard(picross);
+	   		e.setGrpObs(_grpObstacles);
 		}
 
    		for(pc in _arrPicrossBoards)
@@ -227,7 +230,7 @@ class BattleSubState extends FlxSubState
 
 		_grpTexts.add(_txtMP);
 		_grpTexts.add(_txtEnemyMP);
-		// _grpTexts.add(_txtVS);
+		_grpTexts.add(_txtVS);
 		_grpTexts.add(_txtMessage);
 		
 		add(_grpSprites);
@@ -248,16 +251,16 @@ class BattleSubState extends FlxSubState
 		_arrPicrossBoards[_enemyNum].colRowBold(_sprPen.x, _sprPen.y);
 
 		eventManager = new EventClasses.EventManager(this);
-		if (Reg.flags["tutorial_battle"] == 0)
+		if (Reg.flags["tutorial_battle"] == 1)
 		{
-			eventManager.addEvents([new EventFlag("tutorial_battle", 1),
-									new EventDialog(Strings.stringArray[4], this)]);
+			eventManager.addEvents([new EventFlag("tutorial_battle", 2),
+									new EventDialog(Strings.frogponddunStrings[5], this)]);
 		}
 	}
 	
 	public override function update(elapsed:Float)
 	{
-		eventManager.update();
+		eventManager.update(elapsed);
 
 		// timer buisness
 		if (_txtMessage.text != "")
@@ -274,10 +277,10 @@ class BattleSubState extends FlxSubState
 			if (_mcHurtTimer > 0)
 			{
 				_mcHurtTimer -= FlxG.elapsed;
-				_sprPlayer.animation.play("dead_" + Reg.flags["playerHasHood"]);
+				_sprPlayer.animation.play("dead_" + Reg.flags["p_hood"]);
 			}
 			else
-				_sprPlayer.animation.play("idle_" + Reg.flags["playerHasHood"]);
+				_sprPlayer.animation.play("idle_" + Reg.flags["p_hood"]);
 		
 			if (!Reg.isMuted)
 				songBattle.play();
@@ -377,7 +380,7 @@ class BattleSubState extends FlxSubState
 			Player.mp = 0;
 			if (battleState != STATE_DEFEAT)
 			{
-				_sprPlayer.animation.play("dead_" + Reg.flags["playerHasHood"]);
+				_sprPlayer.animation.play("dead_" + Reg.flags["p_hood"]);
 				_txtMessage.text = "You got stumped on, kid.";
 				_msgTimer = _msgDuration;
 				battleState = STATE_DEFEAT;
@@ -394,7 +397,7 @@ class BattleSubState extends FlxSubState
 			if (battleState != STATE_VICTORY)
 			{
 				_sprEnemy.animation.play("dead");
-				_sprPlayer.animation.play("idle_" + Reg.flags["playerHasHood"]);
+				_sprPlayer.animation.play("idle_" + Reg.flags["p_hood"]);
 				_txtMessage.text = "YOU DEFEATED";
 				_msgTimer = _msgDuration;
 				battleState = STATE_VICTORY;
@@ -426,7 +429,7 @@ class BattleSubState extends FlxSubState
 	
 	override public function close():Void
 	{
-		Reg.resetEncounterCounter();
+		Reg.resetEncounterCounter(_state.encounterLowerBound, _state.encounterUpperBound);
 		songBattle.stop();
 		songFanfare.stop();
 		songLost.stop();
@@ -621,7 +624,8 @@ class BattleSubState extends FlxSubState
 		_sprPen.y = yanchor + 48;
 
 		for (e in _arrEnemies)
-			e.grpObs = _grpObstacles;
+	   		e.setGrpObs(_grpObstacles);
+
 		if (_sprEnemy != null)
 		{
 			_sprEnemy.loadGraphic("assets/images/enemies.png", true, 16, 16);
@@ -633,7 +637,7 @@ class BattleSubState extends FlxSubState
 		}
 		else
 		{
-			_sprEnemy = new FlxSprite(_txtEnemyMP.x + _txtEnemyMP.width - 16, _sprPlayer.y);
+			_sprEnemy = new FlxSprite(_sprPlayer.x + _sprPlayer.width * 2, _sprPlayer.y);
 			_sprEnemy.loadGraphic("assets/images/enemies.png", true, 16, 16);
 			var o:Int = 4;  // amount of tiles per enemy
 			o *= _enemyID;
@@ -672,16 +676,16 @@ class BattleSubState extends FlxSubState
 
 	private function takeDamage():Void
 	{
-		Player.mp -= 10 * (_enemyID + 1);
+		Player.mp -= _arrEnemies[_enemyNum].damage;
 		_txtMessage.text = " ";
-		_txtMessage.text = "Suffered " + 10 * (_enemyID + 1) + " damages.";
+		_txtMessage.text = "Suffered " + _arrEnemies[_enemyNum].damage + " damages.";
 		_msgTimer = _msgDuration;
 		_mcHurtTimer = _mcHurtDuration;
 	}
 
 	private function winCheck():Bool
 	{
-		for (row in 0..._arrPicrossBoards[_enemyNum].dimens)
+		for (row in 0..._arrPicrossBoards[_enemyNum].dimens[0])
 		{
 			if (_arrPicrossBoards[_enemyNum].checkRowCorrect(row) == false)
 			{
