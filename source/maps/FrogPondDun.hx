@@ -42,17 +42,17 @@ class FrogPondDun extends TownState
 
 		if (Reg.flags["frogpond_door5"] == 0)
 		{
-			door5 = new NPC(0, 0, FlxObject.DOWN, 9, this, "frogpond_door5");
+			door5 = new NPC(0, 0, FlxObject.DOWN, 9, this, "door5");
 			grpNPCs.add(door5);
 		}
 		if (Reg.flags["frogpond_door6"] == 0)
 		{
-			door6 = new NPC(0, 0, FlxObject.DOWN, 9, this, "frogpond_door6");
+			door6 = new NPC(0, 0, FlxObject.DOWN, 9, this, "door6");
 			grpNPCs.add(door6);
 		}
 		if (Reg.flags["frogpond_door7"] == 0)
 		{
-			door7 = new NPC(0, 0, FlxObject.DOWN, 9, this, "frogpond_door7");
+			door7 = new NPC(0, 0, FlxObject.DOWN, 9, this, "door7");
 			grpNPCs.add(door7);
 		}
 

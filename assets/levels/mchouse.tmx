@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="20" height="15" tilewidth="16" tileheight="16" nextobjectid="20">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="20" height="15" tilewidth="16" tileheight="16" nextobjectid="23">
  <tileset firstgid="1" name="tiles_zelda" tilewidth="16" tileheight="16" tilecount="1000" columns="40">
   <image source="../images/tiles/Inner.png" width="640" height="400"/>
  </tileset>
  <objectgroup name="Objects">
+  <object id="22" name="npc 6" type="NPC" x="160" y="128" width="16" height="16"/>
+  <object id="21" name="npc 5" type="NPC" x="144" y="112" width="16" height="16"/>
+  <object id="20" name="npc 4" type="NPC" x="160" y="208" width="16" height="16"/>
   <object id="19" name="npc 3" type="NPC" x="160" y="112" width="16" height="16"/>
-  <object id="18" name="npc 2" type="NPC" x="160" y="208" width="16" height="16"/>
+  <object id="18" name="npc 2" type="NPC" x="160" y="160" width="16" height="16"/>
   <object id="9" name="npc 1" type="NPC" x="160" y="96" width="16" height="16"/>
   <object id="17" name="npc 0" type="NPC" x="144" y="96" width="16" height="16"/>
   <object id="7" name="1" type="exit" x="64" y="48" width="16" height="16">

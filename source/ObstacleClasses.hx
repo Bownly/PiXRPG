@@ -199,6 +199,62 @@ class ObsLily extends BaseObstacle
 	}
 }
 
+// Owl
+class ObsRevCursor extends BaseObstacle
+{
+	// feathers rain down and flip the board column-wise
+	var _board:PicrossBoard;
+	var _square:PicrossSquare;
+	var _enemy:EnemyClasses.BaseEnemy;
+
+		var _coords:Array<Float>;
+
+
+	public function new(Board:PicrossBoard, Enemy:EnemyClasses.BaseEnemy)
+	{
+		_board = Board;
+		_square = _board.grpPicrossSquares.getRandom();
+		_enemy = Enemy;
+
+		// find the middle square
+		_square = _board.gridPicrossSquares[Std.int(_board.dimens[1]/2)][Std.int(_board.dimens[0]/2)];
+		_coords = [_square.x, _square.y];
+
+		super([_coords[0]-10, _coords[1]-10]);
+		loadGraphic(AssetPaths.owl_eyes__png, true, 40, 20);
+		x -= 5;
+		animation.add("opening", [0, 0, 1, 2, 3, 3], 4, false);
+		scrollFactor.set();	
+	}
+
+	override public function update(elapsed:Float)
+	{
+
+		super.update(elapsed);
+		if (animation.name != "opening")
+		{
+			animation.play("opening");
+		}
+		if (animation.finished == true && this.visible)
+		{
+			var temparr = [ PicrossBoard.REVERSEDVERT, 
+							PicrossBoard.REVERSEDHORZ, 
+							PicrossBoard.REVERSEDBOTH];	
+
+			if (_board.state != PicrossBoard.NORMAL)
+				_board.state = PicrossBoard.NORMAL
+			else
+				_board.state = temparr[FlxG.random.int(0, temparr.length-1)];
+			// TODO???? Dialogbox goes here if first time: you just got confused hahaha
+
+			this.visible = false;
+			this.alive = false;
+			_enemy.removeObstacle();
+		}
+	}
+}
+
+
 // some kind of obstacle that splats down on the board, and has to be "wiped" off by the cursor; also vanishes after x seconds
 
 

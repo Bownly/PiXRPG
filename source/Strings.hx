@@ -355,15 +355,22 @@ class Strings
 
 		// after returning with Froggo
 		// 24
-		[new DialogLine(faces["froggo_normal"], "Hmm...")
+		[new DialogLine(faces["froggo_normal"], "Ah..."),
+		 new DialogLine(faces["froggo_normal"], "I see...")
 		],
 		// walk to other victim
-		// 24
-		[new DialogLine(faces["froggo_normal"], "I see...")
-		],
-		// walk back to mc
 		// 25
-		[new DialogLine(faces["p_sad"], "Well? Can you fix them?"),
+		[new DialogLine(faces["froggo_normal"], "Hmm..."),
+		new DialogLine(faces["froggo_normal"], "Oh dear...")
+		],
+
+		// 26
+		[new DialogLine(faces["p_sad"], "Can you cure them?")
+		],
+
+		// walk back to mc
+		// 27
+		[new DialogLine(faces["froggo_normal"], "Hmm... "),
 		 new DialogLine(faces["froggo_normal"], "The damage done to %rivalname% is minimal, likely thanks to your father having already weakened that owl clan thug."),
 		 new DialogLine(faces["froggo_normal"], "I should be able to fix him right up, but it will take some time."),
 		 new DialogLine(faces["p_glad"], "Great! What about Dad?"),
@@ -466,9 +473,6 @@ class Strings
 		],
 		[new DialogLine(faces["frognpcman_glad"], "If you ever need any barrels, just say the word and I'll help you out, man.")
 		],
-
-
-
 	];
 
 	public static var frogponddunStrings:Array<Array<DialogLine>> = [
@@ -548,8 +552,32 @@ class Strings
 		],
 
 		// 16
-		[new DialogLine(faces["dad_normal"], "Sup. Don't mind me. Just watching some tv."),
+		[new DialogLine(faces["frognpc_normal"], "Sup. Don't mind me. Just watching some tv."),
 		],
+
+		// 17
+		[new DialogLine(faces["r_shock"], "Oh, hey, %pname%."),
+		 new DialogLine(faces["r_smug"], "Once again, I've beaten you to the finish line. You've gotta step your game up, bro."),
+		],
+		
+		// 18
+		[new DialogLine(faces["r_normal"], "I'll be waiting outside.")
+		],
+
+		// 19
+		[new DialogLine(faces["p_shock"], "What's a sign doing in the middle of the room? I should probably go read it or something.")
+		],
+
+		// 20
+		[new DialogLine(faces["p_shock"], "There's an inscription carved into the sign."),
+		 new DialogLine(faces["p_normal"], "\"By making it this far, thoust've provenst thineselfst to be a capable initiate.\""),
+		 new DialogLine(faces["p_normal"], "\"Hereby bestowethd upon thou is the blessing of the holy frog seal.\""),
+		 new DialogLine(faces["p_normal"], "\"Thou can observest the mark of thine new blessing by opening thine status screen.\""),
+		 new DialogLine(faces["p_normal"], "\"Frogspeed, young one.\""),
+		 new DialogLine(faces["p_normal"], "I... think I understood all that. Who's choice was it to use such poorly written old-timey speak?"),
+		 new DialogLine(faces["p_glad"], "More importantly, I've completed the trial! I've gotta go hurry up and meet back up with %rivalname% and Elder Froggo!")
+		],
+
 	];
 
 

@@ -60,6 +60,10 @@ class Reg
 	[
 		"dummy"             => 0,
 		"p_hood"            => 0,
+		"monshou_frog"      => 0,
+		"monshou_ice"       => 0,
+		"monshou_fire"      => 0,
+		"monshou_gondola"   => 0,
 		"save"              => 0,
 		"no_encounters_yet" => 0,
 		"tutorial_battle"   => 0,

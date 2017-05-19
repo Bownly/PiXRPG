@@ -264,7 +264,7 @@ class EnemyOwl extends BaseEnemy
 
 	override public function spawnObstacle()
 	{
-		var drop = new ObsLily(_board, this);
+		var drop = new ObsRevCursor(_board, this);
 		_grpObs.add(drop);
 	}
 }

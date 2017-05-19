@@ -127,9 +127,7 @@ class Player extends Entity
 				
 				// interaction
 				if (FlxG.keys.anyJustPressed(Reg.keys["confirm"]))
-				{
 					interactionCheck(facing);
-				}
 
 				// todo: debug stuff, remove before shipping
 				if (FlxG.keys.anyJustPressed(["P"]))
@@ -154,25 +152,18 @@ class Player extends Entity
 					Reg.flags["frogponddun"] = 1;
 					trace("dun done ");
 				}
-				if (FlxG.keys.anyJustPressed(["N"]))
+				if (FlxG.keys.anyJustPressed(["R"]))
 				{
-					if (FlxG.sound.list.length > 0)
-					{
-						if (FlxG.sound.list.members[0].playing == false)
-						{
-							trace("list: " + FlxG.sound.list.members[0].playing);
-							trace("list: " + FlxG.sound.list);
-							FlxG.sound.play("assets/music/townsong.wav");
-						}
-						else
-							trace("should see this");
-					}
-					else
-					{
-						FlxG.sound.play("assets/music/townsong.wav");
-						trace("now playing");			
-					}
+					if (Reg.flags["monshou_fire"] == 1)
+						Reg.flags["monshou_gondola"] = 1;
+					if (Reg.flags["monshou_ice"] == 1)
+						Reg.flags["monshou_fire"] = 1;
+					if (Reg.flags["monshou_frog"] == 1)
+						Reg.flags["monshou_ice"] = 1;
+					Reg.flags["monshou_frog"] = 1;
+					trace("monshou++ ");
 				}
+				
 
 
 			}

@@ -12,7 +12,12 @@ import flixel.util.FlxColor;
  */
 class PicrossBoard extends FlxGroup
 {
-	
+	static public var NORMAL:Int = 0;
+	static public var REVERSEDVERT:Int = 1;
+	static public var REVERSEDHORZ:Int = 2;
+	static public var REVERSEDBOTH:Int = 3;
+	public var state:Int = 0;
+
 	public var grpTexts:FlxTypedGroup<FlxText>;
 	public var grpSprites:FlxTypedGroup<FlxSprite>;
 	public var grpPicrossSquares:FlxTypedGroup<PicrossSquare>;
@@ -84,72 +89,8 @@ class PicrossBoard extends FlxGroup
 		}
 
 		// sets up the hint Strings and FlxTexts
-		for (i in 0...dimens[0])
-		{
-			rowHintStrings.push(calcRowHintStrings(gridPicrossSquares[i]));
+		setUpHintTexts();
 
-			// 70 is a rough estimate of the offset between the battle window edge and the leftmost picross square
-			// yeah, it's lazy, but it works
-			var txt:FlxText = new FlxText(coords[0] - 70, coords[1] + 46 + i * 10, 48 + 70, rowHintStrings[i], 8);
-			txt.alignment = "right";
-			arrRowHints.push(txt);
-			grpTexts.add(txt);
-		}
-		for (i in 0...dimens[1])
-		{
-			colHintStrings.push(calcColHintStrings(gridPicrossSquares, i));
-
-			var txt:FlxText = new FlxText(coords[0] + 48 + i * 10, coords[1] + 48, 14, colHintStrings[i], 8);
-			txt.y -= txt.height;
-			arrColHints.push(txt);
-			grpTexts.add(txt);
-		}
-
-
-
-
-
-
-		// // sets up the values of the randomized grid and the hint texts
-		// for (i in 0...dimens[0])
-		// {
-
-		// 	rowHintStrings.push(calcRowHintStrings(rowArray));
-
-		// 	// 70 is a rough estimate of the offset between the battle window edge and the leftmost picross square
-		// 	// yeah, it's lazy, but it works
-		// 	var txt:FlxText = new FlxText(coords[0] - 70, coords[1] + 46 + i * 10, 48 + 70, rowHintStrings[i], 8);
-		// 	txt.alignment = "right";
-		// 	arrRowHints.push(txt);
-		// 	grpTexts.add(txt);
-		// 	colArray.push(rowArray);
-		// }
-		// for (i in 0...dimens[1])
-		// {
-		// 	colHintStrings.push(calcColHintStrings(colArray, i));
-
-		// 	var txt:FlxText = new FlxText(coords[0] + 48 + i * 10, coords[1] + 48, 14, colHintStrings[i], 8);
-		// 	txt.y -= txt.height;
-		// 	arrColHints.push(txt);
-		// 	grpTexts.add(txt);
-		// }
-		
-		// // sets up the actual grid of PicrossSquares
-		// for (X in 0...rowArray.length)
-		// {
-		// 	for (Y in 0...colArray.length)
-		// 	{
-		// 		var pSquare:PicrossSquare;
-		// 		// the if statements are to determine what the pattern of the squares' basecolors.
-		// 		if (((X%10 >= 5) && (Y%10 >= 5)) || ((X%10 <= 4) && (Y%10 <= 4)))
-		// 			pSquare = new PicrossSquare(coords[0] + 48 + X * 10, coords[1] + 48 + Y * 10, color+1, X, Y, colArray[Y][X]);
-		// 		else
-		// 			pSquare = new PicrossSquare(coords[0] + 48 + X * 10, coords[1] + 48 + Y * 10, color, X, Y, colArray[Y][X]);
-		// 		gridPicrossSquares[Y][X] = pSquare;
-		// 		grpPicrossSquares.add(pSquare);
-		// 	}
-		// }
-		
 		// sets all of the elements to stay centered to the current camera location
 		for(text in grpTexts) 
 		{
@@ -291,7 +232,31 @@ class PicrossBoard extends FlxGroup
 			for(pX in grpPicrossSquares) 
 				pX.visible = true;
 		}
-
 	}
 
+	public function setUpHintTexts():Void
+	{
+		arrRowHints = new Array<FlxText>();
+		for (i in 0...dimens[0])
+		{
+			rowHintStrings.push(calcRowHintStrings(gridPicrossSquares[i]));
+
+			// 70 is a rough estimate of the offset between the battle window edge and the leftmost picross square
+			// yeah, it's lazy, but it works
+			var txt:FlxText = new FlxText(coords[0] - 70, coords[1] + 46 + i * 10, 48 + 70, rowHintStrings[i], 8);
+			txt.alignment = "right";
+			arrRowHints.push(txt);
+			grpTexts.add(txt);
+		}
+		arrColHints = new Array<FlxText>();
+		for (i in 0...dimens[1])
+		{
+			colHintStrings.push(calcColHintStrings(gridPicrossSquares, i));
+
+			var txt:FlxText = new FlxText(coords[0] + 48 + i * 10, coords[1] + 48, 14, colHintStrings[i], 8);
+			txt.y -= txt.height;
+			arrColHints.push(txt);
+			grpTexts.add(txt);
+		}
+	}
 }

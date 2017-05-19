@@ -12,7 +12,7 @@
  <objectgroup name="Objects">
   <object id="25" name="npc 0" type="NPC" x="64" y="464" width="16" height="16"/>
   <object id="24" name="npc 1" type="NPC" x="64" y="80" width="16" height="16"/>
-  <object id="18" name="chest 5" type="NPC" x="320" y="480" width="16" height="16">
+  <object id="18" name="frogpond_chest5" type="NPC" x="320" y="480" width="16" height="16">
    <properties>
     <property name="facing" type="int" value="1"/>
     <property name="lineNum" type="int" value="11"/>

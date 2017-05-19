@@ -64,6 +64,7 @@ class FrogPond extends TownState
 
 		npcGondola.events = [	
 			new EventHealPlayer(),
+			new EventBattle([new EnemyOwl()], this),
 			new EventDialog(Strings.stringArray[12], this, 
 							[new MenuItemDialogChoice(Strings.stringArray[13], 
 								null, new EventFlag("save", 1)),

@@ -1,6 +1,7 @@
 package;
 
 import flixel.FlxG;
+import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxSubState;
 import flixel.group.FlxGroup;
@@ -471,6 +472,49 @@ class BattleSubState extends FlxSubState
 		return 0;
 	}
 
+	private function moveCursor(Dir:Int):Void
+	{
+		switch (Dir)
+		{
+			case FlxObject.UP:
+			{
+				_cursorTimerVert = 0;
+
+				if (_curBoard.selected[1] > 0)
+					_curBoard.selected[1] -= 1;
+				else
+					_curBoard.selected[1] = _curBoard.gridPicrossSquares.length-1;
+			}
+			case FlxObject.DOWN:
+			{
+				_cursorTimerVert = 0;
+
+				if (_curBoard.selected[1] < _curBoard.gridPicrossSquares.length-1)
+					_curBoard.selected[1] += 1;
+				else
+					_curBoard.selected[1] = 0;
+			}
+			case FlxObject.LEFT:
+			{
+				_cursorTimerHorz = 0;
+
+				if (_curBoard.selected[0] > 0)
+					_curBoard.selected[0] -= 1;
+				else
+					_curBoard.selected[0] = _curBoard.gridPicrossSquares[0].length-1;
+			}
+			case FlxObject.RIGHT:
+			{
+				_cursorTimerHorz = 0;
+
+				if (_curBoard.selected[0] < _curBoard.gridPicrossSquares[0].length-1)
+					_curBoard.selected[0] += 1;
+				else
+					_curBoard.selected[0] = 0;
+			}
+		}
+	}
+
 	private function playerInputs(elapsed:Float):Void
 	{
 		// // cursor movement / dpad stuff
@@ -512,48 +556,40 @@ class BattleSubState extends FlxSubState
 		{
 			if (FlxG.keys.anyJustPressed(Reg.keys["up"]) || _cursorTimerVert > _cursorInterval)
 			{
-				_cursorTimerVert = 0;
-
-				if (_curBoard.selected[1] > 0)
-					_curBoard.selected[1] -= 1;
+				if (_curBoard.state == PicrossBoard.REVERSEDVERT || _curBoard.state == PicrossBoard.REVERSEDBOTH)
+					moveCursor(FlxObject.DOWN);
 				else
-					_curBoard.selected[1] = _curBoard.gridPicrossSquares.length-1;
+					moveCursor(FlxObject.UP);
 			}
 		}
 		else if (FlxG.keys.anyJustPressed(Reg.keys["down"]) || (_cursorIsMovingVert && FlxG.keys.anyPressed(Reg.keys["down"])))
 		{
 			if (FlxG.keys.anyJustPressed(Reg.keys["down"]) || _cursorTimerVert > _cursorInterval)
 			{
-				_cursorTimerVert = 0;
-
-				if (_curBoard.selected[1] < _curBoard.gridPicrossSquares.length-1)
-					_curBoard.selected[1] += 1;
+				if (_curBoard.state == PicrossBoard.REVERSEDVERT || _curBoard.state == PicrossBoard.REVERSEDBOTH)
+					moveCursor(FlxObject.UP);
 				else
-					_curBoard.selected[1] = 0;
+					moveCursor(FlxObject.DOWN);
 			}
 		}
 		if (FlxG.keys.anyJustPressed(Reg.keys["left"]) || (_cursorIsMovingHorz && FlxG.keys.anyPressed(Reg.keys["left"])))
 		{
 			if (FlxG.keys.anyJustPressed(Reg.keys["left"]) || _cursorTimerHorz > _cursorInterval)
 			{
-				_cursorTimerHorz = 0;
-
-			if (_curBoard.selected[0] > 0)
-				_curBoard.selected[0] -= 1;
-			else
-				_curBoard.selected[0] = _curBoard.gridPicrossSquares[0].length-1;
+				if (_curBoard.state == PicrossBoard.REVERSEDHORZ || _curBoard.state == PicrossBoard.REVERSEDBOTH)
+					moveCursor(FlxObject.RIGHT);
+				else
+					moveCursor(FlxObject.LEFT);
 			}
 		}
 		else if (FlxG.keys.anyJustPressed(Reg.keys["right"]) || (_cursorIsMovingHorz && FlxG.keys.anyPressed(Reg.keys["right"])))
 		{
 			if (FlxG.keys.anyJustPressed(Reg.keys["right"]) || _cursorTimerHorz > _cursorInterval)
 			{
-				_cursorTimerHorz = 0;
-
-				if (_curBoard.selected[0] < _curBoard.gridPicrossSquares[0].length-1)
-					_curBoard.selected[0] += 1;
+				if (_curBoard.state == PicrossBoard.REVERSEDHORZ || _curBoard.state == PicrossBoard.REVERSEDBOTH)
+					moveCursor(FlxObject.LEFT);
 				else
-					_curBoard.selected[0] = 0;
+					moveCursor(FlxObject.RIGHT);
 			}
 		}
 
