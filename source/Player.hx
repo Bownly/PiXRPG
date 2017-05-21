@@ -149,8 +149,13 @@ class Player extends Entity
 				}
 				if (FlxG.keys.anyJustPressed(["E"]))
 				{
-					Reg.flags["frogponddun"] = 1;
+					Reg.flags["frogponddun"] += 1;
 					trace("dun done ");
+				}
+				if (FlxG.keys.anyJustPressed(["V"]))
+				{
+					// Reg.flags["frogponddun"] = 1;
+					trace("Reg.flags[p_hood]" + Reg.flags["p_hood"]);
 				}
 				if (FlxG.keys.anyJustPressed(["R"]))
 				{
@@ -230,6 +235,7 @@ class Player extends Entity
 
 	override public function setFacing(Dir:Int):Void
 	{
+		hasHood = Reg.flags["p_hood"];
 		switch (Dir)
 		{
 			case FlxObject.UP:

@@ -81,15 +81,16 @@ class EnemyTest extends BaseEnemy
 
 class EnemyDoor extends BaseEnemy
 {
-	public function new(?Dimens:Array<Int>)
+	public function new(?Dimens:Array<Int>, ?MP:Int)
 	{
 		// id = 7;
 		if (Dimens != null)
 			dimens = Dimens;
 		else
 			dimens = [5, 4];
-		// color = 2;
-		super(7, dimens, [2,3], 5);
+		super(7, dimens, [2,3], 5, 13);
+		if (MP > 0)
+			mp = MP;
 	}
 }
 
@@ -232,11 +233,13 @@ class EnemyOwl extends BaseEnemy
 {
 	public function new()
 	{
-		super();
-		id = 4;
-		dimens = [7, 7];
-		color = [12, 9];
+	// 	super();
+	// 	id = 4;
+	// 	dimens = [7, 7];
+	// 	color = [12, 9];
 		attackFreq = 15;
+		super(4, [7, 7], [12, 9], 10, 25);
+
 	}
 
 	override public function update(elapsed:Float)

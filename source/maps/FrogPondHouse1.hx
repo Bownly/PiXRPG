@@ -36,14 +36,25 @@ class FrogPondHouse1 extends TownState
 	{
 		super.assignEvents();
 
-		if (Reg.flags["owl_clan_attack"] == 0)  // pre-attack
-			npc.events = [new EventDialog(Strings.frogpondStrings[2], this)];
-		else if (Reg.flags["owl_clan_attack"] == 1)  // post-attack
-			npc.events = [new EventDialog(Strings.frogpondStrings[6], this),
-						  new EventDialog(Strings.frogpondStrings[14], this)];
-		else if (Reg.flags["owl_clan_attack"] == 3)  // return to The Pond
-			npc.events = [new EventDialog(Strings.frogpondStrings[14], this)];
 
+
+		if (Reg.flags["owl_clan_attack"] == 0)  // 0 = pre-attack
+			npc.events = [new EventDialog(Strings.frogpondStrings[37], this)];			
+		else if (Reg.flags["owl_clan_attack"] == 1)  // 1 = post-attack
+			npc.events = [new EventDialog(Strings.frogpondStrings[44], this)];			
+		else if (Reg.flags["owl_clan_attack"] >= 3)  // 3 = return to The Pond; 4 = docks; 5 = done
+			npc.events = [new EventDialog(Strings.frogpondStrings[48], this)];			
+
+		if (ItemClasses.InventoryManager.arr.length <= 3)
+		{
+			npc.events.push(new EventDialog(Strings.frogpondStrings[52], this));
+ 			npc.events.push(new EventCurItemChange("Edible Barrel"));
+			npc.events.push(new EventItemGet(new ItemClasses.ItemHealing("Edible Barrel", Strings.itemDescriptions["Edible Barrel"], 13, 20)));
+			if (Reg.flags["p_hood"] == 0)  // 0 = no hood
+				npc.events.push(new EventDialog(Strings.inventoryStrings[0], this));
+			else
+				npc.events.push(new EventDialog(Strings.inventoryStrings[1], this));
+		}
 	}
 
 

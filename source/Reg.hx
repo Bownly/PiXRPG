@@ -69,9 +69,10 @@ class Reg
 		"tutorial_battle"   => 0,
 		"first_wakeup"      => 0,  // 0 = start game; 1 = went downstairs; 2 = talked to dad
 		"first_froggo"      => 0,  // 0 = hasn't met Froggo; 1 = has met him
-		"frogponddun"       => 0,  // 0 = dun not done; 1 = dun done
+		"frogponddun"       => 0,  // 0 = dun not done; 1 = dun done; 2 = talked to Froggo/concluded flag
 		"fight_dummy"       => 0,
-		"owl_clan_attack"   => 0,  // 0 = pre-attack; 1 = post-attack; 2 = return home; 3 = return to The Pond; 4 = done
+		"owl_clan_attack"   => 0,  // 0 = pre-attack; 1 = post-attack; 2 = return home; 3 = return to The Pond; 4 = docks; 5 = done
+		"end_prologue"      => 0,  // -1 = no; 0 = neutral; 1 = yes
 		"frogpond_obs1"     => 0,
 		"frogpond_obs2"     => 0,
 		"frogpond_obs3"     => 0,
@@ -127,6 +128,7 @@ class Reg
 		    case "frogpond-house-2.tmx": FlxG.switchState(new FrogPondHouse2(EntID, "frogpond-house-2.tmx"));
 		    case "frogpond-house-3.tmx": FlxG.switchState(new FrogPondHouse3(EntID, "frogpond-house-3.tmx"));
 		    case "frogpond-house-4.tmx": FlxG.switchState(new FrogPondHouse4(EntID, "frogpond-house-4.tmx"));
+		    case "frogpond-docks.tmx": FlxG.switchState(new FrogPondDocks(EntID, "frogpond-docks.tmx"));
 		    case "frogpond-dungeon.tmx": FlxG.switchState(new FrogPondDun(EntID, "frogpond-dungeon.tmx"));
 		    case "frogpond-dungeon-1.tmx": FlxG.switchState(new FrogPondDun1(EntID, "frogpond-dungeon-1.tmx"));
 		    case "frogpond-dungeon-2.tmx": FlxG.switchState(new FrogPondDun2(EntID, "frogpond-dungeon-2.tmx"));

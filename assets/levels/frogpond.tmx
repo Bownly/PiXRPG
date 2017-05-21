@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="16" tileheight="16" nextobjectid="32">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="16" tileheight="16" nextobjectid="33">
  <tileset firstgid="1" name="tiles_frogpond" tilewidth="16" tileheight="16" tilecount="480" columns="30">
   <image source="../images/tiles/tiles_frogpond.png" width="480" height="256"/>
  </tileset>
@@ -19,13 +19,17 @@
    </properties>
   </object>
   <object id="27" name="6" type="entrance" x="64" y="80" width="16" height="16"/>
-  <object id="26" name="x5" type="exit" x="256" y="80" width="16" height="16">
+  <object id="26" name="x5" type="exit" x="272" y="80" width="16" height="16">
    <properties>
     <property name="nextlevel" value="frogpond-house-4.tmx"/>
     <property name="nextlevelentrance" type="int" value="1"/>
    </properties>
   </object>
-  <object id="25" name="5" type="entrance" x="256" y="80" width="16" height="16"/>
+  <object id="25" name="5" type="entrance" x="272" y="80" width="16" height="16">
+   <properties>
+    <property name="playerfacing" value="W"/>
+   </properties>
+  </object>
   <object id="24" name="x4" type="exit" x="304" y="112" width="16" height="16">
    <properties>
     <property name="nextlevel" value="frogpond-house-4.tmx"/>

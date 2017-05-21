@@ -48,7 +48,7 @@ class MCHouse extends TownState
 			grpNPCs.add(npcDad);	
 			grpNPCs.add(npcRival);	
 		}
-		else if (Reg.flags["frogponddun"] == 1 && Reg.flags["owl_clan_attack"] == 0) // compeleted the dungeon, owl_clan_attack start
+		else if (Reg.flags["frogponddun"] == 2 && Reg.flags["owl_clan_attack"] == 0) // compeleted the dungeon, owl_clan_attack start
 		{
 			npcDad = new NPC(0, 0, FlxObject.DOWN, 1, this, "npc 1");
 			npcRival = new NPC(0, 0, FlxObject.UP, 2, this, "npc 2");
@@ -116,7 +116,7 @@ class MCHouse extends TownState
 			npcRival.events = [new EventDialog(Strings.mchomeStrings[23], this)];
 			npcDad.events = [new EventDialog(Strings.mchomeStrings[23], this)];
 		}		
-		else if (Reg.flags["frogponddun"] == 1 && Reg.flags["owl_clan_attack"] == 0)  // compeleted the dungeon, owl_clan_attack start
+		else if (Reg.flags["frogponddun"] == 2 && Reg.flags["owl_clan_attack"] == 0)  // compeleted the dungeon, owl_clan_attack start
 		{
 			eventManager.addEvents([new EventNPCKillOrNot(npcDad, true),
 							 		new EventDialog(Strings.mchomeStrings[11], this),

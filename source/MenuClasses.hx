@@ -682,8 +682,8 @@ class MenuInventory extends BaseMenu
 	{
 		remove(_dsGroup);
 	
-		if (Reg.flags["playerHasHood"] == 1)
-			_face = 5;
+		if (Reg.flags["p_hood"] == 1)
+			_face = 8;
 		
 		var item:BaseMenuItem = _arr[_selected[1]][_selected[0]];
 		if (Type.getClassName(Type.getClass(item)) == "MenuItemItem")

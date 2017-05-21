@@ -49,14 +49,12 @@ class FrogPond extends TownState
 
 		super.create();
 
-		initializeEvents();
 		assignEvents();
 	}
 	
 	override public function assignEvents():Void
 	{
 		super.assignEvents();
-		// initializeEvents();
 
 		if (Reg.flags["save"] == 1)
 			eventManager.addEvents([new EventSaveGame(2, mapName),
@@ -75,7 +73,7 @@ class FrogPond extends TownState
 
 		npcSign.events = [new EventDialog(Strings.frogpondStrings[7], this)];
 
-		if (Reg.flags["owl_clan_attack"] == 0)  // pre-attack
+		if (Reg.flags["owl_clan_attack"] == 0)  // 0 = pre-attack
 		{
 			if (Reg.flags["first_froggo"] == 0)  // first meeting
 			{
@@ -92,37 +90,16 @@ class FrogPond extends TownState
 								 	new EventNPCRemove(npcRival)
 								 	];
 			}
-			npc1.events = [new EventDialog(Strings.frogpondStrings[5], this)];
+			if (Reg.flags["frogponddun"] == 0)  // 0 = dun not done
+				npc1.events = [new EventDialog(Strings.frogpondStrings[40], this)];			
+			else
+				npc1.events = [new EventDialog(Strings.frogpondStrings[43], this)];			
 		}
-		else if (Reg.flags["owl_clan_attack"] == 1)  // post-attack
-			npc1.events = [new EventDialog(Strings.frogpondStrings[7], this)];			
-		else if (Reg.flags["owl_clan_attack"] == 3)  // return to The Pond
-			npc1.events = [new EventDialog(Strings.frogpondStrings[13], this)];			
-
-
+		else if (Reg.flags["owl_clan_attack"] == 1)  // 1 = post-attack
+			npc1.events = [new EventDialog(Strings.frogpondStrings[47], this)];			
+		else if (Reg.flags["owl_clan_attack"] >= 3)  // 3 = return to The Pond; 4 = docks; 5 = done
+			npc1.events = [new EventDialog(Strings.frogpondStrings[51], this)];			
 	}
-
-
-	public function initializeEvents():Void
-	{
-		_events = [
-
-			"fight_dummy" => [new EventDialog(Strings.stringArray[17], this),
-							new EventBattle([new EnemyTest()], this),
-							new EventFlag("fight_dummy", 0)],
-	
-			"reject_dummy" => [new EventDialog(Strings.stringArray[18], this),
-								new EventFlag("fight_dummy", 0)],
-
-			"talk_to_dummy" => [new EventDialog(Strings.stringArray[10], this,
-												[new MenuItemDialogChoice(Strings.stringArray[15], null, 
-																		new EventFlag("fight_dummy", 1)),
-												new MenuItemDialogChoice(Strings.stringArray[16], null, 
-																		new EventFlag("fight_dummy", -1))
-												])]
-		];
-	}
-
 }
 
 

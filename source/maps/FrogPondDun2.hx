@@ -56,7 +56,7 @@ class FrogPondDun2 extends TownState
 		// door 1 block
 		if (Reg.flags["frogpond_door8"] == 0)
 			door8.events = [new EventDialog(Strings.frogponddunStrings[11], this),
-							new EventBattle([new EnemyDoor([5, 5])], this, "frogpond_door8", 1),
+							new EventBattle([new EnemyDoor([6, 5], 20)], this, "frogpond_door8", 1),
 							];
 		else if (Reg.flags["frogpond_door8"] == 1) 
 		{

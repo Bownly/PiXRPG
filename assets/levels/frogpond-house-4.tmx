@@ -1,17 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="20" height="15" tilewidth="16" tileheight="16" nextobjectid="23">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="20" height="15" tilewidth="16" tileheight="16" nextobjectid="25">
  <tileset firstgid="1" name="tiles_zelda" tilewidth="16" tileheight="16" tilecount="1000" columns="40">
   <image source="../images/tiles/Inner.png" width="640" height="400"/>
  </tileset>
  <objectgroup name="Objects">
-  <object id="9" name="npc" type="NPC" x="160" y="80" width="16" height="16">
-   <properties>
-    <property name="facing" type="int" value="1"/>
-    <property name="lineNum" type="int" value="11"/>
-    <property name="name" value="froggo"/>
-    <property name="species" type="int" value="2"/>
-   </properties>
-  </object>
+  <object id="24" name="npc 3" type="NPC" x="80" y="80" width="16" height="16"/>
+  <object id="23" name="npc 2" type="NPC" x="208" y="80" width="16" height="16"/>
+  <object id="22" name="npc 1" type="NPC" x="176" y="96" width="16" height="16"/>
+  <object id="9" name="npc 0" type="NPC" x="160" y="80" width="16" height="16"/>
   <object id="16" name="x1" type="exit" x="64" y="80" width="16" height="16">
    <properties>
     <property name="nextlevel" value="frogpond.tmx"/>
@@ -20,7 +16,7 @@
   </object>
   <object id="8" name="1" type="entrance" x="64" y="80" width="16" height="16">
    <properties>
-    <property name="playerfacing" value="N"/>
+    <property name="playerfacing" value="E"/>
    </properties>
   </object>
   <object id="20" name="x0" type="exit" x="160" y="208" width="16" height="16">
@@ -32,14 +28,6 @@
   <object id="19" name="0" type="entrance" x="160" y="208" width="16" height="16">
    <properties>
     <property name="playerfacing" value="N"/>
-   </properties>
-  </object>
-  <object id="22" name="npc" type="NPC" x="80" y="160" width="16" height="16">
-   <properties>
-    <property name="facing" type="int" value="1"/>
-    <property name="lineNum" type="int" value="11"/>
-    <property name="name" value="dummy"/>
-    <property name="species" type="int" value="2"/>
    </properties>
   </object>
  </objectgroup>

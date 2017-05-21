@@ -267,9 +267,9 @@ class EventNPCKillOrNot extends BaseEvent
 
 class EventNPCRemove extends BaseEvent
 {
-	var _npc:NPC;
+	var _npc:Entity;
 
-	public function new(Npc:NPC)
+	public function new(Npc:Entity)
 	{
 		super();
 		_npc = Npc;
@@ -429,6 +429,32 @@ class EventSaveGame extends BaseEvent
 		destroy();
 	}
 }
+
+class EventSwitchState extends BaseEvent
+{
+	var _entID:Int = 0;
+	var _mapName:String;
+
+	public function new(MapName:String, ?EntID:Int)
+	{
+		super();
+		if (EntID > 0)
+			_entID = EntID;
+		_mapName = MapName;
+	}
+
+	override public function update(elapsed:Float)
+	{
+		switch _mapName {
+			case "titlescreen": FlxG.switchState(new MenuState());
+		    case "credits": FlxG.switchState(new CreditsState());
+		    default: Reg.goToNextLevel(_entID, _mapName);
+		}
+
+		destroy();
+	}
+}
+
 
 class EventZaWarudo extends BaseEvent
 {

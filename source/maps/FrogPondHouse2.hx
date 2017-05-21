@@ -53,15 +53,17 @@ class FrogPondHouse2 extends TownState
 							])
 		];
 
-		// npc 1
-		// if (Reg.flags["owl_clan_attack"] == 0)  // pre-attack
-		// 	npc.events = [new EventDialog(Strings.frogpondStrings[2], this)];
-		// else if (Reg.flags["owl_clan_attack"] == 1)  // post-attack
-		// 	npc.events = [new EventDialog(Strings.frogpondStrings[6], this)];
-		// else if (Reg.flags["owl_clan_attack"] == 3)  // return to The Pond
-		// 	npc.events = [new EventDialog(Strings.frogpondStrings[14], this)];
-		npc.events = [new EventDialog(Strings.frogpondStrings[4], this)];
-
+		if (Reg.flags["owl_clan_attack"] == 0)  // 0 = pre-attack
+		{
+			if (Reg.flags["frogponddun"] == 0)  // 0 = dun not done
+				npc.events = [new EventDialog(Strings.frogpondStrings[39], this)];			
+			else
+				npc.events = [new EventDialog(Strings.frogpondStrings[42], this)];			
+		}
+		else if (Reg.flags["owl_clan_attack"] == 1)  // 1 = post-attack
+			npc.events = [new EventDialog(Strings.frogpondStrings[46], this)];			
+		else if (Reg.flags["owl_clan_attack"] >= 3)  // 3 = return to The Pond; 4 = docks; 5 = done
+			npc.events = [new EventDialog(Strings.frogpondStrings[50], this)];		
 	}
 
 
