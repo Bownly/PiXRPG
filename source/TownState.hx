@@ -42,8 +42,7 @@ class TownState extends FlxState
 	public var tileMap:FlxTilemap;
 	
 	var sub:BattleSubState;
-	
-	public var songTownsong:FlxSound;
+	var _song:String = "townsong";
 	
 	// tiled stuff
 	public var level:TiledLevel;
@@ -95,7 +94,7 @@ class TownState extends FlxState
 		add(grpNPCs);
 		add(level.foregroundLayer);
 
-		SoundManager.play("townsong");
+		playSong();
 	}
 	
 	/**
@@ -170,7 +169,7 @@ class TownState extends FlxState
 		}
 		
 		if (FlxG.keys.anyJustPressed(["M"]))
-			Reg.muteToggle();
+			FlxG.sound.toggleMuted();
 		
 		for (exit in grpExits)
 		{
@@ -180,9 +179,6 @@ class TownState extends FlxState
 					Reg.goToNextLevel(exit.nextLvlEntID, exit.nextLvl);
 			}			
 		}
-
-
-
 		super.update(elapsed);
 	}	
 
@@ -198,6 +194,13 @@ class TownState extends FlxState
 
 		return;
 	}
+
+	public function playSong():Void
+	{
+		SoundManager.stopMusic(_song);
+		SoundManager.playMusic(_song);		
+	}
+
 
 	private function calculateEncounter(Val:Int):Array<EnemyClasses.BaseEnemy>
 	{

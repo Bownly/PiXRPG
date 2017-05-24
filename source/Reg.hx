@@ -53,24 +53,23 @@ class Reg
 
 	public static var playTime:Int = 0;
 	
-	public static var isMuted:Bool = false;
-
 
 	public static var flags:Map<String, Int> =
 	[
 		"dummy"             => 0,
 		"p_hood"            => 0,
-		"monshou_frog"      => 0,
-		"monshou_ice"       => 0,
-		"monshou_fire"      => 0,
-		"monshou_gondola"   => 0,
+		"monshou_frog"      => 0,  // 0 = don't have; 1 = have
+		"monshou_ice"       => 0,  // 0 = don't have; 1 = have
+		"monshou_fire"      => 0,  // 0 = don't have; 1 = have
+		"monshou_gondola"   => 0,  // 0 = don't have; 1 = have
 		"save"              => 0,
 		"no_encounters_yet" => 0,
-		"tutorial_battle"   => 0,
+		"tutorial_battle"   => 0, 
 		"first_wakeup"      => 0,  // 0 = start game; 1 = went downstairs; 2 = talked to dad
 		"first_froggo"      => 0,  // 0 = hasn't met Froggo; 1 = has met him
 		"frogponddun"       => 0,  // 0 = dun not done; 1 = dun done; 2 = talked to Froggo/concluded flag
-		"fight_dummy"       => 0,
+		"fight_dummy"       => 0,  // -2 = secret fight no; -1 = fight no; 0 = neutral; 1 = fight yes; 2 = secret fight yes
+		"dummy_prizes"      => 0,  // even = nothing; 1 = PiXcalibur; 3, 5 = Pond Scum; >=6 = done
 		"owl_clan_attack"   => 0,  // 0 = pre-attack; 1 = post-attack; 2 = return home; 3 = return to The Pond; 4 = docks; 5 = done
 		"end_prologue"      => 0,  // -1 = no; 0 = neutral; 1 = yes
 		"frogpond_obs1"     => 0,
@@ -146,81 +145,89 @@ class Reg
 	{
 		var save:FlxSave = new FlxSave();
 		save.bind(SAVE_NAME);
-		Strings.stringVars["%pname%"] = save.data.pname;
+
+		// load mc stats
+		Strings.stringVars = save.data.names;
 		Player.mp = save.data.mp;
 		Player.maxmp = save.data.maxmp;
 		Player.xp = save.data.xp;
-		Player.lvl = save.data.lvl;
+		Player.lp = save.data.lp;
 
-		Reg.playTime = save.data.playTime;
+		// load pens
+		PenClasses.PenManager.arrPens = save.data.pens;
+		PenClasses.PenManager.equipped = save.data.ePen;
+	
+		// load playtime
+		playTime = save.data.playTime;
+	
+		// load inventory
 		ItemClasses.InventoryManager.arr = save.data.inventory;
+
+		// load flags
 		Reg.flags = save.data.flags;
 
-		// set location (map + entrance) and load the game
+		// load location (map + entrance)
 		goToNextLevel(save.data.entrance, save.data.mapName);
 	}
 
 	public static function newGame():Void
 	{
+		// set misc
+		for (str in Strings.stringVars)
+			Strings.stringVars[str] = "null";
+
+		// set mc stats
+		Player.resetStats();
+
+		// set pens
+		PenClasses.PenManager.resetPens();
+	
+		// set playtime
+		playTime = 0;
+	
+		// set inventory
+		ItemClasses.InventoryManager.removeAllItems();
+
 		// set flags
 		for (flag in flags.keys())
 			flags[flag] = 0;
 
-		// set inv
-		ItemClasses.InventoryManager.removeAllItems();
-
-		// set mc stats
-		// playerHasHood = false;
-
-		// set playtime
-		playTime = 0;
-
-		// set misc
-		// curItem = "";
-
-		// set location (map + entrance) and start the game
-		// FlxG.switchState(new FrogPond1(1, "frogpond-1.tmx"));
+		// start the game
 		FlxG.switchState(new NamePlayerState());
 	}	
 
-	public static function muteToggle():Void
+	public static function saveGame(EntID:Int, MapName:String):Void 
 	{
-		if (isMuted)
-			isMuted = false;
-		else
-			isMuted = true;
-	}
-
-	public static function saveGame(EntID:Int, MapName:String):Void {
 		var save:FlxSave = new FlxSave();
 		// Delete all existing data
 		save.bind(SAVE_NAME);
 		save.erase();
-
-		// Write new data
-		// set inv
-
-		// set mc stats
 		save.bind(SAVE_NAME);
-		save.data.pname = Strings.stringVars["%pname%"];
+
+		// save mc stats
+		save.data.names = Strings.stringVars;
 		save.data.mp = Player.mp;
 		save.data.maxmp = Player.maxmp;
 		save.data.xp = Player.xp;
-		save.data.lvl = Player.lvl;
+		save.data.lp = Player.lp;
 
-		// set location (map + entrance)
+		// save pens
+		save.data.pens = PenClasses.PenManager.arrPens;
+		save.data.ePen = PenClasses.PenManager.equipped;
+
+		// save playtime
+		save.data.playTime = playTime;
+	
+		// save inventory
+		save.data.inventory = ItemClasses.InventoryManager.arr;
+
+		// save flags
+		save.data.flags = Reg.flags;
+
+		// save location (map + entrance)
 		save.data.mapName = MapName;
 		save.data.entrance = EntID;
 	
-		// set playtime
-		save.data.playTime = 6;
-	
-		// set inventory
-		save.data.inventory = ItemClasses.InventoryManager.arr;
-
-		// set flags
-		save.data.flags = Reg.flags;
-
 		save.flush();
 	}
 

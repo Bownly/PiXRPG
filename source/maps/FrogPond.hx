@@ -62,11 +62,11 @@ class FrogPond extends TownState
 
 		npcGondola.events = [	
 			new EventHealPlayer(),
-			new EventBattle([new EnemyOwl()], this),
-			new EventDialog(Strings.stringArray[12], this, 
-							[new MenuItemDialogChoice(Strings.stringArray[13], 
+			new EventBattle([new EnemyTadpole()], this),
+			new EventDialog(Strings.stringArray[4], this, 
+							[new MenuItemDialogChoice(Strings.stringArray[15], 
 								null, new EventFlag("save", 1)),
-							 new MenuItemDialogChoice(Strings.stringArray[14], 
+							 new MenuItemDialogChoice(Strings.stringArray[15+1], 
 							 	null, new EventFlag("save", 0))
 							])
 		];
@@ -95,7 +95,7 @@ class FrogPond extends TownState
 			else
 				npc1.events = [new EventDialog(Strings.frogpondStrings[43], this)];			
 		}
-		else if (Reg.flags["owl_clan_attack"] == 1)  // 1 = post-attack
+		else if (Reg.flags["owl_clan_attack"] <= 2)  // 1 = post-attack
 			npc1.events = [new EventDialog(Strings.frogpondStrings[47], this)];			
 		else if (Reg.flags["owl_clan_attack"] >= 3)  // 3 = return to The Pond; 4 = docks; 5 = done
 			npc1.events = [new EventDialog(Strings.frogpondStrings[51], this)];			

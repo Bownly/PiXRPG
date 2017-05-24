@@ -69,7 +69,6 @@ class BattleSubState extends FlxSubState
 	var _arrEnemies:Array<BaseEnemy>;
 	var _dimens:Array<Int>;
 	var _winCount:Int = 0;
-	var _curCount:Int = 0;
 	
 	var _msgTimer:Float = 0;
 	var _msgDuration:Float = 1.5;
@@ -102,14 +101,17 @@ class BattleSubState extends FlxSubState
 	static var STATE_MENU:Int = 4;
 	static var STATE_CLOSE:Int = 5;
 	static var STATE_PAUSE:Int = 5;
+	static var STATE_EXP:Int = 6;
 	
-	var songBattle:FlxSound = FlxG.sound.load("assets/music/battle.wav");
-	var songFanfare:FlxSound = FlxG.sound.load("assets/music/victoly_fanfare.wav");
-	var songLost:FlxSound = FlxG.sound.load("assets/music/lost_the_battle.wav");
+	var _WINCHEAT:Bool = false;
+
 	
 	public function new(State:TownState, Enemies:Array<BaseEnemy>, ?WinFlag:String, ?WinFlagVal:Int) 
 	{
 		super();
+
+		SoundManager.pauseMusic("all");
+		SoundManager.playMusic("battle");
 
 		_state = State;
 		_arrEnemies = Enemies;
@@ -142,7 +144,6 @@ class BattleSubState extends FlxSubState
 		_sprPlayer.animation.play("idle_" + Reg.flags["p_hood"]);
 		
 		_txtVS = new FlxText(_sprPlayer.x + _sprPlayer.width, _sprPlayer.y + 8, 16, "vs", 8);
-
 
 		_txtEnemyMP = new FlxText(xanchor, _txtVS.y + _txtVS.height, 64, "MP: " + _arrEnemies[0].mp, 8);
 		_txtEnemyMP.x += 0;  // random padding, will change whenever I fix the ui in general
@@ -272,7 +273,6 @@ class BattleSubState extends FlxSubState
 		_txtEnemyMP.text = "MP: " + _arrEnemies[_enemyNum].mp;
 
 		// this block is basically resolveAnimations()
-		// TODO: make it resolveAnimations() if you add a 3rd animation to resolve
 		if (battleState == STATE_BATTLE)
 		{
 			if (_mcHurtTimer > 0)
@@ -282,76 +282,28 @@ class BattleSubState extends FlxSubState
 			}
 			else
 				_sprPlayer.animation.play("idle_" + Reg.flags["p_hood"]);
-		
-			if (!Reg.isMuted)
-				songBattle.play();
-			else 
-				songBattle.pause();
 		}
 
-		if (!Reg.isMuted)
+		if (battleState == STATE_VICTORY)
 		{
-			if (battleState == STATE_VICTORY)
-			{
-				songBattle.pause();
-				songFanfare.play();
-			}
-			else if (battleState == STATE_DEFEAT)
-			{
-				songBattle.pause();
-				songLost.play();			
-			}
+			SoundManager.pauseMusic("battle");
+			SoundManager.playMusic("victoly");
 		}
-		else
+		else if (battleState == STATE_DEFEAT)
 		{
-			songFanfare.pause();
-			songLost.pause();
+			SoundManager.pauseMusic("battle");
+			SoundManager.playMusic("defeat");		
 		}
-		
+
 		// cursor movement and other control stuff
-		if (battleState == STATE_BATTLE)
+		else if (battleState == STATE_BATTLE)
 		{
 			if (_inputsDelayTimer >= _inputsDelayDuration)
 				playerInputs(elapsed);
 			else
 				_inputsDelayTimer += elapsed;
 			_arrEnemies[_enemyNum].update(elapsed);
-
-			if (_sprPen1 != null) {
-				_sprPen1.x = _sprPen.x - 10;
-				_sprPen1.y = _sprPen.y - 10;				
-			}
-			if (_sprPen2 != null) {
-				_sprPen2.x = _sprPen.x;
-				_sprPen2.y = _sprPen.y - 10;				
-			}
-			if (_sprPen3 != null) {
-				_sprPen3.x = _sprPen.x + 10;
-				_sprPen3.y = _sprPen.y - 10;				
-			}
-			if (_sprPen4 != null) {
-				_sprPen4.x = _sprPen.x - 10;
-				_sprPen4.y = _sprPen.y;				
-			}		
-			if (_sprPen6 != null) {
-				_sprPen6.x = _sprPen.x + 10;
-				_sprPen6.y = _sprPen.y;				
-			}
-			if (_sprPen7 != null) {
-				_sprPen7.x = _sprPen.x - 10;
-				_sprPen7.y = _sprPen.y + 10;				
-			}
-			if (_sprPen8 != null) {
-				_sprPen8.x = _sprPen.x;
-				_sprPen8.y = _sprPen.y + 10;				
-			}
-			if (_sprPen9 != null) {
-				_sprPen9.x = _sprPen.x + 10;
-				_sprPen9.y = _sprPen.y + 10;				
-			}
-
 		}
-		
 		else if (battleState == STATE_MENU)
 		{
 			if (_menu.isAlive == false)
@@ -371,7 +323,6 @@ class BattleSubState extends FlxSubState
 				_inputsDelayTimer = 0;
 			}
 		}
-
 		else if (battleState == STATE_ESCAPE && _txtMessage.text == "")
 			this.close();
 
@@ -391,11 +342,11 @@ class BattleSubState extends FlxSubState
 		}
 		
 		// if you win
-		if (winCheck() == true)
+		if (winCheck() == true || _WINCHEAT == true)
 		{
 			_grpObstacles.clear();
 
-			if (battleState != STATE_VICTORY)
+			if (battleState != STATE_VICTORY && battleState != STATE_EXP)
 			{
 				_sprEnemy.animation.play("dead");
 				_sprPlayer.animation.play("idle_" + Reg.flags["p_hood"]);
@@ -405,14 +356,33 @@ class BattleSubState extends FlxSubState
 			}
 			else if (battleState == STATE_VICTORY && _txtMessage.text == "")
 			{
-				// Reg.AddXP(2 + 3 * _enemyID);
 
 				if (_enemyNum == _arrPicrossBoards.length-1)
 				{
 					if (_winFlag != null && Reg.flags[_winFlag] != _winFlagVal)
 						eventManager.addEvents([new EventFlag(_winFlag, _winFlagVal)]);
-					if (eventManager.getLength() <= 0)
-						this.close();
+
+					var _sumXP = 0;  
+					for (enemy in _arrEnemies)	
+						_sumXP += enemy.xp;
+
+					trace("_sumXP:  ", _sumXP);
+
+					var tempID = FlxG.random.int(0, 3);  // 4 is the amount of unique XP strings  TODO: make it a variable imo
+					tempID = tempID + 5 + (4 * Reg.flags["p_hood"]);  // 5 is the ID of the first XP string
+
+					eventManager.addEvents([new EventStringVarChange("%xp%", ""+_sumXP),
+											new EventDialog(Strings.stringArray[tempID], this),
+											]);
+
+					if (Player.addXP(_sumXP))  // if the player leveled up
+					{
+						eventManager.addEvents([new EventStringVarChange("%level%", ""+Player.lp),
+												new EventDialog(Strings.stringArray[13+Reg.flags["p_hood"]], this),
+												]);
+					}
+
+					battleState = STATE_EXP;
 				}
 				else 
 				{
@@ -424,6 +394,11 @@ class BattleSubState extends FlxSubState
 					battleState = STATE_MENU;
 				}
 			}
+			if (battleState == STATE_EXP)
+			{
+				if (eventManager.getLength() <= 0)
+					this.close();
+			}
 		}
 		super.update(elapsed);
 	}
@@ -431,45 +406,54 @@ class BattleSubState extends FlxSubState
 	override public function close():Void
 	{
 		Reg.resetEncounterCounter(_state.encounterLowerBound, _state.encounterUpperBound);
-		songBattle.stop();
-		songFanfare.stop();
-		songLost.stop();
+		_state.playSong();
 		super.close();
 	}
 
 	private function markSquare(Cursor:FlxSprite, Guess:Int):Int
 	{
-		var cell:PicrossSquare = _curBoard.gridPicrossSquares[_curBoard.selected[1]][_curBoard.selected[0]];
+		var tempX = Std.int((Cursor.x - _curBoard.gridPicrossSquares[0][0].x) / 10);
+		var tempY = Std.int((Cursor.y - _curBoard.gridPicrossSquares[0][0].y) / 10);
+
+		if (tempX < _curBoard.dimens[1] && tempY >= 0)
+		{
+			var _cell = _curBoard.gridPicrossSquares[tempY][tempX];
 			if (Guess != PEN_IDLE)
-				_lastMarkedSquare = cell;
-			var result:Int = cell.turnOnOrOff(Guess);
+				_lastMarkedSquare = _cell;
+			var result:Int = _cell.turnOnOrOff(Guess);
 			switch (result)
 			{
 				case PicrossSquare.CORRECT:
 				{
-					_arrPicrossBoards[_enemyNum].curCount++;
-					_arrPicrossBoards[_enemyNum].checkRowCorrect(cell.rowID);
-					_arrPicrossBoards[_enemyNum].checkColCorrect(cell.colID);
-					_arrEnemies[_enemyNum].removeObstacle();
+					_arrEnemies[_enemyNum].onSquareFilled();
+					// _arrPicrossBoards[_enemyNum].enemy.onSquareFilled();
+					_arrPicrossBoards[_enemyNum].checkRowCorrect(_cell.rowID);
+					_arrPicrossBoards[_enemyNum].checkColCorrect(_cell.colID);
 					return 1;
 				}
 				case PicrossSquare.GOODHURT:
 				{
-					_arrPicrossBoards[_enemyNum].curCount++;
+					_arrEnemies[_enemyNum].onSquareFilled();
+					_arrEnemies[_enemyNum].onSquareHurt();
 					takeDamage();
-					_arrPicrossBoards[_enemyNum].checkRowCorrect(cell.rowID);
-					_arrPicrossBoards[_enemyNum].checkColCorrect(cell.colID);
+					_arrPicrossBoards[_enemyNum].checkRowCorrect(_cell.rowID);
+					_arrPicrossBoards[_enemyNum].checkColCorrect(_cell.colID);
 					camera.shake(0.005, 0.2);
 					return 1;
 				}
 				case PicrossSquare.HURT:
 				{
+					_arrEnemies[_enemyNum].onSquareHurt();
 					camera.shake(0.005, 0.2);
 					takeDamage();
 				}
 				return 0;
 			}
-		return 0;
+			return 0;
+		}
+		else
+			return 0;
+		
 	}
 
 	private function moveCursor(Dir:Int):Void
@@ -513,6 +497,13 @@ class BattleSubState extends FlxSubState
 					_curBoard.selected[0] = 0;
 			}
 		}
+
+		var x = _curBoard.gridPicrossSquares[_curBoard.selected[1]][_curBoard.selected[0]].x;
+		var y = _curBoard.gridPicrossSquares[_curBoard.selected[1]][_curBoard.selected[0]].y;
+		_sprPen.x = x;
+		_sprPen.y = y;
+		_arrPicrossBoards[_enemyNum].colRowBold(_sprPen.x, _sprPen.y);
+		refreshCursorsPos();
 	}
 
 	private function playerInputs(elapsed:Float):Void
@@ -594,17 +585,6 @@ class BattleSubState extends FlxSubState
 		}
 
 
-		if (FlxG.keys.anyPressed(Reg.keys["dpad"]))
-		{
-			var x = _curBoard.gridPicrossSquares[_curBoard.selected[1]][_curBoard.selected[0]].x;
-			var y = _curBoard.gridPicrossSquares[_curBoard.selected[1]][_curBoard.selected[0]].y;
-			_sprPen.x = x;
-			_sprPen.y = y;
-
-			_arrPicrossBoards[_enemyNum].colRowBold(_sprPen.x, _sprPen.y);
-		}
-
-
 		// // debug stuff TODO: remove in any official builds
 		if (FlxG.keys.anyJustPressed(["I"]))
 			_arrEnemies[_enemyNum].spawnObstacle();
@@ -621,7 +601,7 @@ class BattleSubState extends FlxSubState
 		}
 		
 		if (FlxG.keys.anyJustPressed(["M"]))
-			Reg.muteToggle();
+			FlxG.sound.toggleMuted();
 
 		// fleeing
 		if (FlxG.keys.anyPressed(["ESCAPE"]))
@@ -634,6 +614,8 @@ class BattleSubState extends FlxSubState
 			}
 		}
 
+		if (FlxG.keys.anyPressed(["Y"]))
+			_WINCHEAT = true;
 		// marking squares
 		if (FlxG.keys.anyPressed(Reg.keys["conf/canc"]))
 		{
@@ -647,17 +629,61 @@ class BattleSubState extends FlxSubState
 				else
 					penState = PEN_MARK;
 			}
-			markSquare(_sprPen, penState);
+			if (markSquare(_sprPen, penState) == 1)
+			{
+				for (cursor in _grpCursor)
+				{
+					if (cursor != _sprPen)
+						markSquare(cursor, PicrossSquare.SOLVE);
+				}
+			}
+			
+		}
+	}
+
+	private function refreshCursorsPos():Void
+	{
+		if (_sprPen1 != null) {
+			_sprPen1.x = _sprPen.x - 10;
+			_sprPen1.y = _sprPen.y - 10;				
+		}
+		if (_sprPen2 != null) {
+			_sprPen2.x = _sprPen.x;
+			_sprPen2.y = _sprPen.y - 10;				
+		}
+		if (_sprPen3 != null) {
+			_sprPen3.x = _sprPen.x + 10;
+			_sprPen3.y = _sprPen.y - 10;				
+		}
+		if (_sprPen4 != null) {
+			_sprPen4.x = _sprPen.x - 10;
+			_sprPen4.y = _sprPen.y;				
+		}		
+		if (_sprPen6 != null) {
+			_sprPen6.x = _sprPen.x + 10;
+			_sprPen6.y = _sprPen.y;				
+		}
+		if (_sprPen7 != null) {
+			_sprPen7.x = _sprPen.x - 10;
+			_sprPen7.y = _sprPen.y + 10;				
+		}
+		if (_sprPen8 != null) {
+			_sprPen8.x = _sprPen.x;
+			_sprPen8.y = _sprPen.y + 10;				
+		}
+		if (_sprPen9 != null) {
+			_sprPen9.x = _sprPen.x + 10;
+			_sprPen9.y = _sprPen.y + 10;				
 		}
 	}
 
 	private function setUpBoard():Void
 	{
-		// _enemyID = _enemyIDs[_enemyNum];
-		_enemyID = _arrEnemies[_enemyNum].id;
 
+		_enemyID = _arrEnemies[_enemyNum].id;
 		_sprPen.x = xanchor + 48;
 		_sprPen.y = yanchor + 48;
+		refreshCursorsPos();
 
 		for (e in _arrEnemies)
 	   		e.setGrpObs(_grpObstacles);
@@ -688,6 +714,8 @@ class BattleSubState extends FlxSubState
 
 	private function setUpMenu(CloseString:String):Void
 	{
+		SoundManager.playMusic("battle");
+	
 		_cursorTimerHorz = 0;
 		_cursorIsMovingHorz = false;
 		_cursorTimerVert = 0;

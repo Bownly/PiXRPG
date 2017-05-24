@@ -20,7 +20,7 @@
     <property name="species" type="int" value="5"/>
    </properties>
   </object>
-  <object id="17" name="door 7" type="NPC" x="416" y="32" width="16" height="16">
+  <object id="17" name="frogpond_door7" type="NPC" x="416" y="32" width="16" height="16">
    <properties>
     <property name="facing" type="int" value="1"/>
     <property name="lineNum" type="int" value="11"/>
@@ -28,7 +28,7 @@
     <property name="species" type="int" value="7"/>
    </properties>
   </object>
-  <object id="19" name="door 6" type="NPC" x="352" y="240" width="16" height="16">
+  <object id="19" name="frogpond_door6" type="NPC" x="352" y="240" width="16" height="16">
    <properties>
     <property name="facing" type="int" value="1"/>
     <property name="lineNum" type="int" value="11"/>
@@ -36,7 +36,7 @@
     <property name="species" type="int" value="7"/>
    </properties>
   </object>
-  <object id="20" name="door 5" type="NPC" x="80" y="336" width="16" height="16">
+  <object id="20" name="frogpond_door5" type="NPC" x="80" y="336" width="16" height="16">
    <properties>
     <property name="facing" type="int" value="1"/>
     <property name="lineNum" type="int" value="11"/>
@@ -54,7 +54,7 @@
   <object id="23" name="0" type="exit" x="112" y="480" width="16" height="16">
    <properties>
     <property name="nextlevel" value="frogpond.tmx"/>
-    <property name="nextlevelentrance" type="int" value="1"/>
+    <property name="nextlevelentrance" type="int" value="6"/>
    </properties>
   </object>
   <object id="22" name="0" type="entrance" x="112" y="480" width="16" height="16"/>

@@ -40,7 +40,7 @@ class FrogPondDun2 extends TownState
 
 		if (Reg.flags["frogpond_door8"] == 0)
 		{
-			door8 = new NPC(0, 0, FlxObject.DOWN, 9, this, "door 8");
+			door8 = new NPC(0, 0, FlxObject.DOWN, 9, this, "frogpond_door8");
 			grpNPCs.add(door8);
 		}
 
@@ -55,8 +55,8 @@ class FrogPondDun2 extends TownState
 
 		// door 1 block
 		if (Reg.flags["frogpond_door8"] == 0)
-			door8.events = [new EventDialog(Strings.frogponddunStrings[11], this),
-							new EventBattle([new EnemyDoor([6, 5], 20)], this, "frogpond_door8", 1),
+			door8.events = [new EventDialog(Strings.frogponddunStrings[13], this),
+							new EventBattle([new EnemyDoor([6, 5], 20, 21)], this, "frogpond_door8", 1),
 							];
 		else if (Reg.flags["frogpond_door8"] == 1) 
 		{

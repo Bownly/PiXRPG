@@ -53,7 +53,7 @@ class MenuSubState extends FlxSubState
 		var statsWindow = new Window([wpad, wpad], [winW, winH]);
 
 		_txtName = new FlxText(wpad + statsWindow.pad*2, wpad + statsWindow.pad*2, winW, Strings.stringVars["%pname%"]);
-		_txtLevel = new FlxText(_txtName.x, _txtName.y + BaseMenu.ITEM_GAP, winW, "LP: " + Player.lvl, 8);
+		_txtLevel = new FlxText(_txtName.x, _txtName.y + BaseMenu.ITEM_GAP, winW, "LP: " + Player.lp, 8);
 		_txtHP = new FlxText(_txtName.x, _txtLevel.y + BaseMenu.ITEM_GAP, winW, "HP: 999/999", 8);
 		_txtMP = new FlxText(_txtName.x, _txtHP.y + BaseMenu.ITEM_GAP, winW, "MP: " + Player.mp + "/" + Player.maxmp, 8);
 		_txtXP = new FlxText(_txtName.x, _txtMP.y + BaseMenu.ITEM_GAP, winW, "XP: " + Player.xp, 8);

@@ -12,6 +12,7 @@ class WorldMap extends TownState
 	public function new(EntranceID:Int, MapName:String, ?SongName:String, ?Dungeon:Bool) 
 	{
 		super(EntranceID, MapName, SongName, Dungeon);
+		_song = "worldmap";
 
 		if (Reg.flags["frogponddun"] == 0)
 			encounterDecrementer = 0;
@@ -25,7 +26,6 @@ class WorldMap extends TownState
 	override public function create():Void 
 	{
 		super.create();
-		SoundManager.play("worldmap");
 	}
 	
 	override function update(elapsed:Float):Void

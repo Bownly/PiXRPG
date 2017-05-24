@@ -15,7 +15,7 @@ import MenuClasses;
 
 class FrogPondHouse4 extends TownState
 {
-
+	var npcDad:NPC;
 	var npcFroggo:NPC;
 	var npcRival:NPC;
 	var _events:Map<String, Array<BaseEvent>>;
@@ -38,6 +38,13 @@ class FrogPondHouse4 extends TownState
 		if (Reg.flags["frogponddun"] == 1)  // dungeon completed
 		{
 			npcRival = new NPC(256, 256, FlxObject.LEFT, 2, this, "npc 1");
+			grpNPCs.add(npcRival);
+		}
+		if (Reg.flags["owl_clan_attack"] >= 3)  // 
+		{
+			npcDad = new NPC(256, 256, FlxObject.LEFT, 1, this, "npc 4", true);
+			grpNPCs.add(npcDad);
+			npcRival = new NPC(256, 256, FlxObject.LEFT, 2, this, "npc 5", true);
 			grpNPCs.add(npcRival);
 		}
 
@@ -101,6 +108,7 @@ class FrogPondHouse4 extends TownState
 									new EventFlag("owl_clan_attack", 2)
 									]);		
 		else if (Reg.flags["owl_clan_attack"] == 3)  // return to The Pond
+		{
 			eventManager.addEvents([new EventNPCWalk(npcFroggo, [[FlxObject.RIGHT, 1], [FlxObject.UP, 0]]),
 									new EventZaWarudo(0.3),
 									new EventDialog(Strings.frogpondStrings[26], this),  // where is it?
@@ -140,6 +148,21 @@ class FrogPondHouse4 extends TownState
 									new EventNPCRemove(npcFroggo),
 									new EventFlag("owl_clan_attack", 4)
 									]);		
+
+			var tempID = 3;
+			if (Reg.flags["p_hood"] == 1)
+				tempID = 4;
+			npcDad.events = [new EventDialog(Strings.frogpondStrings[tempID], this)];
+			npcRival.events = [new EventDialog(Strings.frogpondStrings[tempID], this)];
+		}
+		else if (Reg.flags["owl_clan_attack"] > 3)  // return to The Pond
+		{
+			var tempID = 3;
+			if (Reg.flags["p_hood"] == 1)
+				tempID = 4;
+			npcDad.events = [new EventDialog(Strings.frogpondStrings[tempID], this)];
+			npcRival.events = [new EventDialog(Strings.frogpondStrings[tempID], this)];
+		}
 
 	}
 }

@@ -76,6 +76,7 @@ class MenuState extends FlxState
 		super.create();	
 
 		SoundManager.initialize();
+		SoundManager.stopMusic();
 	}
 	
 	/**

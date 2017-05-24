@@ -16,12 +16,12 @@ class Player extends Entity
 	private static inline var TILE_SIZE:Int = 16;
 	private static inline var MOVEMENT_SPEED:Float = 2;
 
-	public static var lvl:Int = 1;
+	public static var lp:Int = 1;
 	public static var mp:Int = 60;
 	public static var maxmp:Int = 60;
 	public static var xp:Int = 0;
 	public static var gp:Int = 0;
-	public static var MAXXP:Int = 100;	
+	public static var MAXXP:Int = 6911;	
 
 	public var isMoving:Bool;	
 	public var canMove:Bool = true;
@@ -175,24 +175,39 @@ class Player extends Entity
 		}
 		else if (Reg.STATE == Reg.STATE_CUTSCENE)
 			super.update(elapsed);  
-
 	}
 
-	public static function addXP(Val:Int):Void
+	public static function addXP(Val:Int):Bool
 	{
 		xp += Val;
 		if (xp > MAXXP)
 			xp = MAXXP;
 		
-		if (xp >= 100)
-			lvl = 5;
-		else if (xp >= 55)
-			lvl = 4;
-		else if (xp >= 25)
-			lvl = 3;
-		else if (xp >= 10)
-			lvl = 2;
-		mp = 30 + (lvl) * 30;
+		var _curLP = lp;
+
+		if (xp >= 2400)
+			lp = 8;
+		else if (xp >= 1899)
+			lp = 7;
+		else if (xp >= 1488)
+			lp = 6;
+		else if (xp >= 999)
+			lp = 5;
+		else if (xp >= 699)
+			lp = 4;
+		else if (xp >= 333)
+			lp = 3;
+		else if (xp >= 99)
+			lp = 2;
+		maxmp = 30 + (lp) * 15;
+
+		if (lp != _curLP)
+		{
+			mp = maxmp;
+			return true;			
+		}
+		else
+			return false;
 	}
 	
 	public function collisionCheck(Direction:Int):Bool
@@ -261,15 +276,16 @@ class Player extends Entity
 		}
 	}
 	
-	public static function setStats(LVL:Int, MP:Int, XP:Int):Void
+	public static function setStats(LVL:Int, MMP:Int, MP:Int, XP:Int):Void
 	{
-		lvl = LVL;
+		lp = LVL;
+		maxmp = MMP;
 		mp = MP;
 		xp = XP;
 	}
 
 	public static function resetStats():Void
-		setStats(1, 30, 0);
+		setStats(1, 30, 30, 0);
 	
 
 	public function moveTo(Direction:Int):Void
@@ -281,6 +297,7 @@ class Player extends Entity
 			isMoving = true;
 		}
 	}
+
 	public function interactionCheck(Direction:Int):Void
 	{
 		var xx:Int = 0;

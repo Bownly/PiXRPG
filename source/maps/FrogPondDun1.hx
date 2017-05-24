@@ -121,79 +121,84 @@ class FrogPondDun1 extends TownState
 	{
 		if (Reg.flags["frogpond_chest1"] == 0)
 		{
-			chest1.events = [new EventCurItemChange("1 potion"),
-							new EventDialog(Strings.frogponddunStrings[14], this),
-							new EventFlag("frogpond_chest1", 1),
-							new EventNPCTrigger(chest1, 0),
-							new EventNPCRemove(obs1)
+			chest1.events = [new EventDialog(Strings.frogponddunStrings[14], this),
+							 new EventFlag("frogpond_chest1", 1),
+							 new EventNPCTrigger(chest1, 0),
+							 new EventFlag("frogpond_obs1", 1),
+							 new EventNPCRemove(obs1)
 							];
 		}
 
 		if (Reg.flags["frogpond_chest2"] == 0)
 		{
-			chest2.events = [new EventCurItemChange("2 potion"),
-							new EventDialog(Strings.frogponddunStrings[14], this),
-							new EventFlag("frogpond_chest2", 1),
-							new EventNPCTrigger(chest2, 0),
-							new EventNPCRemove(obs2)
+			chest2.events = [new EventDialog(Strings.frogponddunStrings[14], this),
+							 new EventFlag("frogpond_chest2", 1),
+							 new EventNPCTrigger(chest2, 0),
+							 new EventFlag("frogpond_obs2", 1),
+							 new EventNPCRemove(obs2)
 							];
 		}
 
 		if (Reg.flags["frogpond_chest3"] == 0)
 		{
-			chest3.events = [new EventCurItemChange("3 potion"),
-							new EventDialog(Strings.frogponddunStrings[14], this),
-							new EventFlag("frogpond_chest3", 1),
-							new EventNPCTrigger(chest3, 0),
-							new EventNPCRemove(obs3)
+			chest3.events = [new EventDialog(Strings.frogponddunStrings[14], this),
+							 new EventFlag("frogpond_chest3", 1),
+							 new EventNPCTrigger(chest3, 0),
+							 new EventFlag("frogpond_obs3", 1),
+							 new EventNPCRemove(obs3)
 							];
 		}
 
 		if (Reg.flags["frogpond_chest4"] == 0)
 		{
 			chest4.events = [new EventDialog(Strings.frogponddunStrings[14], this),
-							new EventFlag("frogpond_chest4", 1),
-							new EventNPCTrigger(chest4, 0),
-							new EventNPCRemove(obs4)
+							 new EventFlag("frogpond_chest4", 1),
+							 new EventNPCTrigger(chest4, 0),
+							 new EventFlag("frogpond_obs4", 1),
+							 new EventNPCRemove(obs4)
 							];
 		}
 
+
+		var tempID = 15;  // no hood
+		if (Reg.flags["p_hood"] == 1)
+			tempID = 21;  // hooded
 		
 		if (Reg.flags["frogpond_mimic1"] == 0)
 		{
-			mimic1.events = [new EventDialog(Strings.frogponddunStrings[15], this),
+			mimic1.events = [new EventDialog(Strings.frogponddunStrings[tempID], this),
 							 new EventFlag("frogpond_mimic1", 1),
-							 new EventBattle([new EnemyDoor()], this, "frogpond_mimic1", 1),
+							 new EventBattle([new EnemyFrog()], this, "frogpond_mimic1", 1),
 							 new EventNPCTrigger(mimic1, 0)
 							];
 		}
 		if (Reg.flags["frogpond_mimic2"] == 0)
 		{
-			mimic2.events = [new EventDialog(Strings.frogponddunStrings[15], this),
+			mimic2.events = [new EventDialog(Strings.frogponddunStrings[tempID], this),
 							 new EventFlag("frogpond_mimic2", 1),
-							 new EventBattle([new EnemyDoor()], this, "frogpond_mimic2", 1),
+							 new EventBattle([new EnemyFrog()], this, "frogpond_mimic2", 1),
 							 new EventNPCTrigger(mimic2, 0)
 							];
 		}
 		if (Reg.flags["frogpond_mimic3"] == 0)
 		{
-			mimic3.events = [new EventDialog(Strings.frogponddunStrings[15], this),
+			mimic3.events = [new EventDialog(Strings.frogponddunStrings[tempID], this),
 							 new EventFlag("frogpond_mimic3", 1),
-							 new EventBattle([new EnemyDoor()], this, "frogpond_mimic3", 1),
+							 new EventBattle([new EnemyFrog()], this, "frogpond_mimic3", 1),
 							 new EventNPCTrigger(mimic3, 0)
 							];
 		}
 		if (Reg.flags["frogpond_mimic4"] == 0)
 		{
-			mimic4.events = [new EventDialog(Strings.frogponddunStrings[15], this),
+			mimic4.events = [new EventDialog(Strings.frogponddunStrings[tempID], this),
 							 new EventFlag("frogpond_mimic4", 1),
-							 new EventBattle([new EnemyDoor()], this, "frogpond_mimic4", 1),
+							 new EventBattle([new EnemyFrog()], this, "frogpond_mimic4", 1),
 							 new EventNPCTrigger(mimic4, 0)
 							];
 		}
 		if (Reg.flags["frogpond_mimic5"] == 0)
 		{
-			mimic5.events = [new EventDialog(Strings.frogponddunStrings[15], this),
+			mimic5.events = [new EventDialog(Strings.frogponddunStrings[tempID], this),
 							 new EventFlag("frogpond_mimic5", 1),
 							 new EventBattle([new EnemyDoor()], this, "frogpond_mimic5", 1),
 							 new EventNPCTrigger(mimic5, 0)
@@ -201,7 +206,7 @@ class FrogPondDun1 extends TownState
 		}
 		if (Reg.flags["frogpond_mimic6"] == 0)
 		{
-			mimic6.events = [new EventDialog(Strings.frogponddunStrings[15], this),
+			mimic6.events = [new EventDialog(Strings.frogponddunStrings[tempID], this),
 							 new EventFlag("frogpond_mimic6", 1),
 							 new EventBattle([new EnemyDoor()], this, "frogpond_mimic6", 1),
 							 new EventNPCTrigger(mimic6, 0)
@@ -209,7 +214,7 @@ class FrogPondDun1 extends TownState
 		}
 		if (Reg.flags["frogpond_mimic7"] == 0)
 		{
-			mimic7.events = [new EventDialog(Strings.frogponddunStrings[15], this),
+			mimic7.events = [new EventDialog(Strings.frogponddunStrings[tempID], this),
 							 new EventFlag("frogpond_mimic7", 1),
 							 new EventBattle([new EnemyDoor()], this, "frogpond_mimic7", 1),
 							 new EventNPCTrigger(mimic7, 0)
@@ -217,7 +222,7 @@ class FrogPondDun1 extends TownState
 		}
 		if (Reg.flags["frogpond_mimic8"] == 0)
 		{
-			mimic8.events = [new EventDialog(Strings.frogponddunStrings[15], this),
+			mimic8.events = [new EventDialog(Strings.frogponddunStrings[tempID], this),
 							 new EventFlag("frogpond_mimic8", 1),
 							 new EventBattle([new EnemyDoor()], this, "frogpond_mimic8", 1),
 							 new EventNPCTrigger(mimic8, 0)
@@ -226,7 +231,7 @@ class FrogPondDun1 extends TownState
 
 		// door 1 block
 		if (Reg.flags["frogpond_door1"] == 0)
-			door1.events = [new EventDialog(Strings.frogponddunStrings[8], this),
+			door1.events = [new EventDialog(Strings.frogponddunStrings[9], this),
 							new EventBattle([new EnemyDoor()], this, "frogpond_door1", 1)
 							];
 		else if (Reg.flags["frogpond_door1"] == 1) 
@@ -239,7 +244,7 @@ class FrogPondDun1 extends TownState
 
 		// door 2 block
 		if (Reg.flags["frogpond_door2"] == 0)
-			door2.events = [new EventDialog(Strings.frogponddunStrings[9], this),
+			door2.events = [new EventDialog(Strings.frogponddunStrings[12], this),
 							new EventBattle([new EnemyDoor()], this, "frogpond_door2", 1)
 							];
 		else if (Reg.flags["frogpond_door2"] == 1) 

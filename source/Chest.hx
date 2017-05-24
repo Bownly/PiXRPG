@@ -15,7 +15,7 @@ class Chest extends NPC
 	public function new(X:Float=0, Y:Float=0, State:TownState, Flag:String) 
 	{
 		// the first chest sprite is the 10th npc, hence the 10 value below
-		var _species = 10 + Reg.flags[Flag];
+		var _species = 10;
 		super(X, Y, FlxObject.DOWN, _species, State, Flag);
 	}
 	

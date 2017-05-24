@@ -125,7 +125,7 @@ class DialogSpriteGroup extends FlxGroup
 			else
 				_txtDummy.text = _txtDialog.text + _curLine.substr(0, len);
 
-			if (_txtDummy.textField.textWidth >= _txtDummy.width)
+			if (_txtDummy.textField.textWidth >= _txtDummy.width - 8)  // the 8 is the default leftside spacing on textfields
 			{
 				if (_txtDialog.text.substr(_txtDialog.text.length-1, 1) == " ")  // if a space is activating the wordwrap
 				{
@@ -148,7 +148,6 @@ class DialogSpriteGroup extends FlxGroup
 
 		if (_canControl && FlxG.keys.anyJustPressed(["J", "SPACE", "W", "A", "S", "D", "UP", "DOWN", "LEFT", "RIGHT", "K"]))
 		{
-
 			if (_curLine.length > 0)
 			{
 				_txtDialog.text = _curLineMaster;	

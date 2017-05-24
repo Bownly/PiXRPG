@@ -41,14 +41,19 @@ class FrogPondHouse2 extends TownState
 
 		// gondola
 		if (Reg.flags["save"] == 1)
-			eventManager.addEvents([new EventSaveGame(2, mapName),
+			eventManager.addEvents([new EventSaveGame(1, mapName),
 									new EventFlag("save", 0)]);
+
+		var tempID = 0;
+		if (Reg.flags["p_hood"] == 1)
+			tempID = 2;
+
 		npc_gondola.events = [	
 			new EventHealPlayer(),
-			new EventDialog(Strings.stringArray[12], this, 
-							[new MenuItemDialogChoice(Strings.stringArray[13], 
+			new EventDialog(Strings.stringArray[4], this, 
+							[new MenuItemDialogChoice(Strings.stringArray[tempID], 
 								null, new EventFlag("save", 1)),
-							 new MenuItemDialogChoice(Strings.stringArray[14], 
+							 new MenuItemDialogChoice(Strings.stringArray[tempID+1], 
 							 	null, new EventFlag("save", 0))
 							])
 		];
@@ -60,7 +65,7 @@ class FrogPondHouse2 extends TownState
 			else
 				npc.events = [new EventDialog(Strings.frogpondStrings[42], this)];			
 		}
-		else if (Reg.flags["owl_clan_attack"] == 1)  // 1 = post-attack
+		else if (Reg.flags["owl_clan_attack"] <= 2)  // 1 = post-attack; 2 = return home
 			npc.events = [new EventDialog(Strings.frogpondStrings[46], this)];			
 		else if (Reg.flags["owl_clan_attack"] >= 3)  // 3 = return to The Pond; 4 = docks; 5 = done
 			npc.events = [new EventDialog(Strings.frogpondStrings[50], this)];		

@@ -125,23 +125,6 @@ class EventBattle extends BaseEvent
 	}
 }
 
-class EventCurItemChange extends BaseEvent
-{
-	var _name:String;
-
-	public function new(Name:String)
-	{
-		_name = Name;
-		super();
-	}
-
-	override public function update(elapsed:Float)
-	{
-		Strings.stringVars["%item%"] = _name;
-		destroy();
-	}
-}
-
 class EventDialog extends BaseEvent
 {
 	var _dialogBox:DialogClasses.DialogBox;
@@ -156,9 +139,9 @@ class EventDialog extends BaseEvent
 
 	override public function update(elapsed:Float)
 	{
-		destroy();
 		var sub = new DialogSubState(_dialogBox);
 		_state.openSubState(sub);
+		destroy();
 		super.update(elapsed);
 	}
 }
@@ -430,6 +413,25 @@ class EventSaveGame extends BaseEvent
 	}
 }
 
+class EventStringVarChange extends BaseEvent
+{
+	var _name:String;
+	var _val:String;
+
+	public function new(Name:String, Val:String)
+	{
+		_name = Name;
+		_val = Val;
+		super();
+	}
+
+	override public function update(elapsed:Float)
+	{
+		Strings.stringVars[_name] = _val;
+		destroy();
+	}
+}
+
 class EventSwitchState extends BaseEvent
 {
 	var _entID:Int = 0;
@@ -451,6 +453,24 @@ class EventSwitchState extends BaseEvent
 		    default: Reg.goToNextLevel(_entID, _mapName);
 		}
 
+		destroy();
+	}
+}
+
+
+class EventUnlockPen extends BaseEvent
+{
+	var _penID:Int;
+
+	public function new(PenID:Int)
+	{
+		_penID = PenID;
+		super();
+	}
+
+	override public function update(elapsed:Float)
+	{
+		PenClasses.PenManager.unlockPen(_penID);
 		destroy();
 	}
 }

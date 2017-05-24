@@ -22,27 +22,60 @@ class SoundManager
 	{
 		var townsong = FlxG.sound.load("assets/music/townsong.wav");
 		townsong.persist = true;
+		townsong.looped = true;
 		var worldmap = FlxG.sound.load("assets/music/za_warudo_map.wav");
 		worldmap.persist = true;
+		worldmap.looped = true;
 		var battle = FlxG.sound.load("assets/music/battle.wav");
 		battle.persist = true;
+		battle.looped = true;
+		var victoly = FlxG.sound.load("assets/music/victoly_fanfare.wav");
+		victoly.persist = true;
+		var defeat = FlxG.sound.load("assets/music/lost_the_battle.wav");
+		defeat.persist = true;
 
 		songs = 
 		[
 			"townsong"  => townsong,
 			"worldmap"  => worldmap,
 			"battle"    => battle,
+			"victoly"   => victoly,
+			"defeat"    => defeat,
 		];
 	}
-	public static function play(title:String):Void
+	public static function playMusic(title:String):Void
 	{
 		if (songs[title].playing == false)
+			songs[title].play();
+	}
+
+	public static function pauseMusic(title:String):Void
+	{
+		if (title != "all")
+			songs[title].pause();
+		else
 		{
 			for (song in FlxG.sound.list)
-				song.stop();
-			songs[title].play();
+				song.pause();
 		}
 	}
 
+	public static function stopMusic(?Excluded:String):Void
+	{
+		if (Excluded != null)
+		{
+			for (song in FlxG.sound.list)
+			{
+				if (song != songs[Excluded])
+					song.stop();				
+			}
+		}
+		else
+		{
+			for (song in FlxG.sound.list)
+					song.stop();				
+		}
+
+	}
 
 }

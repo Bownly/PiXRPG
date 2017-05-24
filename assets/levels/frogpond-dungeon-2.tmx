@@ -6,24 +6,28 @@
  <objectgroup name="Objects">
   <object id="1" name="chest 3" type="NPC" x="512" y="496" width="16" height="16"/>
   <object id="18" name="chest 2" type="NPC" x="128" y="496" width="16" height="16"/>
-  <object id="17" name="door 8" type="NPC" x="320" y="352" width="16" height="16"/>
-  <object id="19" name="door 7" type="NPC" x="496" y="496" width="16" height="16"/>
-  <object id="20" name="door 6" type="NPC" x="144" y="496" width="16" height="16"/>
+  <object id="17" name="frogpond_door8" type="NPC" x="320" y="352" width="16" height="16"/>
+  <object id="19" name="frogpond_door7" type="NPC" x="496" y="496" width="16" height="16"/>
+  <object id="20" name="frogpond_door6" type="NPC" x="144" y="496" width="16" height="16"/>
   <object id="25" name="npc 1" type="NPC" x="320" y="272" width="16" height="16"/>
   <object id="21" name="npc 0" type="NPC" x="320" y="288" width="16" height="16"/>
   <object id="24" name="1" type="exit" x="320" y="240" width="16" height="16">
    <properties>
     <property name="nextlevel" value="frogpond.tmx"/>
-    <property name="nextlevelentrance" type="int" value="1"/>
+    <property name="nextlevelentrance" type="int" value="6"/>
    </properties>
   </object>
   <object id="15" name="0" type="exit" x="320" y="816" width="16" height="16">
    <properties>
-    <property name="nextlevel" value="frogpond.tmx"/>
-    <property name="nextlevelentrance" type="int" value="3"/>
+    <property name="nextlevel" value="frogpond-dungeon-1.tmx"/>
+    <property name="nextlevelentrance" type="int" value="1"/>
    </properties>
   </object>
-  <object id="14" name="0" type="entrance" x="320" y="816" width="16" height="16"/>
+  <object id="14" name="0" type="entrance" x="320" y="816" width="16" height="16">
+   <properties>
+    <property name="playerfacing" value="N"/>
+   </properties>
+  </object>
  </objectgroup>
  <layer name="Copy of Floor" width="40" height="60">
   <properties>

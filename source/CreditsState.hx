@@ -61,8 +61,8 @@ class CreditsState extends FlxState
 		
 		FlxG.mouse.visible = false;		
 		super.create();	
-		
-		}
+		SoundManager.stopMusic();
+	}
 	
 	/**
 	 * Function that is called when this state is destroyed - you might want to 
