@@ -65,9 +65,9 @@ class PicrossBoard extends FlxGroup
 			var arr = new Array<PicrossSquare>();
 			for (i in 0...dimens[1])
 			{
-				var tempColor = color[0];
+				var tempColor = color[1];
 				if (((i%10 >= 5) && (j%10 >= 5)) || ((i%10 <= 4) && (j%10 <= 4)))
-					tempColor = color[1];
+					tempColor = color[0];
 				var pSquare = new PicrossSquare(coords[0] + 48 + i * 10, coords[1] + 48 + j * 10, tempColor, i, j, 0);
 				arr.push(pSquare);
 				grpPicrossSquares.add(pSquare);

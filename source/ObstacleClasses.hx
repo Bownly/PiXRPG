@@ -202,13 +202,10 @@ class ObsLily extends BaseObstacle
 // Owl
 class ObsRevCursor extends BaseObstacle
 {
-	// feathers rain down and flip the board column-wise
 	var _board:PicrossBoard;
 	var _square:PicrossSquare;
 	var _enemy:EnemyClasses.BaseEnemy;
-
-		var _coords:Array<Float>;
-
+	var _coords:Array<Float>;
 
 	public function new(Board:PicrossBoard, Enemy:EnemyClasses.BaseEnemy)
 	{
@@ -239,12 +236,15 @@ class ObsRevCursor extends BaseObstacle
 		{
 			var temparr = [ PicrossBoard.REVERSEDVERT, 
 							PicrossBoard.REVERSEDHORZ, 
-							PicrossBoard.REVERSEDBOTH];	
+							PicrossBoard.REVERSEDBOTH,
+							PicrossBoard.NORMAL,
+							PicrossBoard.NORMAL];	
 
-			if (_board.state != PicrossBoard.NORMAL)
-				_board.state = PicrossBoard.NORMAL
-			else
-				_board.state = temparr[FlxG.random.int(0, temparr.length-1)];
+			var tempState = temparr[FlxG.random.int(0, temparr.length-1)];
+			while (tempState == _board.state)
+				tempState = temparr[FlxG.random.int(0, temparr.length-1)];
+
+			_board.state = tempState;
 			// TODO???? Dialogbox goes here if first time: you just got confused hahaha
 
 			this.visible = false;

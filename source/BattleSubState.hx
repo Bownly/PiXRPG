@@ -226,6 +226,7 @@ class BattleSubState extends FlxSubState
 	   		_grpPicrossSquaresBoards.add(pc);
 		setUpBoard();
 
+		_arrPicrossBoards[_enemyNum].colRowBold(_sprPen.x, _sprPen.y);
 
 		_grpSprites.add(_sprEnemy);	
 		_grpSprites.add(_sprPlayer);	
@@ -249,8 +250,6 @@ class BattleSubState extends FlxSubState
 		for(cursor in _grpCursor) 
 			cursor.scrollFactor.set();		
 
-
-		_arrPicrossBoards[_enemyNum].colRowBold(_sprPen.x, _sprPen.y);
 
 		eventManager = new EventClasses.EventManager(this);
 		if (Reg.flags["tutorial_battle"] == 1)
@@ -338,7 +337,7 @@ class BattleSubState extends FlxSubState
 				battleState = STATE_DEFEAT;
 			}
 			else if (battleState == STATE_DEFEAT && _txtMessage.text == "")
-				this.close();
+				FlxG.switchState(new GameOverState());
 		}
 		
 		// if you win
@@ -688,25 +687,10 @@ class BattleSubState extends FlxSubState
 		for (e in _arrEnemies)
 	   		e.setGrpObs(_grpObstacles);
 
-		if (_sprEnemy != null)
-		{
-			_sprEnemy.loadGraphic("assets/images/enemies.png", true, 16, 16);
-			var o:Int = 4;  // amount of tiles per enemy
-			o *= _enemyID;
-			_sprEnemy.animation.add("idle", [1 + o, 0 + o, 1 + o, 2 + o], 4, true);
-			_sprEnemy.animation.add("dead", [3 + o]);
-			_sprEnemy.animation.play("idle");
-		}
-		else
-		{
-			_sprEnemy = new FlxSprite(_sprPlayer.x + _sprPlayer.width * 2, _sprPlayer.y);
-			_sprEnemy.loadGraphic("assets/images/enemies.png", true, 16, 16);
-			var o:Int = 4;  // amount of tiles per enemy
-			o *= _enemyID;
-			_sprEnemy.animation.add("idle", [1 + o, 0 + o, 1 + o, 2 + o], 4, true);
-			_sprEnemy.animation.add("dead", [3 + o]);
-			_sprEnemy.animation.play("idle");
-		}
+		_sprEnemy =_arrEnemies[_enemyNum].sprite;
+		_sprEnemy.x = _sprPlayer.x + _sprPlayer.width * 2;
+		_sprEnemy.y =  _sprPlayer.y;
+		_sprEnemy.animation.play("idle");
 
 		_arrPicrossBoards[_enemyNum].flipActive();
 		_curBoard = _arrPicrossBoards[_enemyNum];

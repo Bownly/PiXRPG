@@ -209,6 +209,43 @@ class EventItemGet extends BaseEvent
 	}
 }
 
+class EventMusicPlay extends BaseEvent
+{
+	var _song:String;
+
+	public function new(Song:String)
+	{
+		_song = Song;
+		super();
+	}
+
+	override public function update(elapsed:Float)
+	{
+		SoundManager.playMusic(_song);
+		destroy();
+	}
+}
+
+class EventMusicStop extends BaseEvent
+{
+	var _song:String;
+
+	public function new(?Song:String)
+	{
+		_song = Song;
+		super();
+	}
+
+	override public function update(elapsed:Float)
+	{
+		if (_song != null)
+			SoundManager.stopMusic(_song);
+		else
+			SoundManager.stopMusic();
+		destroy();
+	}
+}
+
 class EventNPCAdd extends BaseEvent
 {
 	var _npc:NPC;
@@ -457,7 +494,6 @@ class EventSwitchState extends BaseEvent
 	}
 }
 
-
 class EventUnlockPen extends BaseEvent
 {
 	var _penID:Int;
@@ -474,7 +510,6 @@ class EventUnlockPen extends BaseEvent
 		destroy();
 	}
 }
-
 
 class EventZaWarudo extends BaseEvent
 {

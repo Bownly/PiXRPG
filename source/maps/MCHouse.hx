@@ -29,7 +29,6 @@ class MCHouse extends TownState
 	override public function create():Void
 	{
 		grpNPCs = new FlxTypedGroup<NPC>();
-		
 
 		if (Reg.flags["owl_clan_attack"] == 2)  // 2 = return home
 		{
@@ -78,6 +77,15 @@ class MCHouse extends TownState
 
 
 		super.create();
+		_song = "bosssong";
+		playSong();
+
+		// if (Reg.flags["frogponddun"] == 2 && Reg.flags["owl_clan_attack"] == 0) // compeleted the dungeon, owl_clan_attack start
+		// 	eventManager.addEvents([new EventMusicStop(), 
+		// 							new EventMusicPlay("bosssong")
+		// 							]);
+
+
 		assignEvents();
 	}
 	
@@ -88,13 +96,13 @@ class MCHouse extends TownState
 			eventManager.addEvents([new EventNPCWalk(player, [[FlxObject.UP, 3]]),
 									new EventNPCAdd(npcFroggo, grpNPCs),
 									new EventNPCWalk(npcFroggo, [[FlxObject.UP, 1], [FlxObject.LEFT, 1], [FlxObject.UP, 1]]),
-									new EventDialog(Strings.mchomeStrings[24], this),
+									new EventDialog(Strings.mchomeStrings[34], this),
 									new EventNPCWalk(npcFroggo, [[FlxObject.RIGHT, 1], [FlxObject.UP, 1]]),
-									new EventDialog(Strings.mchomeStrings[25], this),
+									new EventDialog(Strings.mchomeStrings[35], this),
 									new EventNPCWalk(player, [[FlxObject.UP, 1]]),
-									new EventDialog(Strings.mchomeStrings[26], this),
+									new EventDialog(Strings.mchomeStrings[36], this),
 									new EventNPCWalk(npcFroggo, [[FlxObject.DOWN, 1]]),
-									new EventDialog(Strings.mchomeStrings[27], this),
+									new EventDialog(Strings.mchomeStrings[37], this),
 									// new EventDialog(Strings.mchomeStrings[26], this),  // lots of dialog between mc and froggo
 									// new EventDialog(Strings.mchomeStrings[26], this),
 									// new EventDialog(Strings.mchomeStrings[26], this),
@@ -113,40 +121,40 @@ class MCHouse extends TownState
 		}	
 		else if (Reg.flags["owl_clan_attack"] == 1)  // 1 = post-attack
 		{
-			npcRival.events = [new EventDialog(Strings.mchomeStrings[23], this)];
-			npcDad.events = [new EventDialog(Strings.mchomeStrings[23], this)];
+			npcRival.events = [new EventDialog(Strings.mchomeStrings[33], this)];
+			npcDad.events = [new EventDialog(Strings.mchomeStrings[33], this)];
 		}		
 		else if (Reg.flags["frogponddun"] == 2 && Reg.flags["owl_clan_attack"] == 0)  // compeleted the dungeon, owl_clan_attack start
 		{
 			eventManager.addEvents([new EventNPCKillOrNot(npcDad, true),
-							 		new EventDialog(Strings.mchomeStrings[11], this),
+							 		new EventDialog(Strings.mchomeStrings[21], this),
 									new EventNPCWalk(player, [[FlxObject.UP, 3]]),
 									new EventNPCAdd(npcRival, grpNPCs),
 									new EventNPCWalk(npcRival, [[FlxObject.LEFT, 1], [FlxObject.UP, 1]]),
 									new EventNPCWalk(npcOwl, [[FlxObject.DOWN, 0]]),
-									new EventDialog(Strings.mchomeStrings[12], this),
-									new EventDialog(Strings.mchomeStrings[13], this),
+									new EventDialog(Strings.mchomeStrings[22], this),
+									new EventDialog(Strings.mchomeStrings[23], this),
 									new EventNPCWalk(npcRival, [[FlxObject.UP, 2]]),
-									new EventDialog(Strings.mchomeStrings[14], this),
+									new EventDialog(Strings.mchomeStrings[24], this),
 									new EventNPCWalk(player, [[FlxObject.UP, 3]]),
-									new EventDialog(Strings.mchomeStrings[16], this),
+									new EventDialog(Strings.mchomeStrings[26], this),
 									new EventNPCKillOrNot(npcRival, true),
 									new EventNPCWalk(player, [[FlxObject.LEFT, 0]]),
-									new EventDialog(Strings.mchomeStrings[15], this),
-									new EventDialog(Strings.mchomeStrings[17], this),
+									new EventDialog(Strings.mchomeStrings[25], this),
+									new EventDialog(Strings.mchomeStrings[27], this),
 									new EventNPCWalk(npcOwl, [[FlxObject.RIGHT, 0]]),
-									new EventDialog(Strings.mchomeStrings[18], this),
+									new EventDialog(Strings.mchomeStrings[28], this),
 									new EventNPCWalk(npcOwl, [[FlxObject.LEFT, 1], [FlxObject.DOWN, 2], 
 									 						  [FlxObject.RIGHT, 2], [FlxObject.DOWN, 2]]),
 									new EventNPCWalk(player, [[FlxObject.DOWN]]),
-									new EventDialog(Strings.mchomeStrings[19], this),
+									new EventDialog(Strings.mchomeStrings[29], this),
 									new EventNPCWalk(player, [[FlxObject.DOWN, 2]]),
-									new EventDialog(Strings.mchomeStrings[20], this),
+									new EventDialog(Strings.mchomeStrings[30], this),
 									new EventBattle([new EnemyOwl()], this),
-									new EventDialog(Strings.mchomeStrings[21], this),
+									new EventDialog(Strings.mchomeStrings[31], this),
 									new EventNPCWalk(npcOwl, [[FlxObject.DOWN, 3]]),
 									new EventNPCRemove(npcOwl),
-									new EventDialog(Strings.mchomeStrings[22], this),
+									new EventDialog(Strings.mchomeStrings[32], this),
 									new EventNPCSetCanTurn(npcDad, false),
 									new EventNPCSetCanTurn(npcRival, false),
 									new EventFlag("owl_clan_attack", 1)
@@ -161,6 +169,21 @@ class MCHouse extends TownState
 				npcDad.events = [new EventDialog(Strings.mchomeStrings[7], this),
 								 new EventDialog(Strings.mchomeStrings[8], this),
 								 new EventDialog(Strings.mchomeStrings[9], this),
+								 new EventDialog(Strings.mchomeStrings[10], this),
+								 new EventDialog(Strings.mchomeStrings[11], this),
+								 new EventDialog(Strings.mchomeStrings[12], this),
+								 new EventDialog(Strings.mchomeStrings[13], this),
+								 new EventDialog(Strings.mchomeStrings[14], this),
+								 new EventDialog(Strings.mchomeStrings[15], this),
+								 new EventDialog(Strings.mchomeStrings[16], this),
+								 new EventUnlockPen(0),
+
+								 // new EventPlaySFX("item_get"),
+
+								 new EventDialog(Strings.mchomeStrings[17], this),
+								 new EventDialog(Strings.mchomeStrings[18], this),
+								 new EventNPCWalk(npcRival, [[FlxObject.LEFT, 0]]),
+								 new EventDialog(Strings.mchomeStrings[19], this),
 								 new EventFlag("first_wakeup", 2),
 								 new EventNPCWalk(npcRival, [[FlxObject.DOWN, 6]]),
 								 new EventZaWarudo(0.5),
@@ -170,7 +193,7 @@ class MCHouse extends TownState
 				];
 			}
 			else if (Reg.flags["first_wakeup"] == 2)  // after first talk with dad
-				npcDad.events = [new EventDialog(Strings.mchomeStrings[10], this)];
+				npcDad.events = [new EventDialog(Strings.mchomeStrings[20], this)];
 		}
 	}
 }

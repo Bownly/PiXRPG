@@ -56,6 +56,7 @@ class Reg
 
 	public static var flags:Map<String, Int> =
 	[
+		"difficulty"        => 0,  // 0 = normal; 1 = hard
 		"dummy"             => 0,
 		"p_hood"            => 0,
 		"monshou_frog"      => 0,  // 0 = don't have; 1 = have
@@ -172,10 +173,6 @@ class Reg
 
 	public static function newGame():Void
 	{
-		// set misc
-		for (str in Strings.stringVars)
-			Strings.stringVars[str] = "null";
-
 		// set mc stats
 		Player.resetStats();
 
@@ -193,7 +190,7 @@ class Reg
 			flags[flag] = 0;
 
 		// start the game
-		FlxG.switchState(new NamePlayerState());
+		FlxG.switchState(new DifficultySelectionState());
 	}	
 
 	public static function saveGame(EntID:Int, MapName:String):Void 
@@ -233,7 +230,7 @@ class Reg
 
 	public static function resetEncounterCounter(lower:Int, upper:Int):Void
 	{
-		encounterCounter = FlxG.random.int(8, 12);
+		encounterCounter = FlxG.random.int(lower, upper);
 	}
 	
 

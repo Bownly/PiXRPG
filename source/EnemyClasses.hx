@@ -43,39 +43,44 @@ class BaseEnemy
 	public var _board:PicrossBoard;
 	public var timerAttack:Float = 0;
 	public var attackFreq:Int = 1;
+	public var fillcount:Int = 0;
 	public var damage:Int = 10;
+	public var sprite:FlxSprite;
 
-
-	public function new(?ID:Int, ?S:Array<Int>, ?C:Array<Int>, ?D:Int, ?M:Int, ?X:Int) 
+	public function new(ID:Int, S:Array<Int>, C:Array<Int>, D:Int, M:Int, X:Int) 
 	{
 		id = ID;
-		if (S != null)
-			dimens = S;
-		else
-			dimens = [1, 1];
-		if (C != null)
-			color = C;
-		else
-			color = [8,9];
-		if (D > -1)
-			damage = D;
-		else
-			damage = 5;
-		if (M > 0)
-			maxMP = M;
-		else
-			maxMP = 5;
-		if (X > 0)
-			xp = X;
-		else
-			xp = 3;
-		// mp = Std.int(dimens*dimens/2);
+		dimens = S;
+		color = C;
+		damage = D;
+		maxMP = M;
+		mp = maxMP;
+		xp = X;
+
+		if (Reg.flags["difficulty"] == 1)  // 1 = hard
+		{
+			damage *= 2;
+			dimens[0] += 2;
+			dimens[1] += 2;
+			maxMP = Std.int((maxMP * dimens[0] * dimens[1]) / ((dimens[0]-2) * (dimens[1]-2)));
+			mp = maxMP;
+		}
+
+		sprite = new FlxSprite(0, 0);
+		sprite.loadGraphic("assets/images/enemies.png", true, 16, 16);
+		var o:Int = 4;  // amount of tiles per enemy
+		o *= id;
+		sprite.animation.add("idle", [1 + o, 0 + o, 1 + o, 2 + o], 4, true);
+		sprite.animation.add("dead", [3 + o]);
+		sprite.animation.play("idle");
 	}
 
 	public function update(elapsed:Float) {
 		mp = maxMP - _board.curCount;
 	}
 	public function onSquareFilled() {
+		fillcount++;
+		timerAttack++;
 		mp--;
 	}	
 	public function onSquareHurt() {}
@@ -94,7 +99,7 @@ class EnemyTest extends BaseEnemy
 {
 	public function new()
 	{
-		super(6, [4, 4], [27, 10], 0, 12, 3);
+		super(6, [4, 4], [11, 26], 0, 12, 3);
 	}
 }
 
@@ -102,12 +107,11 @@ class EnemyDoor extends BaseEnemy
 {
 	public function new(?Dimens:Array<Int>, ?MP:Int, ?XP:Int)
 	{
-		// id = 7;
 		if (Dimens != null)
 			dimens = Dimens;
 		else
 			dimens = [5, 4];
-		super(7, dimens, [6, 7], 5, 13, 15);
+		super(7, dimens, [7, 6], 3, 13, 15);
 		if (MP > 0)
 			mp = MP;
 		if (XP > 0)
@@ -119,16 +123,15 @@ class EnemyDummyBoss extends BaseEnemy
 {
 	public function new()
 	{
-		super(6, [14, 14], [27, 10], 15, 125, 300);
-		// super(6, [14, 14], [4, 13], 15, 195);
-		attackFreq = 5;
+		super(6, [12, 12], [11, 26], 15, 92, 300);
+		attackFreq = 8;
 	}
 	
 	override public function update(elapsed:Float)
 	{
 		timerAttack += elapsed;
 
-		if (timerAttack >= 5)
+		if (timerAttack >= attackFreq)
 		{
 			spawnObstacle();
 			timerAttack = 0;
@@ -141,11 +144,11 @@ class EnemyDummyBoss extends BaseEnemy
 	{
 		super.onSquareFilled();
 		removeObstacle();
-		if ((maxMP - mp) % attackFreq == 0)
-		{
-			timerAttack = 0;
-			spawnObstacle();
-		}
+		// if ((maxMP - mp) % attackFreq == 0)
+		// {
+		// 	timerAttack = 0;
+		// 	spawnObstacle();
+		// }
 	}
 
 	override public function onSquareHurt() 
@@ -193,14 +196,8 @@ class EnemyMush extends BaseEnemy
 
 	public function new()
 	{
-		super();
-		id = 0;
-		dimens = [4, 4];
-		color = [20, 21];
+		super(0, [4, 4], [21, 22], 6, 11, 6);
 		attackFreq = 5;
-		maxMP = 11;
-		xp = 6;
-
 	}
 
 	override public function update(elapsed:Float)
@@ -266,12 +263,7 @@ class EnemyBee extends BaseEnemy
 {
 	public function new()
 	{
-		super();
-		id = 1;
-		dimens = [5, 5];
-		color = [8, 9];
-		maxMP = 14;
-		xp = 9;
+		super(1, [5, 5], [9, 32], 8, 14, 9);
 	}
 }
 
@@ -279,11 +271,8 @@ class EnemySnail extends BaseEnemy
 {
 	public function new()
 	{
-		super();
-		id = 2;
-		dimens = [5, 5];
-		color = [22, 23];
-		attackFreq = 15;
+		super(2, [5, 5], [31, 18], 6, 11, 9);
+		attackFreq = 11;
 	}
 
 	override public function update(elapsed:Float)
@@ -302,11 +291,11 @@ class EnemySnail extends BaseEnemy
 	override public function onSquareFilled()
 	{
 		super.onSquareFilled();
-		if ((maxMP - mp) % attackFreq == 0)
-		{
-			spawnObstacle();
-			timerAttack = 0;
-		}
+		// if ((maxMP - mp) % attackFreq == 0)
+		// {
+		// 	spawnObstacle();
+		// 	timerAttack = 0;
+		// }
 	}
 
 	override public function spawnObstacle()
@@ -320,7 +309,7 @@ class EnemyFlower extends BaseEnemy
 {
 	public function new()
 	{
-		super(3, [6, 6], [8, 9], 5, 7);
+		super(3, [6, 6], [3, 2], 5, 20, 15);
 	}
 }
 
@@ -328,7 +317,7 @@ class EnemyTadpole extends BaseEnemy
 {
 	public function new()
 	{
-		super(4, [3, 4], [15, 16], 5, 7, 3);
+		super(4, [3, 4], [17, 32], 2, 7, 3);
 	}
 }
 
@@ -336,31 +325,27 @@ class EnemyFrog extends BaseEnemy
 {
 	public function new()
 	{
-		super(5, [5, 5], [12, 13], 5, 15, 15);
-		attackFreq = 15;
+		super(5, [5, 5], [13, 14], 5, 15, 15);
+		attackFreq = 12;
 	}
 
 	override public function update(elapsed:Float)
 	{
 		timerAttack += elapsed;
 
-		if (timerAttack >= 9)
+		if (timerAttack >= attackFreq)
 		{
 			spawnObstacle();
 			timerAttack = 0;
 		}
 
+		trace("timerAttack:  " + timerAttack);
 		super.update(elapsed);
 	}
 
 	override public function onSquareFilled()
 	{
 		super.onSquareFilled();
-		if ((maxMP - mp) % attackFreq == 0)
-		{
-			spawnObstacle();
-			timerAttack = 0;
-		}
 	}
 
 	override public function spawnObstacle()
@@ -369,19 +354,24 @@ class EnemyFrog extends BaseEnemy
 		_grpObs.add(drop);
 	}
 }
+
 class EnemyOwl extends BaseEnemy
 {
 	public function new()
 	{
-		super(4, [8, 8], [12, 9], 10, 42, 60);
+		super(8, [8, 8], [25, 24], 10, 42, 60);
 		attackFreq = 20;
+
+		var o:Int = 4;  // amount of tiles per enemy
+		o *= id;
+		sprite.animation.add("idle", [0 + o, 1 + o], 4, true);
 	}
 
 	override public function update(elapsed:Float)
 	{
 		timerAttack += elapsed;
 
-		if (timerAttack >= 9)
+		if (timerAttack >= attackFreq)
 		{
 			spawnObstacle();
 			timerAttack = 0;
@@ -393,11 +383,11 @@ class EnemyOwl extends BaseEnemy
 	override public function onSquareFilled()
 	{
 		super.onSquareFilled();
-		if ((maxMP - mp) % attackFreq == 0)
-		{
-			spawnObstacle();
-			timerAttack = 0;
-		}
+		// if ((maxMP - mp) % attackFreq == 0)
+		// {
+		// 	spawnObstacle();
+		// 	timerAttack = 0;
+		// }
 	}
 
 	override public function spawnObstacle()

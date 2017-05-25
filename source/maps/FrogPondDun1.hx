@@ -200,7 +200,7 @@ class FrogPondDun1 extends TownState
 		{
 			mimic5.events = [new EventDialog(Strings.frogponddunStrings[tempID], this),
 							 new EventFlag("frogpond_mimic5", 1),
-							 new EventBattle([new EnemyDoor()], this, "frogpond_mimic5", 1),
+							 new EventBattle([new EnemyFrog()], this, "frogpond_mimic5", 1),
 							 new EventNPCTrigger(mimic5, 0)
 							];
 		}
@@ -208,7 +208,7 @@ class FrogPondDun1 extends TownState
 		{
 			mimic6.events = [new EventDialog(Strings.frogponddunStrings[tempID], this),
 							 new EventFlag("frogpond_mimic6", 1),
-							 new EventBattle([new EnemyDoor()], this, "frogpond_mimic6", 1),
+							 new EventBattle([new EnemyFrog()], this, "frogpond_mimic6", 1),
 							 new EventNPCTrigger(mimic6, 0)
 							];
 		}
@@ -216,7 +216,7 @@ class FrogPondDun1 extends TownState
 		{
 			mimic7.events = [new EventDialog(Strings.frogponddunStrings[tempID], this),
 							 new EventFlag("frogpond_mimic7", 1),
-							 new EventBattle([new EnemyDoor()], this, "frogpond_mimic7", 1),
+							 new EventBattle([new EnemyFrog()], this, "frogpond_mimic7", 1),
 							 new EventNPCTrigger(mimic7, 0)
 							];
 		}
@@ -224,7 +224,7 @@ class FrogPondDun1 extends TownState
 		{
 			mimic8.events = [new EventDialog(Strings.frogponddunStrings[tempID], this),
 							 new EventFlag("frogpond_mimic8", 1),
-							 new EventBattle([new EnemyDoor()], this, "frogpond_mimic8", 1),
+							 new EventBattle([new EnemyFrog()], this, "frogpond_mimic8", 1),
 							 new EventNPCTrigger(mimic8, 0)
 							];
 		}

@@ -195,10 +195,12 @@ class NameRivalState extends FlxState
 	function done():Void
 	{
 		// record rival's name
-		if (_txtName.text == "")
-			Strings.stringVars["%rivalname%"] = "Adam";
+		if (_txtName.text.length <= 0)
+			Strings.stringVars["%rivalname%"] = Strings.stringVars["%rnameDefault%"];
 		else
 			Strings.stringVars["%rivalname%"] = _txtName.text;
+
+		trace("rivalname:  " + Strings.stringVars["%rivalname%"]);
 
 		// goto next state
 		Reg.goToNextLevel(1, "mchouse-1.tmx");

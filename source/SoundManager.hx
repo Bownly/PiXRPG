@@ -33,6 +33,8 @@ class SoundManager
 		victoly.persist = true;
 		var defeat = FlxG.sound.load("assets/music/lost_the_battle.wav");
 		defeat.persist = true;
+		var bosssong = FlxG.sound.load("assets/music/the_final_pick_ross.wav");
+		bosssong.persist = true;
 
 		songs = 
 		[
@@ -41,6 +43,7 @@ class SoundManager
 			"battle"    => battle,
 			"victoly"   => victoly,
 			"defeat"    => defeat,
+			"bosssong"  => bosssong,
 		];
 	}
 	public static function playMusic(title:String):Void

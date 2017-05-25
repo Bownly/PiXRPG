@@ -57,6 +57,11 @@ class FrogPondDun extends TownState
 		}
 
 		super.create();
+
+		eventManager.addEvents([new EventNPCSetCanTurn(dummy, false),
+								new EventNPCSetCanTurn(npclazy, false)
+								]);
+
 		assignEvents();
 	}
 	

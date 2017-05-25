@@ -40,7 +40,7 @@ class PenManager
 
 	public static function resetPens():Void
 	{
-		arrPens = [ new Pen(0, "Dad's pen", true,
+		arrPens = [ new Pen(0, "Dad's pen", false,
 							[0, 0, 0, 
 							 0, 1, 0,
 							 0, 0, 0]),

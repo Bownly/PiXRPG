@@ -19,8 +19,8 @@ class WorldMap extends TownState
 		else
 			encounterDecrementer = 1;
 
-		encounterLowerBound = 8;
-		encounterUpperBound = 12;
+		encounterLowerBound = 15;
+		encounterUpperBound = 25;
 	}
 	
 	override public function create():Void 

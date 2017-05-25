@@ -109,6 +109,7 @@ class TownState extends FlxState
 	override public function update(elapsed:Float):Void
 	{
 		eventManager.update(elapsed);
+		super.update(elapsed);
 
 		// SoundManager.play("townsong");
 
@@ -122,30 +123,12 @@ class TownState extends FlxState
 			Reg.goToNextLevel(edgeExitNextEntID, edgeExitNextMapName);
 
 		// start battle!!!!
-		if (player.isMoving == false && Reg.encounterCounter <= 0)
+		if (Reg.encounterCounter <= 0 && encounterUpperBound != 0)  // eUB = 0 when the map doesn't have random encounters
 		{
-			var xx:Int = 0;
-			var yy:Int = 0;
-			
-			switch (player.facing)
-			{
-				case FlxObject.UP:
-					yy = -16;
-				case FlxObject.DOWN:
-					yy = 16;
-				case FlxObject.LEFT:
-					xx = -16;
-				case FlxObject.RIGHT:
-					xx = 16;
-			}
+			trace("nannin?");			
 			var map = tileMap;
-
 			var val:Int = encounterMap.tileArray[Std.int(player.y/16 * (width+16)/16 + player.x/16)];
 
-			if (val > 4)
-				val = 1;
-			
-			// songTownsong.pause();
 			sub = new BattleSubState(this, calculateEncounter(val));
 			this.openSubState(sub);
 		}
@@ -157,15 +140,16 @@ class TownState extends FlxState
 				var sub = new MenuSubState(FlxG.width/2, FlxG.height/2, this);
 				this.openSubState(sub);
 			}
-			else if (FlxG.keys.anyJustPressed(["O"]))
-			{
-				eventManager.addEvents([new EventClasses.EventItemGet(new ItemClasses.ItemHealing("WWWWWWWW", "heals 5 MP\nWait, only 5? Must be past its expiration\ndate.", 9, 5))]);
-				eventManager.addEvents([new EventClasses.EventItemGet(new ItemClasses.ItemHealing("WWWWWWWW", "heals 10 MP\nAh, the classic bargain bin potion.", 9, 10))]);
-				eventManager.addEvents([new EventClasses.EventItemGet(new ItemClasses.ItemHealing("Good potion", "heals 15 MP\nAnd it tastes great too.", 9, 15))]);
-				eventManager.addEvents([new EventClasses.EventItemGet(new ItemClasses.ItemHealing("Edible Barrel", Strings.itemDescriptions["Edible Barrel"], 9, 69))]);
-				eventManager.addEvents([new EventClasses.EventItemGet(new ItemClasses.ItemHealing("e potion", "heals 100 MP\nNow that's a lotta MP!", 9, 100))]);
-				Reg.STATE = Reg.STATE_CUTSCENE;
-			}
+			// debug cheat
+			// else if (FlxG.keys.anyJustPressed(["O"]))
+			// {
+			// 	eventManager.addEvents([new EventClasses.EventItemGet(new ItemClasses.ItemHealing("WWWWWWWW", "heals 5 MP\nWait, only 5? Must be past its expiration\ndate.", 9, 5))]);
+			// 	eventManager.addEvents([new EventClasses.EventItemGet(new ItemClasses.ItemHealing("WWWWWWWW", "heals 10 MP\nAh, the classic bargain bin potion.", 9, 10))]);
+			// 	eventManager.addEvents([new EventClasses.EventItemGet(new ItemClasses.ItemHealing("Good potion", "heals 15 MP\nAnd it tastes great too.", 9, 15))]);
+			// 	eventManager.addEvents([new EventClasses.EventItemGet(new ItemClasses.ItemHealing("Edible Barrel", Strings.itemDescriptions["Edible Barrel"], 9, 69))]);
+			// 	eventManager.addEvents([new EventClasses.EventItemGet(new ItemClasses.ItemHealing("e potion", "heals 100 MP\nNow that's a lotta MP!", 9, 100))]);
+			// 	Reg.STATE = Reg.STATE_CUTSCENE;
+			// }
 		}
 		
 		if (FlxG.keys.anyJustPressed(["M"]))
@@ -179,7 +163,6 @@ class TownState extends FlxState
 					Reg.goToNextLevel(exit.nextLvlEntID, exit.nextLvl);
 			}			
 		}
-		super.update(elapsed);
 	}	
 
 
@@ -195,12 +178,20 @@ class TownState extends FlxState
 		return;
 	}
 
+	public function encounterCheck():Bool
+	{
+		Reg.encounterCounter -= encounterDecrementer;
+		if (Reg.encounterCounter <= 0 && encounterUpperBound != 0)
+			return true;
+		else
+			return false;
+	}
+
 	public function playSong():Void
 	{
 		SoundManager.stopMusic(_song);
 		SoundManager.playMusic(_song);		
 	}
-
 
 	private function calculateEncounter(Val:Int):Array<EnemyClasses.BaseEnemy>
 	{
@@ -215,8 +206,11 @@ class TownState extends FlxState
 			case 3:
 				arr.push(new EnemyClasses.EnemySnail());
 			case 4:
-				arr.push(new EnemyClasses.EnemyMush());
 				arr.push(new EnemyClasses.EnemyFlower());
+			case 5:
+				arr.push(new EnemyClasses.EnemyTadpole());
+			case 6:
+				arr.push(new EnemyClasses.EnemyFrog());
 		}
 
 		return arr;

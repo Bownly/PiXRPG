@@ -47,7 +47,6 @@ class SoundRoomState extends FlxState
 	public function new():Void
 	{
 		super();
-		
 	}
 	
 	/**
@@ -96,7 +95,7 @@ class SoundRoomState extends FlxState
 		add(_grpSelections);
 		add(_txtTitle);
 		add(_txtTwitter);
-		add(_txtLD);
+		// add(_txtLD);
 		add(_txtControls);
 		
 		
@@ -136,23 +135,21 @@ class SoundRoomState extends FlxState
 			
 		if (FlxG.keys.anyJustPressed(["J"]))
 		{
+			SoundManager.stopMusic();
 			switch (selectedSelection)
 			{
 				case (0):
-				{
-					songTownSong.play(true);
-					FlxG.sound.playMusic("assets/music/townsong.wav");
-				}
+					SoundManager.playMusic("townsong");
 				case (1):
-					FlxG.sound.playMusic("assets/music/za_warudo_map.wav");
+					SoundManager.playMusic("worldmap");
 				case (2):
-					FlxG.sound.playMusic("assets/music/battle.wav");
+					SoundManager.playMusic("battle");
 				case (3):
-					FlxG.sound.playMusic("assets/music/victoly_fanfare.wav");
+					SoundManager.playMusic("victoly");
 				case (4):
-					FlxG.sound.playMusic("assets/music/lost_the_battle.wav");
+					SoundManager.playMusic("defeat");
 				case (5):
-					FlxG.sound.playMusic("assets/music/the_final_pick_ross.wav");
+					SoundManager.playMusic("bosssong");
 					
 			}
 		}

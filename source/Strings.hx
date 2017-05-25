@@ -123,11 +123,12 @@ class Strings
 
 	public static var stringVars:Map<String, String> =
 	[
-		"%pname%"     => "Player",
-		"%rivalname%" => "Brother",
-		"%item%"      => ":O",
-		"%level%"     => "2",
-		"%xp%"        => "10"
+		"%pname%"        => "Player",
+		"%rnameDefault%" => "Jacob",
+		"%rivalname%"    => "Brother",
+		"%item%"         => ":O",
+		"%level%"        => "2",
+		"%xp%"           => "10"
 	];
 
 	public static var stringArray:Array<Array<DialogLine>> = [
@@ -169,25 +170,13 @@ class Strings
 		[new DialogLine(faces["pfrog_glad"], "Sweet! Another Level Point! I now have %level% LP!")],	
 
 
-
-
-		// 2
+		// 15
+		[new DialogLine(faces["froggo_normal"], "blah blah blah blah blah"),
+		],
+		// 16
 		[new DialogLine(faces["froggo_normal"], "blah blah blah blah blah blah"),
 		],
-		// 3
-		[new DialogLine(faces["froggo_normal"], "blah blah blah blah blah blah"),
-		],
-		// 4
-		[new DialogLine(faces["dummy"], "Hi ho! This is the battle screen! Up in the corner is a display of your MP (Mental Points) and your opponent's MP!"),
-		 new DialogLine(faces["dummy"], "The goal of a battle is to reduce your opponent's MP to zero! The opponent's mental state is represented by the puzzle in the center!"),
-		 new DialogLine(faces["dummy"], "In order to reduce your opponent's MP, you must solve that puzzle!"),
-		 new DialogLine(faces["dummy"], "Each square in the grid can either be ON or OFF! The numbers indicate how many consecutive squares in each column or row should turned be ON!"),
-		 new DialogLine(faces["dummy"], "When you fully solve a row or column, the corresponding numbers will turn grey!"),
-		 new DialogLine(faces["dummy"], "Fill in squares with the \"J\" button and mark ones you suspect should remain OFF with the \"K\" button!"),
-		 new DialogLine(faces["dummy"], "But be careful! If you incorrectly turn ON a square, the stress will cause you to lose some MP!"),
-		 new DialogLine(faces["dummy"], "Also, note that some opponents may struggle in an attempt to thwart your puzzle solving efforts! They won't all be pushovers like I am!"),
-		 new DialogLine(faces["dummy"], "Wew! That's a lot of info! Just give it a shot and you'll figure it out!"),
-		],
+
 	];
 
 	public static var inventoryStrings:Array<Array<DialogLine>> = [
@@ -195,10 +184,6 @@ class Strings
 		[new DialogLine(faces["p_glad"], "%item% get!")],
 		// 1
 		[new DialogLine(faces["pfrog_glad"], "%item% get!")],
-
-		// item descriptions
-		// 
-		[new DialogLine(faces["pfrog_glad"], "")],
 	];
 
 	public static var itemDescriptions:Map<String, String> = [
@@ -238,72 +223,96 @@ class Strings
 	
 		// 8
 		[new DialogLine(faces["p_normal"], "%rivalname% took them! I didn't do anything!")],
+
 	
 		// 9
 		[new DialogLine(faces["dad_mad"], "Funny, %rivalname% said the exact opposite. One of you is lying, but you're both guilty either way so it doesn't matter!"),
 		 new DialogLine(faces["dad_mad"], "I've warned you both countless times that my pens become dangerous weapons in the wrong hands."),
 		 new DialogLine(faces["dad_mad"], "Doubly so for untrained kids like you two."),
-		 new DialogLine(faces["dad_mad"], "I can't risk you two running around recklessly, potentially endangering anything--or anyone--in your path."),
-		 new DialogLine(faces["p_sad"], "Does that mean we're grounded again?"),
-		 new DialogLine(faces["dad_normal"], "No, not this time. It's become clear that the only way to stop you two from misusing my pens is to have you learn how to use them correctly."),
-		 new DialogLine(faces["dad_normal"], "I've already spoken with Elder Froggo who lives up North. He's agreed to instruct you both... Starting today."),
-		 new DialogLine(faces["r_glad"], "Wow, really!? Finally! %pname%, do you know what that means?"),
-		 new DialogLine(faces["p_glad"], "It means we get to be mages, just like Dad!"),
-		 new DialogLine(faces["dad_normal"], "And just like my father and his father before him. I thought that moving away from the pond would allow me to put my magician days behind me."),
-		 new DialogLine(faces["dad_normal"], "Or rather, that was the comforting lie I told myself. Magic is a family tradition, after all. It was only a matter of time until the magic would begin to awaken in you two."),
-		 new DialogLine(faces["dad_glad"], "Now, hurry up and get going! You don't want to keep Elder Froggo waiting."),
-		 new DialogLine(faces["r_glad"], "Of course! Let's go, %pname%!"),
-		 new DialogLine(faces["dad_normal"], "Oh wait! I almost forgot something important. Take these beginner pens with you. Those are family heirlooms, so be sure to treat them well."),
-		 new DialogLine(faces["p_glad"], "Wow, thank you, Dad!"),
-		 new DialogLine(faces["r_normal"], "Yeah, thanks. These don't feel as magical as the ones in your collection, but they'll do. Let's go, %pname%!"),
+		 new DialogLine(faces["dad_mad"], "I can't risk you two running around recklessly, potentially endangering anything--or anyone--in your path.")
 		],
+	
+		// 10
+		[new DialogLine(faces["p_sad"], "Does that mean we're grounded again?")],
+
+		// 11
+		[new DialogLine(faces["dad_normal"], "No, not this time. It's become clear that the only way to stop you two from misusing my pens is to have you learn how to use them correctly."),
+		 new DialogLine(faces["dad_normal"], "I've already spoken with Elder Froggo who lives up North. He's agreed to instruct you both... Starting today.")
+		],
+
+		// 12
+		[new DialogLine(faces["r_glad"], "Wow, really!? Finally! %pname%, do you know what that means?")],
+
+		// 13
+		[new DialogLine(faces["p_glad"], "It means we get to be mages, just like Dad!")],
+
+		// 14
+		[new DialogLine(faces["dad_normal"], "And just like my father and his father before him. I thought that moving away from the pond would allow me to put my magician days behind me."),
+		 new DialogLine(faces["dad_normal"], "Or rather, that was the comforting lie I told myself. Magic is a family tradition, after all. It was only a matter of time until the magic would begin to awaken in you two."),
+		 new DialogLine(faces["dad_glad"], "Now, hurry up and get going! You don't want to keep Elder Froggo waiting.")
+		],
+
+		// 15
+		[new DialogLine(faces["r_glad"], "Of course! Let's go, %pname%!")],
+
+		// 16
+		[new DialogLine(faces["dad_normal"], "Oh wait! I almost forgot something important. Take these beginner pens with you. Those are family heirlooms, so be sure to treat them well.")],
+
+		// 17
+		[new DialogLine(faces["p_glad"], "Wow, thank you, Dad!")],
+
+		// 18
+		[new DialogLine(faces["r_normal"], "Yeah, thanks. These don't feel as magical as the ones in your collection, but they'll do.")],
+
+		// 19
+		[new DialogLine(faces["r_normal"], "Let's hurry up and go, %pname%!")],
 
 
 		// talk before leaving for frogpond for the first time
-		// 10
+		// 20
 		[new DialogLine(faces["dad_normal"], "Don't dally! Elder Froggo is a man of infinite patience, but it's still rude to keep him waiting for too long."),],
 
 
 		// return from Frogpond for the first time
-		// 11
+		// 21
 		[new DialogLine(faces["owlnpc_glad"], "Hahaha! I thought you would have put up more of a fight. To think that the former \"great hero\" could have fallen this far from grace..."),
  		 new DialogLine(faces["owlnpc_glad"], "Not that you can understand me anyway. Your mind is far too gone by now. Hahaha!")
 		],
 	
-		// 12
+		// 22
 		[new DialogLine(faces["r_mad"], "Who are you and what are you doing here!?"),
 		 new DialogLine(faces["p_shock"], "Dad, are you okay!?")
 		],
 	
-		// 13
+		// 23
 		[new DialogLine(faces["owlnpc_glad"], "\"Dad\"? So he great hero had a couple brats, huh? No wonder he's become so weak."),
 		 new DialogLine(faces["owlnpc_glad"], "Heh, nothing personal, kids, but I'm going to have to mind blast you both too.")
 		],
 	
-		// 14
+		// 24
 		[new DialogLine(faces["r_mad"], "%pname%, I'll handle this chump. You go help out Dad."),
 		 new DialogLine(faces["r_mad"], "Bring it on, bird brain!")
 		],
 	
-		// 15
+		// 25
 		[new DialogLine(faces["p_shock"], "%rivalname%!")],
 	
-		// 16
+		// 26
 		[new DialogLine(faces["p_shock"], "Dad? Are you alright?"),
 		 new DialogLine(faces["p_sad"], "He's not responding. It's like he's in a coma."),
 		 new DialogLine(faces["p_sad"], "...Dad...")
 		],
 	
-		// 17
+		// 27
 		[new DialogLine(faces["r_hurt"], "Gah!"),
 		 new DialogLine(faces["owlnpc_glad"], "Heh. Like father like son!"),
 		 new DialogLine(faces["owlnpc_hurt"], "(Although, all this fighting has tired me out. I should leave soon.)")
 		],
 	
-		// 18
+		// 28
 		[new DialogLine(faces["owlnpc_glad"], "Hey, brat! My job here is done, and you don't look worth the effort required to deal with, so I'm going to make my leave now.")],
 	
-		// 19
+		// 29
 		[new DialogLine(faces["p_sad"], "(I can't just sit here and let him get away, but I don't stand a chance against him. What should I do?)"),
 		 new DialogLine(faces["p_sad"], "(...)"),
 		 new DialogLine(faces["p_mad"], "(...)"),
@@ -311,37 +320,37 @@ class Strings
 		 new DialogLine(faces["p_mad"], "Not so fast!")
 		],
 	
-		// 20
+		// 30
 		[new DialogLine(faces["owlnpc_hurt"], "(So the wimp has some guts, huh? No matter, I should have enough left in me to deal with a kid this weak.)")],
 	
-		// 21
+		// 31
 		[new DialogLine(faces["owlnpc_hurt"], "(Those previous fights took too much out of me. I need to get out of here quickly.)"),
 		 new DialogLine(faces["owlnpc_glad"], "I'd love to stay and play some more, but I really must go.")
 		],
 	
-		// 22  // owl leaves
+		// 32  // owl leaves
 		[new DialogLine(faces["p_hurt"], "Phew. Another moment and I would have been a goner. I've got to go back to The Pond. Surely Elder Froggo would know how to cure Dad and %rivalname%.")],
 
 		// after the fight
-		// 23
-		[new DialogLine(faces["p_sad"], "He's been mind blasted by that owl guy. Elder Froggo must know how to fix this.")],
+		// 33
+		[new DialogLine(faces["p_hurt"], "He's been mind blasted by that owl guy. Elder Froggo must know how to fix this.")],
 
 
 		// after returning with Froggo
-		// 24
+		// 34
 		[new DialogLine(faces["froggo_normal"], "Ah..."),
 		 new DialogLine(faces["froggo_normal"], "I see...")
 		],
 		
-		// 25
+		// 35
 		[new DialogLine(faces["froggo_normal"], "Hmm..."),
 		 new DialogLine(faces["froggo_normal"], "Oh dear...")
 		],
 		
-		// 26
+		// 36
 		[new DialogLine(faces["p_sad"], "Can you cure them?")],
 		
-		// 27
+		// 37
 		[new DialogLine(faces["froggo_normal"], "Hmm... "),
 		 new DialogLine(faces["froggo_normal"], "The damage done to %rivalname% is minimal, likely thanks to your father having already weakened that owl clan thug."),
 		 new DialogLine(faces["froggo_normal"], "I should be able to fix him right up, but it will take some time."),
@@ -706,7 +715,7 @@ class Strings
 		],
 
 		// 16
-		[new DialogLine(faces["frognpc_normal"], "Sup. Don't mind me. Just watching some tv."),
+		[new DialogLine(faces["frognpcman_normal"], "Sup. Don't mind me. Just watching some tv."),
 		],
 
 		// 17
@@ -772,8 +781,6 @@ class Strings
 		// 32
 		[new DialogLine(faces["pfrog_normal"], "I'm good.")
 		],
-
-
 	];
 }
 
