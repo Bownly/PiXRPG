@@ -39,6 +39,7 @@ class FrogPondDun1 extends TownState
 	public function new(EntranceID:Int, MapName:String, ?SongName:String, ?Dungeon:Bool) 
 	{
 		super(EntranceID, MapName, SongName, Dungeon);
+		_song = "cavesong";
 	}
 
 	override public function create():Void

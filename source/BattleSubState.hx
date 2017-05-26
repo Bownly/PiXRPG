@@ -59,6 +59,7 @@ class BattleSubState extends FlxSubState
 	public var eventManager:EventClasses.EventManager;
 
 	var _menu:BaseMenu;	
+	var _song:String;
 
 	var _winFlag:String;
 	var _winFlagVal:Int;
@@ -106,12 +107,17 @@ class BattleSubState extends FlxSubState
 	var _WINCHEAT:Bool = false;
 
 	
-	public function new(State:TownState, Enemies:Array<BaseEnemy>, ?WinFlag:String, ?WinFlagVal:Int) 
+	public function new(State:TownState, Enemies:Array<BaseEnemy>, ?WinFlag:String, ?WinFlagVal:Int, ?Song:String) 
 	{
 		super();
 
 		SoundManager.pauseMusic("all");
-		SoundManager.playMusic("battle");
+
+		if (Song != null)
+			_song = Song;
+		else
+			_song = "battle";
+		SoundManager.playMusic(_song);
 
 		_state = State;
 		_arrEnemies = Enemies;
@@ -285,12 +291,12 @@ class BattleSubState extends FlxSubState
 
 		if (battleState == STATE_VICTORY)
 		{
-			SoundManager.pauseMusic("battle");
+			SoundManager.pauseMusic(_song);
 			SoundManager.playMusic("victoly");
 		}
 		else if (battleState == STATE_DEFEAT)
 		{
-			SoundManager.pauseMusic("battle");
+			SoundManager.pauseMusic(_song);
 			SoundManager.playMusic("defeat");		
 		}
 
@@ -437,12 +443,14 @@ class BattleSubState extends FlxSubState
 					takeDamage();
 					_arrPicrossBoards[_enemyNum].checkRowCorrect(_cell.rowID);
 					_arrPicrossBoards[_enemyNum].checkColCorrect(_cell.colID);
+					SoundManager.playSound("hurt");
 					camera.shake(0.005, 0.2);
 					return 1;
 				}
 				case PicrossSquare.HURT:
 				{
 					_arrEnemies[_enemyNum].onSquareHurt();
+					SoundManager.playSound("hurt");
 					camera.shake(0.005, 0.2);
 					takeDamage();
 				}
@@ -698,7 +706,7 @@ class BattleSubState extends FlxSubState
 
 	private function setUpMenu(CloseString:String):Void
 	{
-		SoundManager.playMusic("battle");
+		SoundManager.playMusic(_song);
 	
 		_cursorTimerHorz = 0;
 		_cursorIsMovingHorz = false;

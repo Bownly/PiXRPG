@@ -225,23 +225,19 @@ class Player extends Entity
 			case FlxObject.RIGHT:
 				xx = 16;
 		}
-	trace("0");
 
 		var map = _state.level;
 		if (map.collidableTileMap.getTile(Math.floor((x + xx) / TILE_SIZE), Math.floor((y + yy) / TILE_SIZE)) > 0)
 			return false;
-	trace("1");
 
 		for (npc in _state.grpNPCs)
 		{
 			if (npc.visible == true && npc.y == y + yy && npc.x == x + xx)
 				return false;				
 		}
-	trace("2");
 
 		if (_state.encounterCheck())
 			return false;
-	trace("3");
 
 		return true;
 	}

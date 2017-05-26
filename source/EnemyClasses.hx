@@ -76,7 +76,8 @@ class BaseEnemy
 	}
 
 	public function update(elapsed:Float) {
-		mp = maxMP - _board.curCount;
+		// mp;
+		return;
 	}
 	public function onSquareFilled() {
 		fillcount++;
@@ -279,7 +280,7 @@ class EnemySnail extends BaseEnemy
 	{
 		timerAttack += elapsed;
 
-		if (timerAttack >= 9)
+		if (timerAttack >= attackFreq)
 		{
 			spawnObstacle();
 			timerAttack = 0;
@@ -339,7 +340,6 @@ class EnemyFrog extends BaseEnemy
 			timerAttack = 0;
 		}
 
-		trace("timerAttack:  " + timerAttack);
 		super.update(elapsed);
 	}
 
@@ -359,7 +359,7 @@ class EnemyOwl extends BaseEnemy
 {
 	public function new()
 	{
-		super(8, [8, 8], [25, 24], 10, 42, 60);
+		super(8, [8, 8], [25, 24], 10, 40, 60);
 		attackFreq = 20;
 
 		var o:Int = 4;  // amount of tiles per enemy

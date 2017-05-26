@@ -200,8 +200,6 @@ class NameRivalState extends FlxState
 		else
 			Strings.stringVars["%rivalname%"] = _txtName.text;
 
-		trace("rivalname:  " + Strings.stringVars["%rivalname%"]);
-
 		// goto next state
 		Reg.goToNextLevel(1, "mchouse-1.tmx");
 

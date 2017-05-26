@@ -20,6 +20,7 @@ class SoundRoomState extends FlxState
 	var colorDefault = 0xffffff;
 	var colorSelected = 0x0099FF;
 	var selectedSelection = 0;
+	var _SPACER = 4;
 	
 	var _txtTwitter:FlxText;
 	var _txtLD:FlxText;
@@ -33,6 +34,10 @@ class SoundRoomState extends FlxState
 	var _txtSelection3:FlxText;
 	var _txtSelection4:FlxText;
 	var _txtSelection5:FlxText;
+	var _txtSelection6:FlxText;
+	var _txtSelection7:FlxText;
+	var _txtSelection8:FlxText;
+	var _txtSelection9:FlxText;
 	var _grpSelections:FlxTypedGroup<FlxText>;
 
 	var songTownSong:FlxSound = FlxG.sound.load("assets/music/townsong.wav");
@@ -67,12 +72,16 @@ class SoundRoomState extends FlxState
 		_txtLD.x = FlxG.width - _txtLD.width;
 		
 		_grpSelections = new FlxTypedGroup<FlxText>();
-		_txtSelection0 = new FlxText(96, _txtTitle.y + _txtTitle.height + 16, "townsong (1:48)", 8);
-		_txtSelection1 = new FlxText(96, _txtSelection0.y + _txtSelection0.height + 8, "za warudo map (1:30)", 8);
-		_txtSelection2 = new FlxText(96, _txtSelection1.y + _txtSelection1.height + 8, "battle (0:54)", 8);
-		_txtSelection3 = new FlxText(96, _txtSelection2.y + _txtSelection2.height + 8, "victoly fanfahre (0:02)", 8);
-		_txtSelection4 = new FlxText(96, _txtSelection3.y + _txtSelection3.height + 8, "lost the battle (0:02)", 8);
-		_txtSelection5 = new FlxText(96, _txtSelection4.y + _txtSelection4.height + 8, "the final pick ross (spoilers) (4:32)", 8);
+		_txtSelection0 = new FlxText(96, _txtTitle.y + _txtTitle.height + _SPACER, "housesong (1:01)", 8);
+		_txtSelection1 = new FlxText(96, _txtSelection0.y + _txtSelection0.height + _SPACER, "frogpondsong (4:51)", 8);
+		_txtSelection2 = new FlxText(96, _txtSelection1.y + _txtSelection0.height + _SPACER, "za warudo map (1:53)", 8);
+		_txtSelection3 = new FlxText(96, _txtSelection2.y + _txtSelection0.height + _SPACER, "cavesong (4:20)", 8);
+		_txtSelection4 = new FlxText(96, _txtSelection3.y + _txtSelection0.height + _SPACER, "trouble time (2:42)", 8);
+		_txtSelection5 = new FlxText(96, _txtSelection4.y + _txtSelection0.height + _SPACER, "battle song (2:00)", 8);
+		_txtSelection6 = new FlxText(96, _txtSelection5.y + _txtSelection0.height + _SPACER, "miniboss (2:59)", 8);
+		_txtSelection7 = new FlxText(96, _txtSelection6.y + _txtSelection0.height + _SPACER, "victoly fanfahre (0:02)", 8);
+		_txtSelection8 = new FlxText(96, _txtSelection7.y + _txtSelection0.height + _SPACER, "lost the battle (0:02)", 8);
+		_txtSelection9 = new FlxText(96, _txtSelection8.y + _txtSelection0.height + _SPACER, "shadilay (3:40)", 8);
 		
 		_txtControls = new FlxText(0, 0, FlxG.width, "J = listen, K = not listen, WASD/Arrows = move, m =/= mute\nTHERE'S NO WAY TO SILENCE THESE AUDITORY SENSATIONS");
 		_txtControls.alignment = "center";
@@ -83,6 +92,10 @@ class SoundRoomState extends FlxState
 		_grpSelections.add(_txtSelection3);
 		_grpSelections.add(_txtSelection4);
 		_grpSelections.add(_txtSelection5);
+		_grpSelections.add(_txtSelection6);
+		_grpSelections.add(_txtSelection7);
+		_grpSelections.add(_txtSelection8);
+		_grpSelections.add(_txtSelection9);
 		
 		//_grpSongs.add(songTownSong);
 	/*	_grpSongs.add(songWorldMap);
@@ -128,29 +141,26 @@ class SoundRoomState extends FlxState
 		{
 			selectedSelection--;
 		}
-		if (selectedSelection >= 6)
+		if (selectedSelection >= 10)
 			selectedSelection = 0;
 		else if (selectedSelection < 0)
-			selectedSelection = 5;
+			selectedSelection = 9;
 			
 		if (FlxG.keys.anyJustPressed(["J"]))
 		{
 			SoundManager.stopMusic();
 			switch (selectedSelection)
 			{
-				case (0):
-					SoundManager.playMusic("townsong");
-				case (1):
-					SoundManager.playMusic("worldmap");
-				case (2):
-					SoundManager.playMusic("battle");
-				case (3):
-					SoundManager.playMusic("victoly");
-				case (4):
-					SoundManager.playMusic("defeat");
-				case (5):
-					SoundManager.playMusic("bosssong");
-					
+				case (0): SoundManager.playMusic("housesong");
+				case (1): SoundManager.playMusic("townsong");
+				case (2): SoundManager.playMusic("worldmap");
+				case (3): SoundManager.playMusic("cavesong");
+				case (4): SoundManager.playMusic("badstuff");
+				case (5): SoundManager.playMusic("battle");
+				case (6): SoundManager.playMusic("miniboss");
+				case (7): SoundManager.playMusic("victoly");
+				case (8): SoundManager.playMusic("defeat");
+				case (9): SoundManager.playMusic("shadilay");
 			}
 		}
 		
@@ -169,18 +179,16 @@ class SoundRoomState extends FlxState
 			level.setFormat(8, colorDefault, "center");
 		switch (selectedSelection)
 		{
-			case (0):
-				_txtSelection0.setFormat(8, colorSelected);
-			case (1):
-				_txtSelection1.setFormat(8, colorSelected);
-			case (2):
-				_txtSelection2.setFormat(8, colorSelected);
-			case (3):
-				_txtSelection3.setFormat(8, colorSelected);
-			case (4):
-				_txtSelection4.setFormat(8, colorSelected);
-			case (5):
-				_txtSelection5.setFormat(8, colorSelected);				
+			case (0): _txtSelection0.setFormat(8, colorSelected);
+			case (1): _txtSelection1.setFormat(8, colorSelected);
+			case (2): _txtSelection2.setFormat(8, colorSelected);
+			case (3): _txtSelection3.setFormat(8, colorSelected);
+			case (4): _txtSelection4.setFormat(8, colorSelected);
+			case (5): _txtSelection5.setFormat(8, colorSelected);
+			case (6): _txtSelection6.setFormat(8, colorSelected);
+			case (7): _txtSelection7.setFormat(8, colorSelected);
+			case (8): _txtSelection8.setFormat(8, colorSelected);
+			case (9): _txtSelection9.setFormat(8, colorSelected);
 		}
 	}
 

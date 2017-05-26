@@ -19,7 +19,8 @@ class FrogPond extends TownState
 	var npcFroggo:NPC;
 	var npc1:NPC;
 	var npcRival:NPC;
-	var npcSign:NPC;
+	var npcSign1:NPC;
+	var npcSign2:NPC;
 	var npcGondola:NPC;
 	var _events:Map<String, Array<BaseEvent>>;
 
@@ -33,7 +34,8 @@ class FrogPond extends TownState
 		grpNPCs = new FlxTypedGroup<NPC>();
 		npc1 = new NPC(336, 32, FlxObject.DOWN, 3, this, "npc 1");
 		npcGondola = new NPC(0, 0, FlxObject.DOWN, 13, this, "npc gondola");
-		npcSign = new NPC(0, 0, FlxObject.DOWN, 15, this, "npc 3");
+		npcSign1 = new NPC(0, 0, FlxObject.UP, 15, this, "npc sign 0");
+		npcSign2 = new NPC(0, 0, FlxObject.DOWN, 15, this, "npc sign 1");
 
 		if (Reg.flags["first_froggo"] == 0)
 		{
@@ -44,10 +46,15 @@ class FrogPond extends TownState
 			npcRival.visible = false;
 		}
 		grpNPCs.add(npc1);
-		grpNPCs.add(npcSign);
+		grpNPCs.add(npcSign1);
+		grpNPCs.add(npcSign2);
 		grpNPCs.add(npcGondola);
 
 		super.create();
+
+		eventManager.addEvents([new EventNPCSetCanTurn(npcSign1, false),
+								new EventNPCSetCanTurn(npcSign2, false)
+								]);
 
 		assignEvents();
 	}
@@ -71,7 +78,8 @@ class FrogPond extends TownState
 							])
 		];
 
-		npcSign.events = [new EventDialog(Strings.frogpondStrings[7], this)];
+		npcSign1.events = [new EventDialog(Strings.frogpondStrings[53 + Reg.flags["p_hood"]], this)];
+		npcSign2.events = [new EventDialog(Strings.frogpondStrings[55 + Reg.flags["p_hood"]], this)];
 
 		if (Reg.flags["owl_clan_attack"] == 0)  // 0 = pre-attack
 		{

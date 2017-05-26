@@ -21,6 +21,11 @@ class MCHouse1 extends TownState
 	public function new(EntranceID:Int, MapName:String, ?SongName:String, ?Dungeon:Bool) 
 	{
 		super(EntranceID, MapName, SongName, Dungeon);
+		if (Reg.flags["frogponddun"] == 2 && Reg.flags["owl_clan_attack"] == 0 || 
+			Reg.flags["owl_clan_attack"] == 1) // 2 = talked to Froggo/concluded flag / 0 = pre-attack; 1 = post-attack; 
+			_song = "badstuff";
+		else 
+			_song = "housesong";
 	}
 
 	override public function create():Void
@@ -34,6 +39,13 @@ class MCHouse1 extends TownState
 		}
 		
 		super.create();
+
+		// if (Reg.flags["owl_clan_attack"] == 1)
+		// 	_song = "bosssong";
+		// else 
+		// 	_song = "housesong";
+		// playSong();			
+
 		assignEvents();
 	}
 	

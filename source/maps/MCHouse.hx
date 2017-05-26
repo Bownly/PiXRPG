@@ -24,6 +24,11 @@ class MCHouse extends TownState
 	public function new(EntranceID:Int, MapName:String, ?SongName:String, ?Dungeon:Bool) 
 	{
 		super(EntranceID, MapName, SongName, Dungeon);
+		if (Reg.flags["frogponddun"] == 2 && Reg.flags["owl_clan_attack"] == 0 || 
+			Reg.flags["owl_clan_attack"] == 1) // 2 = talked to Froggo/concluded flag / 0 = pre-attack; 1 = post-attack; 
+			_song = "badstuff";
+		else 
+			_song = "housesong";
 	}
 
 	override public function create():Void
@@ -77,14 +82,9 @@ class MCHouse extends TownState
 
 
 		super.create();
-		_song = "bosssong";
-		playSong();
 
-		// if (Reg.flags["frogponddun"] == 2 && Reg.flags["owl_clan_attack"] == 0) // compeleted the dungeon, owl_clan_attack start
-		// 	eventManager.addEvents([new EventMusicStop(), 
-		// 							new EventMusicPlay("bosssong")
-		// 							]);
 
+		// playSong();			
 
 		assignEvents();
 	}
@@ -103,9 +103,6 @@ class MCHouse extends TownState
 									new EventDialog(Strings.mchomeStrings[36], this),
 									new EventNPCWalk(npcFroggo, [[FlxObject.DOWN, 1]]),
 									new EventDialog(Strings.mchomeStrings[37], this),
-									// new EventDialog(Strings.mchomeStrings[26], this),  // lots of dialog between mc and froggo
-									// new EventDialog(Strings.mchomeStrings[26], this),
-									// new EventDialog(Strings.mchomeStrings[26], this),
 									new EventNPCWalk(npcFroggo, [[FlxObject.UP, 1]]),
 									new EventNPCWalk(npcDad, [[FlxObject.DOWN, 1]]),
 									new EventNPCRemove(npcDad),
@@ -138,7 +135,10 @@ class MCHouse extends TownState
 									new EventDialog(Strings.mchomeStrings[24], this),
 									new EventNPCWalk(player, [[FlxObject.UP, 3]]),
 									new EventDialog(Strings.mchomeStrings[26], this),
+									new EventDialog(Strings.mchomeStrings[38], this),
+									new EventZaWarudo(0.1),
 									new EventNPCKillOrNot(npcRival, true),
+									new EventZaWarudo(0.1),
 									new EventNPCWalk(player, [[FlxObject.LEFT, 0]]),
 									new EventDialog(Strings.mchomeStrings[25], this),
 									new EventDialog(Strings.mchomeStrings[27], this),
@@ -150,14 +150,13 @@ class MCHouse extends TownState
 									new EventDialog(Strings.mchomeStrings[29], this),
 									new EventNPCWalk(player, [[FlxObject.DOWN, 2]]),
 									new EventDialog(Strings.mchomeStrings[30], this),
-									new EventBattle([new EnemyOwl()], this),
+									new EventBattle([new EnemyOwl()], this, "owl_clan_attack", 1, "miniboss"),
 									new EventDialog(Strings.mchomeStrings[31], this),
 									new EventNPCWalk(npcOwl, [[FlxObject.DOWN, 3]]),
 									new EventNPCRemove(npcOwl),
 									new EventDialog(Strings.mchomeStrings[32], this),
 									new EventNPCSetCanTurn(npcDad, false),
-									new EventNPCSetCanTurn(npcRival, false),
-									new EventFlag("owl_clan_attack", 1)
+									new EventNPCSetCanTurn(npcRival, false)
 									]);
 		}
 		else if (Reg.flags["owl_clan_attack"] == 0)  // 0 = pre-attack

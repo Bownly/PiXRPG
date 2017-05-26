@@ -62,6 +62,7 @@ class CreditsState extends FlxState
 		FlxG.mouse.visible = false;		
 		super.create();	
 		SoundManager.stopMusic();
+		SoundManager.playMusic("shadilay");
 	}
 	
 	/**
@@ -80,9 +81,9 @@ class CreditsState extends FlxState
 	{
 		
 		if (FlxG.keys.anyJustPressed(["K"]))
-		{
 			FlxG.switchState(new MenuState());
-		}
+		if (FlxG.keys.anyJustPressed(["M"]))
+			FlxG.sound.toggleMuted();
 		super.update(elapsed);
 	}	
 

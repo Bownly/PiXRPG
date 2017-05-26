@@ -247,7 +247,7 @@ class Strings
 		[new DialogLine(faces["p_glad"], "It means we get to be mages, just like Dad!")],
 
 		// 14
-		[new DialogLine(faces["dad_normal"], "And just like my father and his father before him. I thought that moving away from the pond would allow me to put my magician days behind me."),
+		[new DialogLine(faces["dad_normal"], "And just like my father and his father before him. I thought that moving away from the pond would allow me to put my magic days behind me."),
 		 new DialogLine(faces["dad_normal"], "Or rather, that was the comforting lie I told myself. Magic is a family tradition, after all. It was only a matter of time until the magic would begin to awaken in you two."),
 		 new DialogLine(faces["dad_glad"], "Now, hurry up and get going! You don't want to keep Elder Froggo waiting.")
 		],
@@ -304,8 +304,7 @@ class Strings
 		],
 	
 		// 27
-		[new DialogLine(faces["r_hurt"], "Gah!"),
-		 new DialogLine(faces["owlnpc_glad"], "Heh. Like father like son!"),
+		[new DialogLine(faces["owlnpc_glad"], "Heh. Like father like son!"),
 		 new DialogLine(faces["owlnpc_hurt"], "(Although, all this fighting has tired me out. I should leave soon.)")
 		],
 	
@@ -352,45 +351,50 @@ class Strings
 		
 		// 37
 		[new DialogLine(faces["froggo_normal"], "Hmm... "),
-		 new DialogLine(faces["froggo_normal"], "The damage done to %rivalname% is minimal, likely thanks to your father having already weakened that owl clan thug."),
+		 new DialogLine(faces["froggo_normal"], "The damage done to %rivalname% is minimal, likely thanks to your father having already weakened that Owl Clan thug."),
 		 new DialogLine(faces["froggo_normal"], "I should be able to fix him right up, but it will take some time."),
 		 new DialogLine(faces["p_glad"], "Great! What about Dad?"),
 		 new DialogLine(faces["froggo_normal"], "Hmm. Sadly, the damage done onto your father is too severe for me to handle."),
 		 new DialogLine(faces["p_sad"], "Then, does that mean... he'll be stuck like this forever?"),
 		 new DialogLine(faces["froggo_normal"], "This may be beyond my abilities, but the Frog King should be able to help."),
 		 new DialogLine(faces["p_shock"], "Who's the Frog King?"),
-		 new DialogLine(faces["froggo_normal"], "He's the central leader of all the Frog Clans, and also the most powerful frog magician. He lives on the main continent in the Frog Kingdom."),
+		 new DialogLine(faces["froggo_normal"], "He's the central leader of all the Frog Clans, and also the most powerful Frog Mage. He lives on the main continent in the Frog Kingdom."),
 		 new DialogLine(faces["froggo_normal"], "I can lend you a boat and give you directions on how to get there. If you tell him that I sent you, he'll agree to help immediately."),
 		 new DialogLine(faces["p_scared"], "This is all too much. I can't possibly travel all alone! "),
 		 new DialogLine(faces["froggo_normal"], "I observed you during your training, %pname%. You are far more capable than you give yourself credit for. Besides, your family is depending on you."),
 		 new DialogLine(faces["froggo_normal"], "Now then, I'm going to take these two back to The Pond so I can get started on curing them. Come see me when you're ready to depart.")
-		]
+		],
+
+
+		// 38  // this goes inbetween 24 and 25
+		[new DialogLine(faces["r_hurt"], "Gah!")],
+
 	];
 
 	public static var frogpondStrings:Array<Array<DialogLine>> = [
 		// 0
-		[new DialogLine(faces["froggo_normal"], "Well met, %pname% and %rivalname%! Welcome to The Pond, the place where all young boys of the frog clan come to become mages. We've been expecting you two."),
+		[new DialogLine(faces["froggo_normal"], "Well met, %pname% and %rivalname%! Welcome to The Pond, the place where all young boys of the Frog Clan come to become mages. We've been expecting you two."),
 		 new DialogLine(faces["froggo_normal"], "Your father might not have mentioned it, but did you know that I also trained him back when he was around your age?"),
 		 new DialogLine(faces["froggo_normal"], "He was quite the skilled mage--and I can sense a similar power in the both of you. The apple doesn't fall far from the tree. Hohoho."),
-		 new DialogLine(faces["froggo_normal"], "As you may or may not know, there are many types of magic in this world. We of the frog clan call our magic \"frog magic\", for obvious reasons."),
-		 new DialogLine(faces["froggo_normal"], "While some magic schools can shoot fire or heal wounds, frog magic is limited to the world of the mind."),
-		 new DialogLine(faces["froggo_normal"], "The average frog mage uses his magic to help people suffering from problems like phobias, traumas, or writer's block."),
-		 new DialogLine(faces["froggo_normal"], "At their most powerful, frog mages can control the very thoughts of any living creature. But most mages never make it to that level."),
-		 new DialogLine(faces["froggo_normal"], "I do not exaggerate when I say that frog magic is potentially the most powerful school of magic. And because of that, it is also requires the most discipline to use."),
-		 new DialogLine(faces["froggo_normal"], "In order to prevent abuse, all frog mages must swear an oath to never use their powers for evil. Frog magic is exclusively meant for helping people."),
-		 new DialogLine(faces["froggo_normal"], "If you use frog magic for nefarious or selfish reasons, you risk becoming corrupted and evil. The owl clan is living proof of that."),
+		 new DialogLine(faces["froggo_normal"], "As you may or may not know, there are many types of magic in this world. We of the Frog Clan call our magic \"Frog Magic\", for obvious reasons."),
+		 new DialogLine(faces["froggo_normal"], "While some magic schools can shoot fire or heal wounds, Frog Magic is limited to the world of the mind."),
+		 new DialogLine(faces["froggo_normal"], "The average Frog Mage uses his magic to help people suffering from problems like phobias, traumas, or writer's block."),
+		 new DialogLine(faces["froggo_normal"], "At their most powerful, Frog Mages can control the very thoughts of any living creature. But most mages never make it to that level."),
+		 new DialogLine(faces["froggo_normal"], "I do not exaggerate when I say that Frog Magic is potentially the most powerful school of magic. And because of that, it is also requires the most discipline to use."),
+		 new DialogLine(faces["froggo_normal"], "In order to prevent abuse, all Frog Mages must swear an oath to never use their powers for evil. Frog Magic is exclusively meant for helping people."),
+		 new DialogLine(faces["froggo_normal"], "If you use Frog Magic for nefarious or selfish reasons, you risk becoming corrupted and evil. The Owl Clan is living proof of that."),
 		 new DialogLine(faces["froggo_normal"], "Well, at any rate, I think you've heard enough of this old man's ramblings. After all, we'll have plenty more opportunities for me to teach you all that you need to know."),
-		 new DialogLine(faces["froggo_normal"], "I can tell that you're both itching to start your training. As is tradition, all aspiring new frog mages have to go through the cave of initiation to start their training."),
+		 new DialogLine(faces["froggo_normal"], "I can tell that you're both itching to start your training. As is tradition, all aspiring new Frog Mages have to go through the cave of initiation to start their training."),
 		 new DialogLine(faces["froggo_normal"], "You can reach the cave through the back door of my house. Here, follow me.")
 		],
 
 		// 1
 		[new DialogLine(faces["froggo_normal"], "The cave's entrance is just through the back door over there to the left. Good luck, and frogspeed."), 
-		 new DialogLine(faces["froggo_normal"], "Oh, and be sure to talk to my training dummy friend down there if you want to review the fundamentals of how to use frog magic!")
+		 new DialogLine(faces["froggo_normal"], "Oh, and be sure to talk to my training dummy friend down there if you want to review the fundamentals of how to use Frog Magic!")
 		],
 
-		// 2
-		[new DialogLine(faces["null"], "placeholder")],
+		// 2  // this belongs between 18 and 19
+		[new DialogLine(faces["froggo_normal"], "You boys should go head back home now and go brag to you father.")],
 
 		// 3  // this and the next one belong after Froggo brings your mindblasted family to his house
 		[new DialogLine(faces["p_sad"], "Just wait a bit longer. I'll go see the Frog King and he'll come cure you.")],
@@ -411,7 +415,7 @@ class Strings
 		[new DialogLine(faces["froggo_normal"], "Ah, %pname%. Right on time. Come here for a moment.")],
 		
 		// 9
-		[new DialogLine(faces["p_glad"], "%rivalname%, we did it! We finished our first frog mage trial!")],
+		[new DialogLine(faces["p_glad"], "%rivalname%, we did it! We finished our first Frog Mage trial!")],
 		
 		// 10
 		[new DialogLine(faces["r_smug"], "And it only took you forever and a half, slowpoke.")],
@@ -471,7 +475,7 @@ class Strings
 		[new DialogLine(faces["p_hurt"], "When we got back home...\n... ...\n... ... ...\n... ... ... ...")],
 
 		// 24
-		[new DialogLine(faces["froggo_mad"], "An owl mage? Here? This is grave news... \nI wonder if--\nNo, there's no time to speculate.")],
+		[new DialogLine(faces["froggo_mad"], "An Owl Mage? Here? This is grave news... \nI wonder if--\nNo, there's no time to speculate.")],
 
 		// 25
 		[new DialogLine(faces["froggo_normal"], "%pname%, let's head over to your house immediately.")],
@@ -500,7 +504,7 @@ class Strings
 
 		// 32
 		[new DialogLine(faces["froggo_normal"], "I presume that since you're here, that you're ready to depart. Well before you do, I have a present for you. It's a hood."),
-		 new DialogLine(faces["froggo_normal"], "But not just any old hood. Indeed, it's a bona fide frog mage hood. Ordinarilly a trainee has to complete his training to earn his robe, but these are no ordinary circumstances."),
+		 new DialogLine(faces["froggo_normal"], "But not just any old hood. Indeed, it's a bona fide Frog Mage hood. Ordinarilly a trainee has to complete his training to earn his robe, but these are no ordinary circumstances."),
 		 new DialogLine(faces["froggo_normal"], "With this robe, you'll have no problem seeking an audience with the Frog King.")
 		],
 		
@@ -524,7 +528,7 @@ class Strings
 		[new DialogLine(faces["frognpcman_glad"], "I've collected so many barrels that I can't even get to my bed anymore. Sleeping on the floor isn't so bad once you get used to it.")],
 
 		// 38
-		[new DialogLine(faces["frognpcman_normal"], "Y'know, I always thought it was funny how your dad wanted to move away to escape the mage life, but he ended up moving here--to tadpole island of all places."),
+		[new DialogLine(faces["frognpcman_normal"], "Y'know, I always thought it was funny how your dad wanted to move away to escape the mage life, but he ended up moving here--to Tadpole Island of all places."),
 		 new DialogLine(faces["frognpcman_normal"], "I mean, there's nothing on this island other than The Pond. What was he thinking?"),
 		 new DialogLine(faces["frognpcman_shock"], "Oh, sorry! That was rude. I have this habit of saying things that I shouldn't."),
 		],
@@ -532,8 +536,8 @@ class Strings
 		// 39
 		[new DialogLine(faces["frognpcman_normal"], "Greetings, %pname%. Did you know that I’m hosting an exchange student? Her name is, uh... well, I forgot. My memory isn't the best."),
 		 new DialogLine(faces["frognpcman_normal"], "She’s from that one tribe of mute folk. I can't remember their name, and she won't tell me. But you've heard of them, haven't you? They wear those funny bear hats."),
-		 new DialogLine(faces["frognpcman_normal"], "Like the frog clan, they’re a magical people, but their magic is of a different ilk. Whereas frog magic is based on the mind, their magic draws power from nature."),
-		 new DialogLine(faces["frognpcman_normal"], "It’s said that they can channel nature spirits to do things like heal people and \"save\", whatever that means. ")
+		 new DialogLine(faces["frognpcman_normal"], "Like the Frog Clan, they’re a magical people, but their magic is of a different ilk. Whereas Frog Magic is based on the mind, their magic draws is more nature focused."),
+		 new DialogLine(faces["frognpcman_normal"], "It’s said that they can channel the powers of Mother Nature herself to do things like heal people and \"save\", whatever that means. ")
 		],
 
 		// 40
@@ -599,9 +603,17 @@ class Strings
 		[new DialogLine(faces["frognpcman_shock"], "It looks like you could use an extra barrel. Here, take this one.")
 		],
 
-			// 
-		[new DialogLine(faces["null"], "reserved")
-		],
+		// sign stuff, independent of story progress
+		// 53
+		[new DialogLine(faces["p_normal"], "There's a crudely written message. It says \"Elder Froggo's house\".\nDid Elder Froggo write this?")],
+		// 54
+		[new DialogLine(faces["pfrog_normal"], "There's a crudely written message. It says \"Elder Froggo's house\".\nDid Elder Froggo write this?")],
+
+		// 55
+		[new DialogLine(faces["p_normal"], "There's a crudely written message. It says \"Non-mages get off my lawn! REEEEEE!\"\nWhat did he mean by this?")],
+		// 56
+		[new DialogLine(faces["pfrog_normal"], "There's a crudely written message. It says \"Non-mages get off my lawn! REEEEEE!\"\nWhat did he mean by this?")],
+
 	];
 
 	public static var frogponddocksStrings:Array<Array<DialogLine>> = [

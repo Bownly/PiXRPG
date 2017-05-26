@@ -100,27 +100,29 @@ class EventBattle extends BaseEvent
 	var _state:TownState;
 	var _winFlag:String;
 	var _winFlagVal:Int;
+	var _song:String;
 
-	public function new(Enemies:Array<BaseEnemy>, State:TownState, ?WinFlag:String, ?WinFlagVal:Int)
+	public function new(Enemies:Array<BaseEnemy>, State:TownState, ?WinFlag:String, ?WinFlagVal:Int, ?Song:String)
 	{
 		super();
 		_enemies = Enemies;
 		_state = State;
 		_winFlag = WinFlag;
 		_winFlagVal = WinFlagVal;
+		_song = Song;
 	}
 
 	override public function update(elapsed:Float)
 	{
 		destroy();
-		if (_winFlag != null) {
-			var sub = new BattleSubState(_state, _enemies, _winFlag, _winFlagVal);
+		// if (_winFlag != null) {
+			var sub = new BattleSubState(_state, _enemies, _winFlag, _winFlagVal, _song);
 			_state.openSubState(sub);
-		}
-		else {
-			var sub = new BattleSubState(_state, _enemies);			
-			_state.openSubState(sub);
-		}
+		// }
+		// else {
+			// var sub = new BattleSubState(_state, _enemies);			
+			// _state.openSubState(sub);
+		// }
 		super.update(elapsed);
 	}
 }

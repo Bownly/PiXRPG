@@ -85,7 +85,7 @@ class FrogPondHouse4 extends TownState
 									new EventFlag("frogponddun", 2)
 									]);
 		else if (Reg.flags["frogponddun"] == 2 && Reg.flags["owl_clan_attack"] == 0)
-			npcFroggo.events = [new EventDialog(Strings.frogpondStrings[12], this)];
+			npcFroggo.events = [new EventDialog(Strings.frogpondStrings[2], this)];
 		else if (Reg.flags["owl_clan_attack"] == 1)  // post-attack
 			eventManager.addEvents([new EventNPCWalk(player, [[FlxObject.UP, 3]]),
 									new EventDialog(Strings.frogpondStrings[19], this),  // elder froggo !!!!
