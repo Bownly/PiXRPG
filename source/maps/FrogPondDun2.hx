@@ -17,6 +17,7 @@ class FrogPondDun2 extends TownState
 {
 	var shrine:NPC;
 	var npcRival:NPC;
+	var npcMonshou:NPC;
 	var door8:NPC;
 
 	public function new(EntranceID:Int, MapName:String, ?SongName:String, ?Dungeon:Bool) 
@@ -29,14 +30,17 @@ class FrogPondDun2 extends TownState
 	{
 		grpNPCs = new FlxTypedGroup<NPC>();
 		
-		shrine = new NPC(0, 0, FlxObject.DOWN, 15, this, "npc 1");
+		shrine = new NPC(0, 0, FlxObject.UP, 16, this, "npc shrine");
 		grpNPCs.add(shrine);
-
+		shrine.setCanTurn(false);
 
 		if (Reg.flags["frogponddun"] == 0)
 		{
 			npcRival = new NPC(0, 0, FlxObject.UP, 2, this, "npc 0");
 			grpNPCs.add(npcRival);
+			npcMonshou = new NPC(0, 0, FlxObject.UP, 17, this, "npc monshou");
+			npcMonshou.setCanTurn(false);
+			grpNPCs.add(npcMonshou);
 		}
 
 		if (Reg.flags["frogpond_door8"] == 0)
@@ -73,6 +77,12 @@ class FrogPondDun2 extends TownState
 									new EventDialog(Strings.frogponddunStrings[19], this),
 								 	new EventNPCWalk(player, [[FlxObject.UP, 2]]),
 									new EventDialog(Strings.frogponddunStrings[20], this),
+									new EventZaWarudo(0.5),
+									new EventNPCWalk(npcMonshou, [[FlxObject.DOWN, 2]], false),
+									new EventNPCRemove(npcMonshou),
+									new EventSFXPlay("lvl"),
+									new EventZaWarudo(0.25),
+									new EventDialog(Strings.frogponddunStrings[33], this),
 									new EventFlag("frogponddun", 1),
 									new EventFlag("monshou_frog", 1),
 									]);

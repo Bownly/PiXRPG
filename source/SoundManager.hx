@@ -20,40 +20,49 @@ class SoundManager
 
 	public static function initialize():Void
 	{
+		initializeMusic();
+		initializeSFX();
+	}
+
+	public static function initializeMusic():Void
+	{
 		var townsong = FlxG.sound.load("assets/music/great_forest.wav");
 		townsong.persist = true;
 		townsong.looped = true;
-		townsong.volume = 0.3;
+		townsong.volume = 0.2;
 		var housesong = FlxG.sound.load("assets/music/village_dreaming.wav");
 		housesong.persist = true;
 		housesong.looped = true;
-		housesong.volume = 0.125;
+		housesong.volume = 0.1;
 		var cavesong = FlxG.sound.load("assets/music/shadilay8.wav");
 		cavesong.persist = true;
 		cavesong.looped = true;
 		var badstuff = FlxG.sound.load("assets/music/dark_sanctum.wav");
 		badstuff.persist = true;
 		badstuff.looped = true;
-		badstuff.volume = 0.6;
+		badstuff.volume = 0.4;
 		var worldmap = FlxG.sound.load("assets/music/windy_bluffs.wav");
 		worldmap.persist = true;
 		worldmap.looped = true;
-		worldmap.volume = 0.3;
+		worldmap.volume = 0.2;
 		var battle = FlxG.sound.load("assets/music/battle_loop.wav");
 		battle.persist = true;
 		battle.looped = true;
-		battle.volume = 0.7;
+		battle.volume = 0.5;
 		var miniboss = FlxG.sound.load("assets/music/miniboss.wav");
 		miniboss.persist = true;
 		miniboss.looped = true;
-		miniboss.volume = 0.7;
+		miniboss.volume = 0.5;
 		var victoly = FlxG.sound.load("assets/music/victoly_fanfare.wav");
 		victoly.persist = true;
 		var defeat = FlxG.sound.load("assets/music/lost_the_battle.wav");
 		defeat.persist = true;
 		var shadilay = FlxG.sound.load("assets/music/shadilay.wav");
 		shadilay.persist = true;
-		worldmap.looped = true;
+		shadilay.volume = 0.5;
+		shadilay.looped = true;
+		var hurt = FlxG.sound.load("assets/music/hurt116.wav");
+
 
 		songs = 
 		[
@@ -68,15 +77,30 @@ class SoundManager
 			"defeat"    => defeat,
 			"shadilay"  => shadilay,
 		];
+	}
 
+	public static function initializeSFX():Void
+	{
+
+		var talk_high = FlxG.sound.load("assets/sounds/talk_high.wav");
+		talk_high.volume = 0.1;
+		var talk_normal = FlxG.sound.load("assets/sounds/talk_normal.wav");
+		talk_normal.volume = 0.1;
 		var hurt = FlxG.sound.load("assets/sounds/hurt16.wav");
+		var lvl = FlxG.sound.load("assets/sounds/lvl.wav");
+		var splash = FlxG.sound.load("assets/sounds/splash.wav");
+		var menu = FlxG.sound.load("assets/sounds/menu_sound.wav");
+		menu.volume = 0.75;
 
 		sounds = 
 		[
-			"hurt"  => hurt,
+			"talk_high"   => talk_high,
+			"talk_normal" => talk_normal,
+			"hurt"        => hurt,
+			"lvl"         => lvl,
+			"splash"      => splash,
+			"menu"        => menu,
 		];
-
-
 	}
 
 	public static function playMusic(title:String):Void
@@ -87,7 +111,7 @@ class SoundManager
 
 	public static function playSound(title:String):Void
 	{
-		sounds[title].play();
+		sounds[title].play(true);
 	}
 
 

@@ -35,13 +35,13 @@ class DifficultySelectionState extends FlxState
 		var xanchor:Float = 0;
 		var yanchor:Float = 48;  // arbitray spacing number determined to look good
 
-		_txtInstructions = new FlxText(xanchor, yanchor, FlxG.width, "Select a difficulty:", 8);
-		_txtInstructions.setFormat(8, colorDefault, "center");
+		_txtInstructions = new FlxText(xanchor, yanchor, FlxG.width, "Select a difficulty:", 16);
+		_txtInstructions.setFormat(16, colorDefault, "center");
 		yanchor += _txtInstructions.height;
 
 		_grpSelections = new FlxTypedGroup<FlxText>();
 		// lotta (somewhat) arbitrary spacing numbers below
-		_txtSelectionNormal = new FlxText(xanchor + 16, _txtInstructions.y + _txtInstructions.height + 32, 128, "Normal\n\nPick this one if you're new to picross puzzles, just want to experience the story, or are a casual.", 8);
+		_txtSelectionNormal = new FlxText(xanchor + 16, _txtInstructions.y + _txtInstructions.height + 16, 128, "Normal\n\nPick this one if you're new to picross puzzles, just want to experience the story, or are a casual scrub.", 8);
 		_txtSelectionHard = new FlxText(_txtInstructions.x + 32 + _txtSelectionNormal.width, _txtSelectionNormal.y, 128, "Hard\n\nFor players more experienced with picross puzzles. The puzzles are bigger and the enemies hit harder.", 8);
 	
 		_txtControls = new FlxText(0, 0, FlxG.width, "J = confirm, K = do nothing, WASD/Arrows = move");
@@ -52,7 +52,7 @@ class DifficultySelectionState extends FlxState
 		_grpSelections.add(_txtSelectionNormal);
 		_grpSelections.add(_txtSelectionHard);
 		add(_grpSelections);
-		add(_txtControls);
+		// add(_txtControls);
 		
 		FlxG.mouse.visible = false;		
 		super.create();	
@@ -85,9 +85,9 @@ class DifficultySelectionState extends FlxState
 			selectedSelection--;
 		}
 		if (selectedSelection >= 2)
-			selectedSelection = 0;
-		else if (selectedSelection < 0)
 			selectedSelection = 1;
+		else if (selectedSelection < 0)
+			selectedSelection = 0;
 			
 		if (FlxG.keys.anyJustPressed(["J"]))
 		{

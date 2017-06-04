@@ -60,18 +60,6 @@ class DialogChoiceSubState extends FlxSubState
 			_menu.open();
 		}
 
-
-
-
-
-
-		// _menu.setMenus();
-		// _menu.isAlive = true;
-
-
-
-
-
 		add(_grpEverything);
 		
 		for(text in _grpEverything) 
@@ -87,6 +75,10 @@ class DialogChoiceSubState extends FlxSubState
 		{
 			this.close();
 		}
+
+		if (FlxG.keys.anyJustPressed(["M"]))
+			FlxG.sound.toggleMuted();
+
 		super.update(elapsed);
 	}
 

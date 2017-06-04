@@ -15,8 +15,11 @@ import MenuClasses;
 
 class MCHouse1 extends TownState
 {
-
 	var npcRival:NPC;
+	var obj0:NPC;
+	var obj1:NPC;
+	var obj2:NPC;
+	var obj3:NPC;
 
 	public function new(EntranceID:Int, MapName:String, ?SongName:String, ?Dungeon:Bool) 
 	{
@@ -37,68 +40,50 @@ class MCHouse1 extends TownState
 			npcRival = new NPC(48, 32, FlxObject.UP, 2, this, "npc 0");
 			grpNPCs.add(npcRival);
 		}
-		
-		super.create();
 
-		// if (Reg.flags["owl_clan_attack"] == 1)
-		// 	_song = "bosssong";
-		// else 
-		// 	_song = "housesong";
-		// playSong();			
+		obj0 = new NPC(0, 0, FlxObject.RIGHT, 8, this, "obj 0");
+		obj1 = new NPC(0, 0, FlxObject.RIGHT, 8, this, "obj 1");
+		obj2 = new NPC(0, 0, FlxObject.RIGHT, 8, this, "obj 2");
+		obj3 = new NPC(0, 0, FlxObject.RIGHT, 8, this, "obj 3");
+		obj0.setCanTurn(false);
+		obj1.setCanTurn(false);
+		obj2.setCanTurn(false);
+		obj3.setCanTurn(false);
+		grpNPCs.add(obj0);
+		grpNPCs.add(obj1);
+		grpNPCs.add(obj2);
+		grpNPCs.add(obj3);
+		super.create();
 
 		assignEvents();
 	}
 	
 	override public function assignEvents():Void
 	{
-		if (Reg.flags["save"] == 1)
-		{
-			eventManager.addEvents([new EventSaveGame(2, mapName),
-									new EventFlag("save", 0)]);
-		}
+
+		obj0.events = [new EventDialog(Strings.mchouse1Strings[6], this)];
+		obj1.events = [new EventDialog(Strings.mchouse1Strings[7], this)];
+		obj2.events = [new EventDialog(Strings.mchouse1Strings[8], this)];
+		obj3.events = [new EventDialog(Strings.mchouse1Strings[9], this)];
+
 
 		if (Reg.flags["first_wakeup"] == 0)
 		{
-			eventManager.addEvents([new EventDialog(Strings.mchomeStrings[0], this, 
-													[new MenuItemDialogChoice(Strings.mchomeStrings[1], 
+			eventManager.addEvents([new EventDialog(Strings.mchouse1Strings[0], this, 
+													[new MenuItemDialogChoice(Strings.mchouse1Strings[1], 
 														null, new EventFlag("dummy", 1)),
-													 new MenuItemDialogChoice(Strings.mchomeStrings[2], 
+													 new MenuItemDialogChoice(Strings.mchouse1Strings[2], 
 													 	null, new EventFlag("dummy", 1))
 													]),
-									new EventDialog(Strings.mchomeStrings[3], this),
-									new EventDialog(Strings.mchomeStrings[4], this),
-									new EventDialog(Strings.mchomeStrings[5], this),
+									new EventDialog(Strings.mchouse1Strings[3], this),
+									new EventDialog(Strings.mchouse1Strings[4], this),
+									new EventDialog(Strings.mchouse1Strings[5], this),
 									new EventNPCWalk(npcRival, [[FlxObject.LEFT, 6],
 															[FlxObject.DOWN, 1]]),
 									new EventNPCRemove(npcRival),
 									new EventFlag("first_wakeup", 1)
 									]);
 		}
-		// npc2.events = [ 
-		// 	// new EventBattle([new EnemyTest()], this),
-		// 	// new EventDialog(Strings.frogpondStrings[0], this)
-		// 	new EventDialog(Strings.mchomeStrings[0], this),
-		// 	new EventDialog(Strings.mchomeStrings[1], this),
-		// 	new EventDialog(Strings.mchomeStrings[2], this),
-		// 	new EventDialog(Strings.mchomeStrings[3], this),
-		// 	new EventDialog(Strings.mchomeStrings[4], this),
-		// 	new EventDialog(Strings.mchomeStrings[5], this),
-		// 	new EventDialog(Strings.mchomeStrings[6], this),
-		// 	new EventDialog(Strings.mchomeStrings[7], this)
-		// ];
-		
-		// npc3.events = [	
-		// 	// new EventDialog(Strings.stringArray[30], this),
-		// 	// new EventDialog(Strings.stringArray[31], this),
-		// 	new EventHealPlayer(),
-		// 	new EventDialog(Strings.stringArray[12], this, 
-		// 					[new MenuItemDialogChoice(Strings.stringArray[13], 
-		// 						null, new EventFlag("save", 1)),
-		// 					 new MenuItemDialogChoice(Strings.stringArray[14], 
-		// 					 	null, new EventFlag("save", 0))
-		// 					])
-		// ];
-		
 	}
 }
 

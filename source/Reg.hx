@@ -43,6 +43,7 @@ class Reg
 	public static var STATE:Int = 0;
 	public static inline var STATE_NORMAL:Int = 0;
 	public static inline var STATE_CUTSCENE:Int = 1;
+	public static inline var STATE_TRANSITION:Int = 2;
 
 	public static var pLV:Int = 1;
 	public static var pMP:Int = 60;
@@ -65,9 +66,9 @@ class Reg
 		"monshou_gondola"   => 0,  // 0 = don't have; 1 = have
 		"save"              => 0,
 		"no_encounters_yet" => 0,
-		"tutorial_battle"   => 0, 
-		"first_wakeup"      => 0,  // 0 = start game; 1 = went downstairs; 2 = talked to dad
-		"first_froggo"      => 0,  // 0 = hasn't met Froggo; 1 = has met him
+		"tutorial_battle"   => 0,  // 0 = nothing; 1 = show tutorial text; 2 = already did
+		"first_wakeup"      => 0,  // 0 = start game; 1 = went downstairs; 2 = talked to dad; 3 = joined up with rival
+		"first_froggo"      => 0,  // 0 = hasn't met Froggo; 1 = has met him; 2 = rival walked off in dungeon (should be frogponddun but whatever)
 		"frogponddun"       => 0,  // 0 = dun not done; 1 = dun done; 2 = talked to Froggo/concluded flag
 		"fight_dummy"       => 0,  // -2 = secret fight no; -1 = fight no; 0 = neutral; 1 = fight yes; 2 = secret fight yes
 		"dummy_prizes"      => 0,  // even = nothing; 1 = PiXcalibur; 3, 5 = Pond Scum; >=6 = done
@@ -156,7 +157,7 @@ class Reg
 
 		// load pens
 		PenClasses.PenManager.arrPens = save.data.pens;
-		PenClasses.PenManager.equipped = save.data.ePen;
+		PenClasses.PenManager.equip(save.data.ePen);
 	
 		// load playtime
 		playTime = save.data.playTime;

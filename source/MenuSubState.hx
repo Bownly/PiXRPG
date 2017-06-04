@@ -118,6 +118,7 @@ class MenuSubState extends FlxSubState
 		
 		for(spr in _grpEverything) 
 			spr.scrollFactor.set();
+		SoundManager.playSound("menu");					
 
 	}
 	

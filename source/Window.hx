@@ -17,8 +17,8 @@ class Window extends FlxGroup
 	public var pad:Int = 2;
 	public var coords:Array<Float>;
 	public var dimens:Array<Float>;
-	var _sprBack:FlxSprite;
-	var _sprBackBG:FlxSprite;
+	public var _sprBack:FlxSprite;
+	public var _sprBackBG:FlxSprite;
 
 	public function new(Coords:Array<Float>, Dimens:Array<Float>, ?Pad:Int) 
 	{

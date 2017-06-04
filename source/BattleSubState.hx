@@ -5,11 +5,13 @@ import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxSubState;
 import flixel.group.FlxGroup;
-import flixel.system.FlxSound;
-import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.math.FlxRandom;
 import flixel.math.FlxPoint;
+import flixel.system.FlxSound;
+import flixel.text.FlxText;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
 
 import DialogClasses;
 import EnemyClasses;
@@ -55,6 +57,7 @@ class BattleSubState extends FlxSubState
 	var _lastMarkedSquare:PicrossSquare;
 	var _grpCursor:FlxTypedGroup<FlxSprite>;
 	var _grpMenus:FlxTypedGroup<BaseMenu>;
+	public var grpEntities:FlxTypedGroup<Entity> = new FlxTypedGroup<Entity>();
 
 	public var eventManager:EventClasses.EventManager;
 
@@ -70,6 +73,10 @@ class BattleSubState extends FlxSubState
 	var _arrEnemies:Array<BaseEnemy>;
 	var _dimens:Array<Int>;
 	var _winCount:Int = 0;
+	
+	var _sprTransition:FlxSprite;
+	var _transitionTimer:Float = 1;
+	var _transitionDuration:Float = 0;
 	
 	var _msgTimer:Float = 0;
 	var _msgDuration:Float = 1.5;
@@ -105,25 +112,292 @@ class BattleSubState extends FlxSubState
 	static var STATE_EXP:Int = 6;
 	
 	var _WINCHEAT:Bool = false;
-
 	
 	public function new(State:TownState, Enemies:Array<BaseEnemy>, ?WinFlag:String, ?WinFlagVal:Int, ?Song:String) 
 	{
 		super();
 
-		SoundManager.pauseMusic("all");
+		xanchor = Std.int((FlxG.width-FlxG.height)/2);
+		yanchor = Std.int(0);
 
-		if (Song != null)
-			_song = Song;
-		else
-			_song = "battle";
-		SoundManager.playMusic(_song);
+		// window = new Window([xanchor, yanchor], [FlxG.height, FlxG.height]);
+		// xanchor += window.pad*2;
+		// yanchor += window.pad*2;
+		// // add(window);
+
+		_sprTransition = new FlxSprite(xanchor+FlxG.height/2, yanchor+FlxG.height/2);
+		_sprTransition.makeGraphic(1, 1, 0xff000000);
+		_sprTransition.scrollFactor.set();
+		add(_sprTransition);
 
 		_state = State;
 		_arrEnemies = Enemies;
 		_winFlag = WinFlag;
 		_winFlagVal = WinFlagVal;
+		if (Song != null)
+			_song = Song;
+		else
+			_song = "battle";
+
+		Reg.STATE = Reg.STATE_TRANSITION;
+		SoundManager.pauseMusic("all");
+		FlxTween.tween(_sprTransition.scale, { x: FlxG.height-1, y: FlxG.height-1 }, 0.33, { ease:FlxEase.circOut, onComplete:onTransitionEnd });
+
+		eventManager = new EventClasses.EventManager(this);
+	}
 	
+	public override function update(elapsed:Float)
+	{
+		if (Reg.STATE != Reg.STATE_TRANSITION)
+		{
+			eventManager.update(elapsed);
+
+			// timer buisness
+			if (_txtMessage.text != "")
+				_msgTimer -= FlxG.elapsed;
+			if (_msgTimer <= 0)
+				_txtMessage.text = "";
+			_txtMP.text = "MP: " + Player.mp;
+			_txtEnemyMP.text = "MP: " + _arrEnemies[_enemyNum].mp;
+
+			// this block is basically resolveAnimations()
+			if (battleState == STATE_BATTLE)
+			{
+				if (_mcHurtTimer > 0)
+				{
+					_mcHurtTimer -= FlxG.elapsed;
+					_sprPlayer.animation.play("dead_" + Reg.flags["p_hood"]);
+				}
+				else
+					_sprPlayer.animation.play("idle_" + Reg.flags["p_hood"]);
+			}
+
+			if (battleState == STATE_VICTORY)
+			{
+				SoundManager.pauseMusic(_song);
+				SoundManager.playMusic("victoly");
+			}
+			else if (battleState == STATE_DEFEAT)
+			{
+				SoundManager.pauseMusic(_song);
+				SoundManager.playMusic("defeat");		
+			}
+
+			// cursor movement and other control stuff
+			else if (battleState == STATE_BATTLE)
+			{
+				if (_inputsDelayTimer >= _inputsDelayDuration)
+					playerInputs(elapsed);
+				else
+					_inputsDelayTimer += elapsed;
+				_arrEnemies[_enemyNum].update(elapsed);
+			}
+			else if (battleState == STATE_MENU)
+			{
+				if (_menu.isAlive == false)
+				{
+					battleState = STATE_BATTLE;
+					setUpBoard();
+					remove(_menu);
+					_inputsDelayTimer = 0;
+				}
+			}		
+			else if (battleState == STATE_PAUSE)
+			{
+				if (_menu.isAlive == false)
+				{
+					battleState = STATE_BATTLE;
+					remove(_menu);
+					_inputsDelayTimer = 0;
+				}
+			}
+			else if (battleState == STATE_ESCAPE && _txtMessage.text == "")
+				this.close();
+
+			// if you die
+			if (Player.mp <= 0)
+			{
+				Player.mp = 0;
+				if (battleState != STATE_DEFEAT)
+				{
+					_sprPlayer.animation.play("dead_" + Reg.flags["p_hood"]);
+					_txtMessage.text = "You got stumped on, kid.";
+					_msgTimer = _msgDuration;
+					battleState = STATE_DEFEAT;
+				}
+				else if (battleState == STATE_DEFEAT && _txtMessage.text == "")
+					FlxG.switchState(new GameOverState());
+			}
+			
+			// if you win
+			if (winCheck() == true || _WINCHEAT == true)
+			{
+				_grpObstacles.clear();
+
+				if (battleState != STATE_VICTORY && battleState != STATE_EXP)
+				{
+					_sprEnemy.animation.play("dead");
+					_sprPlayer.animation.play("idle_" + Reg.flags["p_hood"]);
+					_txtMessage.text = "YOU DEFEATED";
+					_msgTimer = _msgDuration;
+					battleState = STATE_VICTORY;
+				}
+				else if (battleState == STATE_VICTORY && _txtMessage.text == "")
+				{
+					if (_enemyNum == _arrPicrossBoards.length-1)
+					{
+						if (_winFlag != null && Reg.flags[_winFlag] != _winFlagVal)
+							eventManager.addEvents([new EventFlag(_winFlag, _winFlagVal)]);
+
+						var _sumXP = 0;  
+						for (enemy in _arrEnemies)	
+							_sumXP += enemy.xp;
+
+						var tempID = FlxG.random.int(0, 3);  // 4 is the amount of unique XP strings  TODO: make it a variable imo
+						tempID = tempID + 5 + (4 * Reg.flags["p_hood"]);  // 5 is the ID of the first XP string
+
+						eventManager.addEvents([new EventStringVarChange("%xp%", ""+_sumXP*1),
+												new EventDialog(Strings.stringArray[tempID], this),
+												]);
+
+						if (Player.addXP(_sumXP))  // if the player leveled up
+						{
+							// SoundManager.playSound("lvl");
+							eventManager.addEvents([new EventStringVarChange("%level%", ""+Player.lp),
+													new EventSFXPlay("lvl"),
+													new EventDialog(Strings.stringArray[13+Reg.flags["p_hood"]], this),
+													]);
+						}
+
+						battleState = STATE_EXP;
+					}
+					else 
+					{
+						_arrPicrossBoards[_enemyNum].flipActive();
+						_arrEnemies[_enemyNum].removeAllObstacles();
+						_grpObstacles.clear();
+						_enemyNum += 1;
+						setUpMenu("Next round");
+						battleState = STATE_MENU;
+					}
+				}
+				if (battleState == STATE_EXP)
+				{
+					if (eventManager.getLength() <= 0)
+						this.close();
+				}
+			}
+		}
+		super.update(elapsed);
+	}
+	
+	override public function close():Void
+	{
+		Reg.resetEncounterCounter(_state.encounterLowerBound, _state.encounterUpperBound);
+		_state.playSong();
+		super.close();
+	}
+
+	private function markSquare(Cursor:FlxSprite, Guess:Int):Int
+	{
+		var tempX = Std.int((Cursor.x - _curBoard.gridPicrossSquares[0][0].x) / 10);
+		var tempY = Std.int((Cursor.y - _curBoard.gridPicrossSquares[0][0].y) / 10);
+
+		if (tempX < _curBoard.dimens[1] && tempY >= 0)
+		{
+			var _cell = _curBoard.gridPicrossSquares[tempY][tempX];
+			if (Guess != PEN_IDLE)
+				_lastMarkedSquare = _cell;
+			var result:Int = _cell.turnOnOrOff(Guess);
+			switch (result)
+			{
+				case PicrossSquare.CORRECT:
+				{
+					_arrEnemies[_enemyNum].onSquareFilled();
+					// _arrPicrossBoards[_enemyNum].enemy.onSquareFilled();
+					_arrPicrossBoards[_enemyNum].checkRowCorrect(_cell.rowID);
+					_arrPicrossBoards[_enemyNum].checkColCorrect(_cell.colID);
+					return 1;
+				}
+				case PicrossSquare.GOODHURT:
+				{
+					_arrEnemies[_enemyNum].onSquareFilled();
+					_arrEnemies[_enemyNum].onSquareHurt();
+					takeDamage();
+					_arrPicrossBoards[_enemyNum].checkRowCorrect(_cell.rowID);
+					_arrPicrossBoards[_enemyNum].checkColCorrect(_cell.colID);
+					return 1;
+				}
+				case PicrossSquare.HURT:
+				{
+					_arrEnemies[_enemyNum].onSquareHurt();
+					// SoundManager.playSound("hurt");
+					takeDamage();
+				}
+				return 0;
+			}
+			return 0;
+		}
+		else
+			return 0;	
+	}
+
+	private function moveCursor(Dir:Int):Void
+	{
+		switch (Dir)
+		{
+			case FlxObject.UP:
+			{
+				_cursorTimerVert = 0;
+
+				if (_curBoard.selected[1] > 0)
+					_curBoard.selected[1] -= 1;
+				else
+					_curBoard.selected[1] = _curBoard.gridPicrossSquares.length-1;
+			}
+			case FlxObject.DOWN:
+			{
+				_cursorTimerVert = 0;
+
+				if (_curBoard.selected[1] < _curBoard.gridPicrossSquares.length-1)
+					_curBoard.selected[1] += 1;
+				else
+					_curBoard.selected[1] = 0;
+			}
+			case FlxObject.LEFT:
+			{
+				_cursorTimerHorz = 0;
+
+				if (_curBoard.selected[0] > 0)
+					_curBoard.selected[0] -= 1;
+				else
+					_curBoard.selected[0] = _curBoard.gridPicrossSquares[0].length-1;
+			}
+			case FlxObject.RIGHT:
+			{
+				_cursorTimerHorz = 0;
+
+				if (_curBoard.selected[0] < _curBoard.gridPicrossSquares[0].length-1)
+					_curBoard.selected[0] += 1;
+				else
+					_curBoard.selected[0] = 0;
+			}
+		}
+
+		var x = _curBoard.gridPicrossSquares[_curBoard.selected[1]][_curBoard.selected[0]].x;
+		var y = _curBoard.gridPicrossSquares[_curBoard.selected[1]][_curBoard.selected[0]].y;
+		_sprPen.x = x;
+		_sprPen.y = y;
+		_arrPicrossBoards[_enemyNum].colRowBold(_sprPen.x, _sprPen.y);
+		refreshCursorsPos();
+		// SoundManager.playSound("cursor");
+	}
+
+	private function onTransitionEnd(_):Void
+	{
+		Reg.STATE = Reg.STATE_NORMAL;
+		SoundManager.playMusic(_song);
+
 		_grpTexts = new FlxTypedGroup<FlxText>();
 		_grpSprites = new FlxTypedGroup<FlxSprite>();
 		_grpPicrossSquaresBoards = new FlxTypedGroup<PicrossBoard>();
@@ -131,14 +405,13 @@ class BattleSubState extends FlxSubState
 		_grpObstacles = new FlxTypedGroup<ObstacleClasses.BaseObstacle>();
 		_grpMenus = new FlxTypedGroup<BaseMenu>();
 
-		xanchor = Std.int((FlxG.width-FlxG.height)/2);
-		yanchor = Std.int(0);
+		// remove(_sprTransition);
 
 		window = new Window([xanchor, yanchor], [FlxG.height, FlxG.height]);
 		xanchor += window.pad*2;
 		yanchor += window.pad*2;
 		add(window);
-		
+
 		_txtMP = new FlxText(xanchor, yanchor, 64, "MP: " + Player.mp, 8);
 		
 		_sprPlayer = new FlxSprite(xanchor, _txtMP.y + _txtMP.height);
@@ -215,8 +488,6 @@ class BattleSubState extends FlxSubState
 		_arrPicrossBoards = new Array<PicrossBoard>();
 
 		// 15 is max board dimens, 10 is size of picross squares, 14 is height of text
-		// xanchor = Std.int(window.getHeight()) - 15*10 - 14;
-		// yanchor = xanchor;
 		xanchor += 40 - 14;
 		yanchor += 40 - 14;
 
@@ -260,257 +531,10 @@ class BattleSubState extends FlxSubState
 		eventManager = new EventClasses.EventManager(this);
 		if (Reg.flags["tutorial_battle"] == 1)
 		{
-			eventManager.addEvents([new EventFlag("tutorial_battle", 2),
+			eventManager.addEvents([
+				// new EventFlag("tutorial_battle", 1),
 									new EventDialog(Strings.frogponddunStrings[5], this)]);
 		}
-	}
-	
-	public override function update(elapsed:Float)
-	{
-		eventManager.update(elapsed);
-
-		// timer buisness
-		if (_txtMessage.text != "")
-			_msgTimer -= FlxG.elapsed;
-		if (_msgTimer <= 0)
-			_txtMessage.text = "";
-		_txtMP.text = "MP: " + Player.mp;
-		_txtEnemyMP.text = "MP: " + _arrEnemies[_enemyNum].mp;
-
-		// this block is basically resolveAnimations()
-		if (battleState == STATE_BATTLE)
-		{
-			if (_mcHurtTimer > 0)
-			{
-				_mcHurtTimer -= FlxG.elapsed;
-				_sprPlayer.animation.play("dead_" + Reg.flags["p_hood"]);
-			}
-			else
-				_sprPlayer.animation.play("idle_" + Reg.flags["p_hood"]);
-		}
-
-		if (battleState == STATE_VICTORY)
-		{
-			SoundManager.pauseMusic(_song);
-			SoundManager.playMusic("victoly");
-		}
-		else if (battleState == STATE_DEFEAT)
-		{
-			SoundManager.pauseMusic(_song);
-			SoundManager.playMusic("defeat");		
-		}
-
-		// cursor movement and other control stuff
-		else if (battleState == STATE_BATTLE)
-		{
-			if (_inputsDelayTimer >= _inputsDelayDuration)
-				playerInputs(elapsed);
-			else
-				_inputsDelayTimer += elapsed;
-			_arrEnemies[_enemyNum].update(elapsed);
-		}
-		else if (battleState == STATE_MENU)
-		{
-			if (_menu.isAlive == false)
-			{
-				battleState = STATE_BATTLE;
-				setUpBoard();
-				remove(_menu);
-				_inputsDelayTimer = 0;
-			}
-		}		
-		else if (battleState == STATE_PAUSE)
-		{
-			if (_menu.isAlive == false)
-			{
-				battleState = STATE_BATTLE;
-				remove(_menu);
-				_inputsDelayTimer = 0;
-			}
-		}
-		else if (battleState == STATE_ESCAPE && _txtMessage.text == "")
-			this.close();
-
-		// if you die
-		if (Player.mp <= 0)
-		{
-			Player.mp = 0;
-			if (battleState != STATE_DEFEAT)
-			{
-				_sprPlayer.animation.play("dead_" + Reg.flags["p_hood"]);
-				_txtMessage.text = "You got stumped on, kid.";
-				_msgTimer = _msgDuration;
-				battleState = STATE_DEFEAT;
-			}
-			else if (battleState == STATE_DEFEAT && _txtMessage.text == "")
-				FlxG.switchState(new GameOverState());
-		}
-		
-		// if you win
-		if (winCheck() == true || _WINCHEAT == true)
-		{
-			_grpObstacles.clear();
-
-			if (battleState != STATE_VICTORY && battleState != STATE_EXP)
-			{
-				_sprEnemy.animation.play("dead");
-				_sprPlayer.animation.play("idle_" + Reg.flags["p_hood"]);
-				_txtMessage.text = "YOU DEFEATED";
-				_msgTimer = _msgDuration;
-				battleState = STATE_VICTORY;
-			}
-			else if (battleState == STATE_VICTORY && _txtMessage.text == "")
-			{
-
-				if (_enemyNum == _arrPicrossBoards.length-1)
-				{
-					if (_winFlag != null && Reg.flags[_winFlag] != _winFlagVal)
-						eventManager.addEvents([new EventFlag(_winFlag, _winFlagVal)]);
-
-					var _sumXP = 0;  
-					for (enemy in _arrEnemies)	
-						_sumXP += enemy.xp;
-
-					trace("_sumXP:  ", _sumXP);
-
-					var tempID = FlxG.random.int(0, 3);  // 4 is the amount of unique XP strings  TODO: make it a variable imo
-					tempID = tempID + 5 + (4 * Reg.flags["p_hood"]);  // 5 is the ID of the first XP string
-
-					eventManager.addEvents([new EventStringVarChange("%xp%", ""+_sumXP),
-											new EventDialog(Strings.stringArray[tempID], this),
-											]);
-
-					if (Player.addXP(_sumXP))  // if the player leveled up
-					{
-						eventManager.addEvents([new EventStringVarChange("%level%", ""+Player.lp),
-												new EventDialog(Strings.stringArray[13+Reg.flags["p_hood"]], this),
-												]);
-					}
-
-					battleState = STATE_EXP;
-				}
-				else 
-				{
-					_arrPicrossBoards[_enemyNum].flipActive();
-					_arrEnemies[_enemyNum].removeAllObstacles();
-					_grpObstacles.clear();
-					_enemyNum += 1;
-					setUpMenu("Next round");
-					battleState = STATE_MENU;
-				}
-			}
-			if (battleState == STATE_EXP)
-			{
-				if (eventManager.getLength() <= 0)
-					this.close();
-			}
-		}
-		super.update(elapsed);
-	}
-	
-	override public function close():Void
-	{
-		Reg.resetEncounterCounter(_state.encounterLowerBound, _state.encounterUpperBound);
-		_state.playSong();
-		super.close();
-	}
-
-	private function markSquare(Cursor:FlxSprite, Guess:Int):Int
-	{
-		var tempX = Std.int((Cursor.x - _curBoard.gridPicrossSquares[0][0].x) / 10);
-		var tempY = Std.int((Cursor.y - _curBoard.gridPicrossSquares[0][0].y) / 10);
-
-		if (tempX < _curBoard.dimens[1] && tempY >= 0)
-		{
-			var _cell = _curBoard.gridPicrossSquares[tempY][tempX];
-			if (Guess != PEN_IDLE)
-				_lastMarkedSquare = _cell;
-			var result:Int = _cell.turnOnOrOff(Guess);
-			switch (result)
-			{
-				case PicrossSquare.CORRECT:
-				{
-					_arrEnemies[_enemyNum].onSquareFilled();
-					// _arrPicrossBoards[_enemyNum].enemy.onSquareFilled();
-					_arrPicrossBoards[_enemyNum].checkRowCorrect(_cell.rowID);
-					_arrPicrossBoards[_enemyNum].checkColCorrect(_cell.colID);
-					return 1;
-				}
-				case PicrossSquare.GOODHURT:
-				{
-					_arrEnemies[_enemyNum].onSquareFilled();
-					_arrEnemies[_enemyNum].onSquareHurt();
-					takeDamage();
-					_arrPicrossBoards[_enemyNum].checkRowCorrect(_cell.rowID);
-					_arrPicrossBoards[_enemyNum].checkColCorrect(_cell.colID);
-					SoundManager.playSound("hurt");
-					camera.shake(0.005, 0.2);
-					return 1;
-				}
-				case PicrossSquare.HURT:
-				{
-					_arrEnemies[_enemyNum].onSquareHurt();
-					SoundManager.playSound("hurt");
-					camera.shake(0.005, 0.2);
-					takeDamage();
-				}
-				return 0;
-			}
-			return 0;
-		}
-		else
-			return 0;
-		
-	}
-
-	private function moveCursor(Dir:Int):Void
-	{
-		switch (Dir)
-		{
-			case FlxObject.UP:
-			{
-				_cursorTimerVert = 0;
-
-				if (_curBoard.selected[1] > 0)
-					_curBoard.selected[1] -= 1;
-				else
-					_curBoard.selected[1] = _curBoard.gridPicrossSquares.length-1;
-			}
-			case FlxObject.DOWN:
-			{
-				_cursorTimerVert = 0;
-
-				if (_curBoard.selected[1] < _curBoard.gridPicrossSquares.length-1)
-					_curBoard.selected[1] += 1;
-				else
-					_curBoard.selected[1] = 0;
-			}
-			case FlxObject.LEFT:
-			{
-				_cursorTimerHorz = 0;
-
-				if (_curBoard.selected[0] > 0)
-					_curBoard.selected[0] -= 1;
-				else
-					_curBoard.selected[0] = _curBoard.gridPicrossSquares[0].length-1;
-			}
-			case FlxObject.RIGHT:
-			{
-				_cursorTimerHorz = 0;
-
-				if (_curBoard.selected[0] < _curBoard.gridPicrossSquares[0].length-1)
-					_curBoard.selected[0] += 1;
-				else
-					_curBoard.selected[0] = 0;
-			}
-		}
-
-		var x = _curBoard.gridPicrossSquares[_curBoard.selected[1]][_curBoard.selected[0]].x;
-		var y = _curBoard.gridPicrossSquares[_curBoard.selected[1]][_curBoard.selected[0]].y;
-		_sprPen.x = x;
-		_sprPen.y = y;
-		_arrPicrossBoards[_enemyNum].colRowBold(_sprPen.x, _sprPen.y);
-		refreshCursorsPos();
 	}
 
 	private function playerInputs(elapsed:Float):Void
@@ -614,15 +638,13 @@ class BattleSubState extends FlxSubState
 		if (FlxG.keys.anyPressed(["ESCAPE"]))
 		{
 			if (battleState != STATE_ESCAPE)
-			{
-				_txtMessage.text = "Escaping...";
-				_msgTimer = _msgDuration;
-				battleState = STATE_ESCAPE;
-			}
+				tryRun();
 		}
 
-		if (FlxG.keys.anyPressed(["Y"]))
-			_WINCHEAT = true;
+		// // // todo: debug stuff, remove before shipping
+		// if (FlxG.keys.anyPressed(["Y"]))
+		// 	_WINCHEAT = true;
+		
 		// marking squares
 		if (FlxG.keys.anyPressed(Reg.keys["conf/canc"]))
 		{
@@ -732,11 +754,32 @@ class BattleSubState extends FlxSubState
 
 	private function takeDamage():Void
 	{
+		SoundManager.playSound("hurt");
 		Player.mp -= _arrEnemies[_enemyNum].damage;
+		camera.shake(0.005, 0.2);
 		_txtMessage.text = " ";
 		_txtMessage.text = "Suffered " + _arrEnemies[_enemyNum].damage + " damages.";
 		_msgTimer = _msgDuration;
 		_mcHurtTimer = _mcHurtDuration;
+	}
+
+	private function tryRun():Void
+	{
+		if (_arrEnemies[_enemyNum].escapable == false)
+		{
+			_txtMessage.text = "Can't Escape!";
+			_msgTimer = _msgDuration;
+		}
+		else
+		{
+			takeDamage();
+			if (Player.mp > 0)
+			{
+				_txtMessage.text = "Escaping...";
+				_msgTimer = _msgDuration;
+				battleState = STATE_ESCAPE;
+			}
+		}
 	}
 
 	private function winCheck():Bool

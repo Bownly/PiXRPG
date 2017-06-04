@@ -130,19 +130,29 @@ class EventBattle extends BaseEvent
 class EventDialog extends BaseEvent
 {
 	var _dialogBox:DialogClasses.DialogBox;
-	var _state:FlxState;
+	var _state:TownState;
+	var _bsState:BattleSubState;
 
-	public function new(DBLine:Array<DialogClasses.DialogLine>, State:FlxState, ?Choices:Array<BaseMenuItem>)
+	public function new(DBLine:Array<DialogClasses.DialogLine>, ?State:TownState, ?State2:BattleSubState, ?Choices:Array<BaseMenuItem>)
 	{
 		super();
 		_dialogBox = new DialogClasses.DialogBox(DBLine, Choices);
 		_state = State;
+		_bsState = State2;
 	}
 
 	override public function update(elapsed:Float)
 	{
-		var sub = new DialogSubState(_dialogBox);
-		_state.openSubState(sub);
+		if (_state != null)
+		{
+			var sub = new DialogSubState(_dialogBox, _state.grpEntities);
+			_state.openSubState(sub);
+		}
+		else
+		{
+			var sub = new DialogSubState(_dialogBox, _bsState.grpEntities);
+			_bsState.openSubState(sub);
+		}
 		destroy();
 		super.update(elapsed);
 	}
@@ -358,7 +368,7 @@ class EventNPCWalk extends BaseEvent
 		super();
 		_npc = Npc;
 		_path = Path;
-		if (Animated)
+		if (Animated != null)
 			_animated = Animated;
 		baseX = 0;
 		baseY = 0;
@@ -452,6 +462,22 @@ class EventSaveGame extends BaseEvent
 	}
 }
 
+class EventSFXPlay extends BaseEvent
+{
+	var _sfx:String;
+
+	public function new(SFX:String)
+	{
+		_sfx = SFX;
+		super();
+	}
+
+	override public function update(elapsed:Float)
+	{
+		SoundManager.playSound(_sfx);
+		destroy();
+	}
+}
 class EventStringVarChange extends BaseEvent
 {
 	var _name:String;
@@ -492,6 +518,25 @@ class EventSwitchState extends BaseEvent
 		    default: Reg.goToNextLevel(_entID, _mapName);
 		}
 
+		destroy();
+	}
+}
+
+class EventTextShowOrHide extends BaseEvent
+{
+	var _text:FlxText;
+	var _visible:Bool;
+
+	public function new(Text:FlxText, Vis:Bool)
+	{
+		super();
+		_text = Text;
+		_visible = Vis;
+	}
+
+	override public function update(elapsed:Float)
+	{
+		_text.visible = _visible;
 		destroy();
 	}
 }

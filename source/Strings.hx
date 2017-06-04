@@ -22,7 +22,7 @@ class Strings
 		"p_glad"              => 2,
 		"p_sad"               => 3,
 		"p_mad"               => 4,
-		"p_scared"            => 5,
+		"p_vexed"             => 5,
 		"p_hurt"              => 6,
 		"p_smug"              => 7,
 
@@ -31,7 +31,7 @@ class Strings
 		"pfrog_glad"          => 10,
 		"pfrog_sad"           => 11,
 		"pfrog_mad"           => 12,
-		"pfrog_scared"        => 13,
+		"pfrog_vexed"         => 13,
 		"pfrog_hurt"          => 14,
 		"pfrog_smug"          => 15,
 
@@ -148,7 +148,7 @@ class Strings
 		// 5
 		[new DialogLine(faces["p_glad"], "Wow! %xp% XP! Nice.")],
 		// 6
-		[new DialogLine(faces["p_glad"], "I-I did it! And I just got %xp% XP!")],
+		[new DialogLine(faces["p_glad"], "I-I did it! And I just got %xp% XP to boot!")],
 		// 7
 		[new DialogLine(faces["p_glad"], "And that's another %xp% XP. I'm bound to level up soon, right?")],
 		// 8
@@ -176,7 +176,6 @@ class Strings
 		// 16
 		[new DialogLine(faces["froggo_normal"], "blah blah blah blah blah blah"),
 		],
-
 	];
 
 	public static var inventoryStrings:Array<Array<DialogLine>> = [
@@ -184,33 +183,30 @@ class Strings
 		[new DialogLine(faces["p_glad"], "%item% get!")],
 		// 1
 		[new DialogLine(faces["pfrog_glad"], "%item% get!")],
+		// 2 
+		[new DialogLine(faces["p_normal"], "Nothing left to do in this menu.")],
 	];
 
 	public static var itemDescriptions:Map<String, String> = [
-		"Pond Scum"     => "Relax, it's the name of a popular sports drink. It's not only tasty, but it also fully restores MP.",
+		"Pond Scum"     => "Fully heals MP.\nRelax, it's the name of a popular sports drink. It's not only delicious, but it's also nutritious!",
 		"Edible Barrel"  => "Heals 20 MP.\nIt's an... edible barrel? Not sure what that means, but it's apparently healthy enough. I just hope I don't get any splinters from eating this.",
 	];
 
-	public static var mchomeStrings:Array<Array<DialogLine>> = [
-		//	start of the game
+	public static var mchouseStrings:Array<Array<DialogLine>> = [
+		//	item descriptions
 		// 0
-		[new DialogLine(faces["r_glad"], "%pname%, check it out! I snagged a couple pens from Dad's collection again. C'mon, let's go try them out!")],
-	
+		[new DialogLine(faces["p_sad"], "As much as I'd rather leave and escape Dad's scolding, the door is locked.")],
 		// 1
-		[new DialogLine(faces["p_glad"], "Yeah, okay!")],
-	
+		[new DialogLine(faces["p_normal"], "Dad's pen collection. We aren't supposed to touch them, but playing with them has always been %rivalname%\'s number one hobby.")],
 		// 2
-		[new DialogLine(faces["p_shock"], "But Dad said we aren't allowed to use his pens.")],
-	
+		[new DialogLine(faces["p_normal"], "Half of Dad's books are about esoteric Frog Magic. The other half are black and white picture books written in some weird, possibly ancient, language.")],
 		// 3
-		[new DialogLine(faces["r_glad"], "Hehe. What Dad doesn't know, won't hurt him.")],
-	
+		[new DialogLine(faces["p_normal"], "Just some normal food storage. Nothing to see here.")],
 		// 4
-		[new DialogLine(faces["dad_normal"], "Boys, wake up and come downstairs! It's family meeting time!")],
-	
+		[new DialogLine(faces["p_normal"], "")],
 		// 5
-		[new DialogLine(faces["r_shock"], "Aw, busted already? Don't worry, I'll go on ahead and sort this out.")],
-	
+		[new DialogLine(faces["p_normal"], "")],
+
 
 		// go downstairs
 		// 6
@@ -256,7 +252,9 @@ class Strings
 		[new DialogLine(faces["r_glad"], "Of course! Let's go, %pname%!")],
 
 		// 16
-		[new DialogLine(faces["dad_normal"], "Oh wait! I almost forgot something important. Take these beginner pens with you. Those are family heirlooms, so be sure to treat them well.")],
+		[new DialogLine(faces["dad_normal"], "Oh wait! I almost forgot something important. Take these beginner pens with you. Those are family heirlooms, so be sure to treat them well."),
+		 new DialogLine(faces["dad_normal"], "You can manage your pens by pressing \"L\".")
+		 ],
 
 		// 17
 		[new DialogLine(faces["p_glad"], "Wow, thank you, Dad!")],
@@ -286,7 +284,7 @@ class Strings
 	
 		// 23
 		[new DialogLine(faces["owlnpc_glad"], "\"Dad\"? So he great hero had a couple brats, huh? No wonder he's become so weak."),
-		 new DialogLine(faces["owlnpc_glad"], "Heh, nothing personal, kids, but I'm going to have to mind blast you both too.")
+		 new DialogLine(faces["owlnpc_glad"], "Heh, nothing personal, kids, but I'm going to have to mindblast you both too.")
 		],
 	
 		// 24
@@ -332,17 +330,17 @@ class Strings
 
 		// after the fight
 		// 33
-		[new DialogLine(faces["p_hurt"], "He's been mind blasted by that owl guy. Elder Froggo must know how to fix this.")],
+		[new DialogLine(faces["p_hurt"], "He's been mindblasted by that owl guy. Elder Froggo must know how to fix this.")],
 
 
 		// after returning with Froggo
 		// 34
-		[new DialogLine(faces["froggo_normal"], "Ah..."),
+		[new DialogLine(faces["froggo_normal"], "Ah...\n...\nHmm..."),
 		 new DialogLine(faces["froggo_normal"], "I see...")
 		],
 		
 		// 35
-		[new DialogLine(faces["froggo_normal"], "Hmm..."),
+		[new DialogLine(faces["froggo_normal"], "... ... ..."),
 		 new DialogLine(faces["froggo_normal"], "Oh dear...")
 		],
 		
@@ -360,15 +358,47 @@ class Strings
 		 new DialogLine(faces["p_shock"], "Who's the Frog King?"),
 		 new DialogLine(faces["froggo_normal"], "He's the central leader of all the Frog Clans, and also the most powerful Frog Mage. He lives on the main continent in the Frog Kingdom."),
 		 new DialogLine(faces["froggo_normal"], "I can lend you a boat and give you directions on how to get there. If you tell him that I sent you, he'll agree to help immediately."),
-		 new DialogLine(faces["p_scared"], "This is all too much. I can't possibly travel all alone! "),
+		 new DialogLine(faces["p_sad"], "This is all too much. I can't possibly travel all alone! "),
 		 new DialogLine(faces["froggo_normal"], "I observed you during your training, %pname%. You are far more capable than you give yourself credit for. Besides, your family is depending on you."),
 		 new DialogLine(faces["froggo_normal"], "Now then, I'm going to take these two back to The Pond so I can get started on curing them. Come see me when you're ready to depart.")
 		],
 
 
 		// 38  // this goes inbetween 24 and 25
-		[new DialogLine(faces["r_hurt"], "Gah!")],
+		[new DialogLine(faces["r_hurt"], "Gah!!")],
+	];
 
+	public static var mchouse1Strings:Array<Array<DialogLine>> = [
+		//	start of the game
+		// 0
+		[new DialogLine(faces["r_glad"], "%pname%, check it out! I snagged a couple pens from Dad's collection again. C'mon, let's go try them out!")],
+	
+		// 1
+		[new DialogLine(faces["p_glad"], "Yeah, okay!")],
+	
+		// 2
+		[new DialogLine(faces["p_shock"], "But Dad said we aren't allowed to use his pens.")],
+	
+		// 3
+		[new DialogLine(faces["r_glad"], "Hehe. What Dad doesn't know, won't hurt him.")],
+	
+		// 4
+		[new DialogLine(faces["dad_normal"], "Boys, wake up and come downstairs! It's family meeting time!")],
+	
+		// 5
+		[new DialogLine(faces["r_shock"], "Aw, busted already? Don't worry, I'll go on ahead and sort this out.")],
+	
+		// environment dialog
+		// 6
+		[new DialogLine(faces["p_normal"], "It's a picture of the superhero, Captain Croak. He's a popular character amongst youths such as myself.")],
+		// 7
+		[new DialogLine(faces["p_normal"], "I'll never understand %rivalname%'s art tastes. Too modern for me.")],
+		// 8
+		[new DialogLine(faces["p_glad"], "Ah, my impressive collection of \"The Adventures of Captain Croak\"."),
+		 new DialogLine(faces["p_vexed"], "But impressive as it is, I'm still missing volume 14...")
+		],
+		// 9
+		[new DialogLine(faces["p_normal"], "Nothing but books on various styles of magic and pranks. Not my cup of tea.")],
 	];
 
 	public static var frogpondStrings:Array<Array<DialogLine>> = [
@@ -382,7 +412,6 @@ class Strings
 		 new DialogLine(faces["froggo_normal"], "At their most powerful, Frog Mages can control the very thoughts of any living creature. But most mages never make it to that level."),
 		 new DialogLine(faces["froggo_normal"], "I do not exaggerate when I say that Frog Magic is potentially the most powerful school of magic. And because of that, it is also requires the most discipline to use."),
 		 new DialogLine(faces["froggo_normal"], "In order to prevent abuse, all Frog Mages must swear an oath to never use their powers for evil. Frog Magic is exclusively meant for helping people."),
-		 new DialogLine(faces["froggo_normal"], "If you use Frog Magic for nefarious or selfish reasons, you risk becoming corrupted and evil. The Owl Clan is living proof of that."),
 		 new DialogLine(faces["froggo_normal"], "Well, at any rate, I think you've heard enough of this old man's ramblings. After all, we'll have plenty more opportunities for me to teach you all that you need to know."),
 		 new DialogLine(faces["froggo_normal"], "I can tell that you're both itching to start your training. As is tradition, all aspiring new Frog Mages have to go through the cave of initiation to start their training."),
 		 new DialogLine(faces["froggo_normal"], "You can reach the cave through the back door of my house. Here, follow me.")
@@ -456,7 +485,7 @@ class Strings
 		[new DialogLine(faces["r_normal"], "No big deal. We can handle them, right %pname%? Let's go.")],
 
 
-		// after owl guy mind blasts family
+		// after owl guy mindblasts family
 		// 19
 		[new DialogLine(faces["p_hurt"], "Elder Froggo!")],
 
@@ -515,7 +544,7 @@ class Strings
 		[new DialogLine(faces["froggo_normal"], "Of course. Your father had special ordered it for you when he decided to let you two train under me. He had one made for %rivalname% too, but...")],
 		
 		// 35
-		[new DialogLine(faces["p_sad"], "Dad. %rivalname%.")],
+		[new DialogLine(faces["p_sad"], "Dad... %rivalname%...")],
 
 		// 36
 		[new DialogLine(faces["froggo_normal"], "Chin up, lad. The Frog King will certainly cure them both and then you and %rivalname% can argue over whose hood is the coolest."),
@@ -542,7 +571,7 @@ class Strings
 
 		// 40
 		[new DialogLine(faces["frognpcman_normal"], "Greetings. It's rare that we get visitors here at The Pond. You must be %pname% and %rivalname%."),
-		 new DialogLine(faces["frognpcman_normal"], "In that case, you'll want to head to Elder Froggo's. This bridge here will take you right to his front door. You can't miss it.")
+		 new DialogLine(faces["frognpcman_normal"], "In that case, you'll want to head to Elder Froggo's. The lilypath to the northeast will take you right to his front door. You can't miss it.")
 		],
 
 
@@ -560,10 +589,10 @@ class Strings
 		],
 
 		// 43
-		[new DialogLine(faces["frognpcman_normal"], "Hey guys, congrats on finishing the Cave of Initiation. Boy, I remember when I went through the cave as a tadpole scount myself. Good times.")],
+		[new DialogLine(faces["frognpcman_normal"], "Hey guys, congrats on finishing the Cave of Initiation. Boy, I remember when I went through the cave back when I was a wee tadpole scout. Good times.")],
 
 
-		// after owl guy mind blasts family
+		// after owl guy mindblasts family
 		// 44
 		[new DialogLine(faces["frognpcman_sad"], "Why so distraught? Not enough barrels?")],
 
@@ -607,64 +636,319 @@ class Strings
 		// 53
 		[new DialogLine(faces["p_normal"], "There's a crudely written message. It says \"Elder Froggo's house\".\nDid Elder Froggo write this?")],
 		// 54
-		[new DialogLine(faces["pfrog_normal"], "There's a crudely written message. It says \"Elder Froggo's house\".\nDid Elder Froggo write this?")],
-
-		// 55
 		[new DialogLine(faces["p_normal"], "There's a crudely written message. It says \"Non-mages get off my lawn! REEEEEE!\"\nWhat did he mean by this?")],
-		// 56
-		[new DialogLine(faces["pfrog_normal"], "There's a crudely written message. It says \"Non-mages get off my lawn! REEEEEE!\"\nWhat did he mean by this?")],
+		// 55
+		[new DialogLine(faces["p_normal"], "It says \"SAVE\". Whatever that means, those capital letters imply that it must be important.\n")],
+	];
 
+	public static var frogpondhouse1Strings:Array<Array<DialogLine>> = [
+		// 0
+		[new DialogLine(faces["frognpcman_glad"], "I've collected so many barrels that I can't even get to my bed anymore. Sleeping on the floor isn't so bad once you get used to it.")],
+
+		// after owl guy mindblasts family
+		// 1
+		[new DialogLine(faces["frognpcman_sad"], "Why so distraught? Not enough barrels?")],
+
+		// after meeting froggo at mchome and he tells you about the boat
+		// 2
+		[new DialogLine(faces["frognpcman_glad"], "If you ever need any barrels, just say the word and I'll help you out, my dude.")
+		],
+
+		// dialog for free barrels, independent of story progress
+		// 3
+		[new DialogLine(faces["frognpcman_shock"], "It looks like you could use an extra barrel. Here, take this one.")
+		],
+
+		// object lines
+		// 4
+		[new DialogLine(faces["p_normal"], "Barrels, barrels, barrels! Nothing but barrels as far as the eye can see.")],
+		// 5
+		[new DialogLine(faces["p_normal"], "Where does this guy even get all of these barrels from?")],
+		// 6
+		[new DialogLine(faces["p_normal"], "I can understand the desire to collect things, but empty barrels? I don't get it.")],
+		// 7
+		[new DialogLine(faces["p_shock"], "I don't think a single one of these barrels is even filled with anything. They're all empty!")],
+		// 5
+		[new DialogLine(faces["p_normal"], "I wonder if he bought these barrels, or if he made them. He might be a cooper for all I know.")],
+	];
+
+	public static var frogpondhouse2Strings:Array<Array<DialogLine>> = [
+		// 0
+		[new DialogLine(faces["frognpcman_normal"], "Greetings, %pname% and %rivalname%. Did you know that I’m hosting an exchange student? Her name is, uh... well, I forgot. My memory isn't the best."),
+		 new DialogLine(faces["frognpcman_normal"], "She’s from that one tribe of mute folk. I can't remember their name, and she won't tell me. But you've heard of them, haven't you? They wear those funny bear hats."),
+		 new DialogLine(faces["frognpcman_normal"], "Like the Frog Clan, they’re a magical people, but their magic is of a different ilk. Whereas Frog Magic is based on the mind, their magic revolves around nature."),
+		 new DialogLine(faces["frognpcman_normal"], "It’s said that they can channel the powers of Mother Nature herself to do things like heal people and \"save\", whatever that means. ")
+		],
+
+		// 1
+		[new DialogLine(faces["p_normal"], "\"Save\", huh? Sounds like something worth doing.")],
+
+		// after frogponddun = done
+		// 2
+		[new DialogLine(faces["frognpcman_normal"], "I had this great idea: I could give a pen and some paper to the mute exchange student I'm hosting and have her communicate with me through writing."),
+		 new DialogLine(faces["frognpcman_normal"], "Ingenious, I know. Especially considering that we have pens out the wazoo here in The Pond."),
+		 new DialogLine(faces["frognpcman_vexed"], "...\nBut we don't have any paper."),
+		 new DialogLine(faces["frognpcman_vexed"], "Not a single sheet in the entire pond.")
+		],
+
+		// 3
+		[new DialogLine(faces["r_normal"], "Not such a great idea after all, is it?")],
+
+		// after owl guy mindblasts family
+		// 4
+		[new DialogLine(faces["frognpcman_sad"], "%pname%, you look beat up. I'm sure our mute friend will heal you up. And while she's doing that, she could help you \"save\" too.")],
+
+		// after meeting froggo at mchome and he tells you about the boat
+		// 5
+		[new DialogLine(faces["frognpcman_normal"], "While you're gone, Golly has agreed to help in the healing efforts. Your family will be safe here."),
+		 new DialogLine(faces["frognpcman_glad"], "Oh right, I guess I didn't tell you, but Golly is what I'm calling my mute exchange student. She seems to like it.")
+		],
+
+		// 6
+		[new DialogLine(faces["p_shock"], "I've never seen a pen collection this large! Its vastness spans four whole shelves!"),
+		 new DialogLine(faces["p_normal"], "I am humbled by its majesty. Truly, the world is a much larger place than I thought.")
+		],
+	];
+
+	public static var frogpondhouse3Strings:Array<Array<DialogLine>> = [
+		// 0
+		[new DialogLine(faces["frognpcman_normal"], "Y'know, I always thought it was funny how your dad wanted to move away to escape the mage life, but he ended up moving here--to Tadpole Island of all places."),
+		 new DialogLine(faces["frognpcman_normal"], "I mean, there's nothing on this island other than The Pond. What was he thinking?"),
+		],
+
+		// 1
+		[new DialogLine(faces["r_mad"], "Big talk coming from someone who lives in an empty house.")],
+
+		// 2
+		[
+		 new DialogLine(faces["frognpcman_shock"], "Oh, sorry! Did I say something rude? I have this habit of saying things that I shouldn't. It's a result of me being under-socialized."),
+		 new DialogLine(faces["frognpcman_normal"], "And for the record, my minimalism is part of my Frog Mage training."),
+		],
+
+		// after frogponddun = done
+		// 3
+		[new DialogLine(faces["frognpcman_shock"], "Hold up. So you're saying that you two have already gone to the cave of initiation on your first day of training? And you both completed it?"),
+		 new DialogLine(faces["frognpcman_normal"], "You truly are your father's sons. Man, I've always been jealous of his skills. And now I'm jealous of two children too. What am I doing with my life?")
+		],
+
+		// after owl guy mindblasts family
+		// 4
+		[new DialogLine(faces["frognpcman_shock"], "Wow, you look awful! Did you lose a fight or something?")],
+
+		// after meeting froggo at mchome and he tells you about the boat
+		// 5
+		[new DialogLine(faces["frognpcman_sad"], "%pname%, I heard the bad news. I'm so sorry."),
+		 new DialogLine(faces["frognpcman_glad"], "But at least they couldn't be in more capable hands!"),
+		 new DialogLine(faces["frognpcman_vexed"], "Well, technically that's not true--the Frog King is leagues more capable. I mean, Elder Froggo can only do so much..."),
+		 new DialogLine(faces["frognpcman_shock"], "Oh no! There I go blurting out my train of thoughts again. When will I learn?")
+		],
+	];
+
+	public static var frogpondhouse4Strings:Array<Array<DialogLine>> = [
+		// 0
+		[new DialogLine(faces["froggo_normal"], "The cave's entrance is just through the back door over there to the left. Good luck, and frogspeed."), 
+		 new DialogLine(faces["froggo_normal"], "Oh, and be sure to talk to my training dummy friend down there if you want to review the fundamentals of how to use Frog Magic!")
+		],
+
+		// after clearing the dungeon
+		// 1
+		[new DialogLine(faces["froggo_normal"], "Ah, %pname%. Right on time. Come here for a moment.")],
+		
+		// 2
+		[new DialogLine(faces["p_glad"], "%rivalname%, we did it! We finished our first Frog Mage trial!")],
+		
+		// 3
+		[new DialogLine(faces["r_smug"], "And it only took you forever and a half, slowpoke.")],
+		
+		// 4
+		[new DialogLine(faces["p_shock"], "Not cool, you only finished a couple minutes before I did!")],
+		
+		// 5
+		[new DialogLine(faces["froggo_normal"], "Ahem. Boys. Listen up, because this'll be another long one.")],
+
+		// 6
+		[new DialogLine(faces["froggo_normal"], "As you may or may not know, all magic works through channelling the energy of pure holy essences. "),
+		 new DialogLine(faces["froggo_normal"], "Each school of magic has its own patron essence from which it draws power and inspiration. As you probably guessed, us Frog Mages draw from the holy Frog Essence."),
+		 new DialogLine(faces["froggo_normal"], "A person can become blessed by a holy essence if they visit the shrine of said essence. When this occurs, that person obtains a seal."),
+		 new DialogLine(faces["froggo_normal"], "Seals have an amplifying effect for mages, but only if the mage is of a suitable lineage. For example, an Ice Seal won't have an effect on your magic abilities."),
+		 new DialogLine(faces["froggo_normal"], "However, Seals serve a dual role as status symbols. Believe it or not, their exclusivity is their main appeal in this day and age."),
+		 new DialogLine(faces["froggo_normal"], "Most people don't even realize the magical value of the Seals. In fact, I probably shouldn't have divulged such sensitive information to two new initiates. Hohoho."),
+		 new DialogLine(faces["froggo_normal"], "Well, I'm sure you would have found out soon enough, considering the man your father is. Speaking of which, I've kept you here for long enough."),
+		 new DialogLine(faces["froggo_normal"], "You should go head back home now and go brag to him.")
+		],
+
+		// 7
+		[new DialogLine(faces["p_glad"], "Good idea! I can't wait to go tell Dad!")],
+		
+		// 8
+		[new DialogLine(faces["p_glad"], "Elder Froggo, thank you so much for training us.")],
+	
+		// 9
+		[new DialogLine(faces["r_glad"], "Yeah, thanks.")],
+
+		// 10
+		[new DialogLine(faces["froggo_glad"], "Hohoho, it's truly my pleasure."),
+		 new DialogLine(faces["froggo_normal"], "Oh, and one more thing about your new Frog Seals: it's not just people who will acknowledge your new status. Indeed, monsters will begin to take an interest in you."),
+		 new DialogLine(faces["froggo_normal"], "Be aware that they might accost you in the wild in an attempt to have you fix them up with some Frog Magic. Of course, some will be more hostile than others.")
+		],
+		
+		// 11
+		[new DialogLine(faces["r_normal"], "No big deal. We can handle them, right %pname%? Let's go.")],
+
+		// 12
+		[new DialogLine(faces["froggo_normal"], "You boys should go head back home now and go brag to you father.")],
+
+
+		// after owl guy mindblasts family
+		// 13
+		[new DialogLine(faces["p_hurt"], "Elder Froggo!")],
+
+		// 14
+		[new DialogLine(faces["froggo_shock"], "%pname%, what happened? You look like you just got beat half to death by a giant wildfrog!")],
+
+		// 15
+		[new DialogLine(faces["p_hurt"], "A guy... With an owl hood... Dad and %rivalname%... mindblasted.")],
+
+		// 16
+		[new DialogLine(faces["froggo_shock"], "Mindblasted!?"),
+		 new DialogLine(faces["froggo_normal"], "%pname%, slow down and tell me everything that happened.")
+		],
+
+		// 17
+		[new DialogLine(faces["p_hurt"], "When we got back home...\n... ...\n... ... ...\n... ... ... ...")],
+
+		// 18
+		[new DialogLine(faces["froggo_mad"], "An Owl Mage? Here? This is grave news... \nI wonder if--\nNo, there's no time to speculate.")],
+
+		// 19
+		[new DialogLine(faces["froggo_normal"], "%pname%, let's head over to your house immediately.")],
+
+	
+		// mc gets hood before departing		
+		// 20 
+		[new DialogLine(faces["p_sad"], "Just wait a bit longer. I'll go see the Frog King and he'll come cure you.")],
+
+		// 21
+		[new DialogLine(faces["froggo_normal"], "Where is it?")],
+
+		// 22
+		[new DialogLine(faces["p_normal"], "Elder Froggo, I think I'm ready.")],
+
+		// 23
+		[new DialogLine(faces["p_normal"], "Hello? Elder Froggo?")
+		],
+
+		// 24
+		[new DialogLine(faces["p_normal"], "Helloooo?")],
+
+		// 25
+		[new DialogLine(faces["froggo_normal"], "Eureka! Here it is!")
+		],
+
+		// 26
+		[new DialogLine(faces["p_normal"], "(Oh, there he is.)\nElder Fro--")],
+
+		// 27
+		[new DialogLine(faces["froggo_shock"], "%pname%, great timing!")],
+
+		// 28
+		[new DialogLine(faces["froggo_normal"], "I presume that since you're here, that you're ready to depart. Well before you do, I have a present for you. It's a hood."),
+		 new DialogLine(faces["froggo_normal"], "But not just any old hood. Indeed, it's a bona fide Frog Mage hood. Ordinarilly a trainee has to complete his training to earn his robe, but these are no ordinary circumstances."),
+		 new DialogLine(faces["froggo_normal"], "With this robe, you'll have no problem seeking an audience with the Frog King. Here, try it on.")
+		],
+		
+		// 29
+		[new DialogLine(faces["p_shock"], "Wow, it fits perfectly. And it even has a cape!")],
+
+		// 30
+		[new DialogLine(faces["froggo_normal"], "Of course. Your father had special ordered it for you when he decided to let you two train under me. He had one made for %rivalname% too, but...")],
+		
+		// 31
+		[new DialogLine(faces["p_sad"], "Dad... %rivalname%...")],
+
+		// 32
+		[new DialogLine(faces["froggo_normal"], "Chin up, lad. The Frog King will certainly cure them both and then you and %rivalname% can argue over whose hood is the coolest."),
+		 new DialogLine(faces["froggo_normal"], "And on that note, we should head up North to the docks. Now's the chance to do any final preparations you might have left to do.")
+		],
+
+		// object dialogs
+		// 33
+		[new DialogLine(faces["p_shock"], "Wow look at all of these exotic looking pens. Elder Froggo's collection is top notch.")],
+		// 34
+		[new DialogLine(faces["p_shock"], "Look at all those crazy pens! Woah, is that a telescopic pen? I don't even what someone would use one of those for, but I want one!")],
+		// 35
+		[new DialogLine(faces["p_normal"], "Here's a funny sounding book: \"On the merits and superiority of the second dimension in comparison to the third.\" Wonder what that's about.")],
+		// 36
+		[new DialogLine(faces["p_normal"], "This shelf is briming with lots of light green clothing. Is this his where Elder Froggo keeps his spare robes?")],
+		// 37
+		[new DialogLine(faces["p_glad"], "This whole shelf is full of tiny statues of different people that I don't recognize. Hey that girl one is kinda cute. Actually, there are lots of cute girl ones. Oh, and there's one of a frog.")],
+		// 38
+		[new DialogLine(faces["p_normal"], "This shelf is overflowing with books about the various schools of magic.")],
+		// 39
+		[new DialogLine(faces["p_normal"], "How odd that Elder Froggo would have children's books in his library. This one is an old classic, \"The Frog Knight\"."),
+		 new DialogLine(faces["p_glad"], "This is my favorite scene. The bad guy has the main guy captured on a boat and is interrogating him:"),
+		 new DialogLine(faces["p_normal"], "\"If I take that hood off, will you die?\"\n\"It would be extrememly painful...\"\n\"You're a big mage.\"\n\"...For you.\""),
+		 new DialogLine(faces["p_glad"], "The writing has a surprising amount of depth for a children's book."),
+		],
+		// 40
+		[new DialogLine(faces["p_normal"], "Most of the books on this shelf are beyond me. Even the titles sound intimidating: \"Critiquing Culture\", \"Meaningful Maps\", \"How to Draw Anime\", \"High school yearbook class of '11\".")],
+		// 41
+		[new DialogLine(faces["p_normal"], "\"Mastering the Secrets of Italian Disco: Part 1 of 5000\"? Not sure what a disco is. Or what Italian means. Or how a book can have five thousand parts. Is this even a real book?")],
+		// 42
+		[new DialogLine(faces["p_glad"], "Oh hey, these black and white picture books are just like the ones Dad has. I wonder if Dad got his from Elder Froggo.")],
 	];
 
 	public static var frogponddocksStrings:Array<Array<DialogLine>> = [
 		// 0
-		[new DialogLine(faces["p_normal"], "It's locked.")
-		],
+		[new DialogLine(faces["p_normal"], "It's locked.")],
 
 		// 1
-		[new DialogLine(faces["froggo_normal"], "Hold on a moment, I'll have to unlock the door first.")
+		[new DialogLine(faces["froggo_normal"], "Hold on a moment, I'll have to unlock the door.")
 		],
 
 		// 2
-		[new DialogLine(faces["froggo_sad"], "%pname%, I'm terribly sorry that this burden has been thrust upon you."),
-		 new DialogLine(faces["froggo_normal"], "However, I know that you're more than capable of seeing this through to the end."),
-		 new DialogLine(faces["froggo_normal"], "The trip to the Frog Kingdom is a short one. Just head east past the FireIce Bay, and when you get to the mainland, follow the coast in a counterclockwise direction."),
-		 new DialogLine(faces["froggo_normal"], "Frogspeed, %pname%. Though it was brief, remember your training.")
-		 ],
+		[new DialogLine(faces["froggo_sad"], "%pname%, I'm terribly sorry that this burden has been thrust upon you. Especially given your youth and inexperience."),
+		 new DialogLine(faces["froggo_normal"], "Capable though you are, I still have some reservations about having you go on this trip alone. So your final test will be assuaging my concerns"),
+		 new DialogLine(faces["froggo_mad"], "%pname%! Show me what you've got!")
+		],
 
 		// 3
-		[new DialogLine(faces["froggo_normal"], "Frogspeed, %pname%. Though it was brief, remember your training.")
+		[new DialogLine(faces["froggo_shock"], "Well done, %pname%! You've cleared up all of my doubts--both figuratively and magically! Hohoho!"),
+		 new DialogLine(faces["froggo_normal"], "With the skills you just demonstrated to me, you should have no problem making it to the Frog Kingdom."),
+		 new DialogLine(faces["froggo_normal"], "The trip to the Frog Kingdom is a short one. Just head east past the FireIce Bay, and when you get to the mainland, follow the coast in a counterclockwise direction."),
+		 new DialogLine(faces["froggo_normal"], "Frogspeed, %pname%. Though it was brief, remember your training.")
 		],
+
 
 		// 4
-		[new DialogLine(faces["pfrog_normal"], "This is it... \nAm I ready?")
-		],
+		[new DialogLine(faces["froggo_normal"], "Frogspeed, %pname%. Though it was brief, remember your training.")],
 
 		// 5
-		[new DialogLine(faces["pfrog_mad"], "Ready or not, I have to do it.")
-		],
+		[new DialogLine(faces["pfrog_normal"], "This is it... \nAm I ready?")],
 
 		// 6
-		[new DialogLine(faces["pfrog_sad"], "On second thought, I should go do that one thing first...")
-		],
+		[new DialogLine(faces["pfrog_mad"], "Ready or not, I have to do it.")],
+
+		// 7
+		[new DialogLine(faces["pfrog_sad"], "On second thought, maybe I should go train up a bit. Maybe go see the training dummy...")],
 	];
 
 	public static var frogponddunStrings:Array<Array<DialogLine>> = [
 		// 0
-		[new DialogLine(faces["dummy"], "Hi ho! I'm the practice dummy! I can teach you how to use magic! Wanna give it a shot!? C'mon, it'll be fun!")
-		],
+		[new DialogLine(faces["dummy"], "Hi ho! I'm the practice dummy! I can teach you how to use magic! Wanna give it a shot!? C'mon, it'll be fun!")],
+
 		// 1
-		[new DialogLine(faces["p_normal"], "Sure.")
-		],
+		[new DialogLine(faces["p_normal"], "Sure.")],
+
 		// 2
-		[new DialogLine(faces["p_normal"], "I'm good.")
-		],	
+		[new DialogLine(faces["p_normal"], "I'm good.")],	
+
 		// 3
-		[new DialogLine(faces["dummy"], "Sweet! Let's go!")
-		],
+		[new DialogLine(faces["dummy"], "Sweet! Let's go!")],
+
 		// 4
-		[new DialogLine(faces["dummy"], "Oh well! Maybe later!")
-		],
+		[new DialogLine(faces["dummy"], "Oh well! Maybe later!")],
+
 		// 5
 		[new DialogLine(faces["dummy"], "Hi ho! This is the battle screen! Up in the corner is a display of your MP (Mental Points) and your opponent's MP!"),
 		 new DialogLine(faces["dummy"], "The goal of a battle is to reduce your opponent's MP to zero! The opponent's mental state is represented by the puzzle in the center!"),
@@ -683,8 +967,9 @@ class Strings
 
 		// 7
 		[new DialogLine(faces["kekdoor"], "You’ve reached the end of the first floor. Nice! Just pass my trial and you can proceed to the next floor."),
-		 new DialogLine(faces["kekdoor"], "By the way, watch out for wild frogs down there. The lack of sunlight makes them easily agitated, and they might jump out at you."),
-		 new DialogLine(faces["kekdoor"], "If a battle gets too hairy for you, there's no shame in ESCaping. Get it? ESC-aping? *wink wink nudge nudge*")
+		 new DialogLine(faces["kekdoor"], "By the way, watch out for wild frogs down there. The lack of sunlight messes with their minds, so they tend to hide in chests and jump out at people."),
+		 new DialogLine(faces["kekdoor"], "If a battle gets too hairy for you, you can always resort to ESCaping. Get it? ESC-aping?\n*wink wink nudge nudge*"),
+		 new DialogLine(faces["kekdoor"], "But if you do run from a battle, be warned that the shame of fleeing may cause you to take some MP damage.")
 		],
 
 		// 8
@@ -706,6 +991,7 @@ class Strings
 		[new DialogLine(faces["kekdoor"], "Don’t you think that it’s weird how there can be basements floors in a lake dungeon? Or how said lake dungeon is under another lake?"),
 		 new DialogLine(faces["kekdoor"], "That’s the kind of stuff I think about whenever I have any spare time in between trials. Speaking of which...")
 		], 
+
 		// 12
 		[new DialogLine(faces["kekdoor"], "Did you know? The doors in this dungeon are highly unprofessional. We mostly just want to shoot the breeze, not serve as a makeshift tutorial to some scrubs."),
 		 new DialogLine(faces["kekdoor"], "That’s supposed to be that tutorial dummy’s job! Between you and me, I’d much rather spend my time chatting up Doory. She's one fine dame."),
@@ -719,16 +1005,13 @@ class Strings
 		],
 
 		// 14
-		[new DialogLine(faces["p_shock"], "It’s empty, but I think it caused that splashy sound. Maybe it triggered something.")
-		],
+		[new DialogLine(faces["p_shock"], "It’s empty, but I think it caused that splashy sound. Maybe it triggered something.")],
 
 		// 15
-		[new DialogLine(faces["p_shock"], "Frog in a box!")
-		],
+		[new DialogLine(faces["p_shock"], "Frog in a box!")],
 
 		// 16
-		[new DialogLine(faces["frognpcman_normal"], "Sup. Don't mind me. Just watching some tv."),
-		],
+		[new DialogLine(faces["frognpcman_normal"], "Sup. Don't mind me. Just watching some tv."),],
 
 		// 17
 		[new DialogLine(faces["r_shock"], "Oh, hey, %pname%."),
@@ -736,26 +1019,22 @@ class Strings
 		],
 		
 		// 18
-		[new DialogLine(faces["r_normal"], "I'll be waiting back at Elder Froggo's house. See you there.")
-		],
+		[new DialogLine(faces["r_normal"], "I'll be waiting back at Elder Froggo's house. See you there.")],
 
 		// 19
-		[new DialogLine(faces["p_shock"], "What's a sign doing in the middle of the room? I should probably go read it or something.")
-		],
+		[new DialogLine(faces["p_shock"], "That pedestal and floating frog head look pretty important. I should probably go check it out.")],
 
 		// 20
-		[new DialogLine(faces["p_shock"], "There's an inscription carved into the sign."),
+		[new DialogLine(faces["p_shock"], "There's an inscription carved into the base of the pedestal. This bad handwriting looks familiar somehow."),
 		 new DialogLine(faces["p_normal"], "\"By making it this far, thoust've provenst thineselfst to be a capable initiate.\""),
 		 new DialogLine(faces["p_normal"], "\"Hereby bestowethd upon thou is the blessing of the Holy Frog.\""),
 		 new DialogLine(faces["p_normal"], "\"Thou can observest the mark of thine new blessing by opening thine status screen.\""),
 		 new DialogLine(faces["p_normal"], "\"Frogspeed, young one.\""),
 		 new DialogLine(faces["p_normal"], "I... think I understood all that. Who's choice was it to use such poorly written old-timey speak?"),
-		 new DialogLine(faces["p_glad"], "More importantly, I've completed the trial! I've gotta go hurry up and meet back up with %rivalname% and Elder Froggo!")
 		],
 
-		// 21
-		[new DialogLine(faces["pfrog_shock"], "Frog in a box!")
-		],
+		// 21  // object line
+		[new DialogLine(faces["p_shock"], "Wait a second! This TV is off! \nCould this be a high-level training technique?")],
 
 		// end of demo secret boss
 		// 22
@@ -763,37 +1042,43 @@ class Strings
 		 new DialogLine(faces["dummy"], "I know! Let's do some advanced training! I'll go all out this time!")
 		],
 		// 23
-		[new DialogLine(faces["dummy"], "Yaaay! Let's do it!")
-		],
+		[new DialogLine(faces["dummy"], "Yaaay! Let's do it!")],
 		// 24
-		[new DialogLine(faces["dummy"], "No!? But I want to train!")
-		],
+		[new DialogLine(faces["dummy"], "No!? But I want to train!")],
 		// 25
-		[new DialogLine(faces["dummy"], "Hey ho! You beat me! Take this secret special pen as a gift! It's a reward for beating the demo exclusive boss: ME! Come back again!")
-		],
+		[new DialogLine(faces["dummy"], "Hey ho! You beat me! Take this secret special pen as a gift! It's a reward for beating the demo exclusive boss: ME! Come back again!")],
 		// 26
-		[new DialogLine(faces["dummy"], "Hey ho! You beat me! I already gave you the PixCalibur! All I have left is a couple Pond Scums! Take one!")
-		],
+		[new DialogLine(faces["dummy"], "Hey ho! You beat me! I already gave you the PixCalibur! All I have left is a couple Pond Scums! Take one!")],
 		// 27
-		[new DialogLine(faces["dummy"], "Hey ho! You beat me! Still thirsty!? I only have one Pond Scum left! Take it!")
-		],
+		[new DialogLine(faces["dummy"], "Hey ho! You beat me! Still thirsty!? I only have one Pond Scum left! Take it!")],
 		// 28
-		[new DialogLine(faces["dummy"], "Hey ho! You beat me! I have nothing left to give you! But let's train again anyway!")
+		[new DialogLine(faces["dummy"], "Hey ho! You beat me! I have nothing left to give you! But let's train again anyway!")],
+
+		// 29 
+		[new DialogLine(faces["p_normal"], "Sure.")],
+		// 30
+		[new DialogLine(faces["pfrog_normal"], "Sure.")],
+		// 31
+		[new DialogLine(faces["p_normal"], "I'm good.")],
+		// 32
+		[new DialogLine(faces["pfrog_normal"], "I'm good.")],
+
+		// 33
+		[new DialogLine(faces["p_shock"], "Woah! Did I just absorb that frog head thing?"),
+		 new DialogLine(faces["p_shock"], "That must be the blessing that that inscription mentioned. So then, that must mean that I completed the trial."),
+		 new DialogLine(faces["p_glad"], "Woohoo! I did it! I've gotta go hurry up and meet back up with %rivalname% and Elder Froggo!")
 		],
 
-		// 29  // moving these from indexes 1 and 2 for easier hood variables reasons
-		[new DialogLine(faces["p_normal"], "Sure.")
-		],
-		// 30
-		[new DialogLine(faces["pfrog_normal"], "Sure.")
-		],
-		// 31  // moving these from indexes 1 and 2 for easier hood variables reasons
-		[new DialogLine(faces["p_normal"], "I'm good.")
-		],
-		// 32
-		[new DialogLine(faces["pfrog_normal"], "I'm good.")
-		],
+		// 34  // rival says this when you enter the dungeon the first time
+		[new DialogLine(faces["r_glad"], "I've used Dad's pens enough to where I don't need a dummy to lecture me. I'm going straight to the end of the cave.")],
+
 	];
+
+	public static var worldmapStrings:Array<Array<DialogLine>> = [
+		// 0  
+		[new DialogLine(faces["r_normal"], "Let's go!")],
+	];
+
 }
 
 

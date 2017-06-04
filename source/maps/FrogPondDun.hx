@@ -15,11 +15,13 @@ import MenuClasses;
 
 class FrogPondDun extends TownState
 {
+	var obj0:NPC;
 	var chest5:Chest;
 	var door5:NPC;
 	var door6:NPC;
 	var door7:NPC;
 	var npclazy:NPC;
+	var npcRival:NPC;
 	var dummy:NPC;
 
 	public function new(EntranceID:Int, MapName:String, ?SongName:String, ?Dungeon:Bool) 
@@ -37,9 +39,20 @@ class FrogPondDun extends TownState
 		grpNPCs.add(dummy);
 		grpNPCs.add(npclazy);
 
-		chest5 = new Chest(0, 0, this, "frogpond_chest5");
+		chest5 = new Chest(0, 0, FlxObject.UP, this, "frogpond_chest5");
 		grpNPCs.add(chest5);
 		
+		obj0 = new NPC(0, 0, FlxObject.RIGHT, 8, this, "obj 0");
+		obj0.events = [new EventDialog(Strings.mchouseStrings[1], this)];
+		obj0.setCanTurn(false);
+		grpNPCs.add(obj0);
+
+		if (Reg.flags["first_froggo"] == 1)
+		{
+			npcRival = new NPC(0, 0, FlxObject.LEFT, 2, this, "npc 2");
+			// npcRival.visible = false;
+			grpNPCs.add(npcRival);
+		}
 
 		if (Reg.flags["frogpond_door5"] == 0)
 		{
@@ -69,14 +82,27 @@ class FrogPondDun extends TownState
 	override public function assignEvents():Void
 	{
 
-		npclazy.events = [ new EventDialog(Strings.frogponddunStrings[16], this)];
+		npclazy.events = [new EventDialog(Strings.frogponddunStrings[16], this)];
+		obj0.events = [new EventDialog(Strings.frogponddunStrings[21], this)];
 
+		if (Reg.flags["first_froggo"] == 1)
+		{
+			eventManager.addEvents([new EventNPCWalk(npcRival, [[FlxObject.LEFT, 1], [FlxObject.RIGHT, 0]]),
+									new EventNPCWalk(player, [[FlxObject.LEFT, 0]]),
+									new EventFlag("first_froggo", 2),
+									new EventNPCAdd(npcRival, grpNPCs),
+									new EventDialog(Strings.frogponddunStrings[34], this),
+									new EventNPCWalk(npcRival, [[FlxObject.LEFT, 1], [FlxObject.UP, 12]]),
+									new EventNPCRemove(npcRival)
+									]);
+
+		}
 
 		if (Reg.flags["frogpond_chest5"] == 0)
 		{
 			chest5.events = [new EventStringVarChange("%item%", "Pond Scum"),
 							 new EventDialog(Strings.inventoryStrings[0], this),
-							 new EventItemGet(new ItemClasses.ItemHealing("Pond Scum", "Relax, it's the name of a popular sports drink. It's not only tasty, but it also fully restores MP.", 9, 999)),
+							 new EventItemGet(new ItemClasses.ItemHealing("Pond Scum", Strings.itemDescriptions["Pond Scum"], 9, 999)),
 							 new EventFlag("frogpond_chest5", 1),
 							 new EventNPCTrigger(chest5, 0)
 							];
@@ -114,8 +140,6 @@ class FrogPondDun extends TownState
 			eventManager.addEvents([new EventNPCRemove(door7)]);
 			eventManager.addEvents([new EventFlag("frogpond_door7", 2)]);
 		}
-
-		var _hood:Int = Reg.flags["p_hood"];
 		
 		// secret boss fight blocks
 		if (Reg.flags["dummy_prizes"] == 1)
@@ -123,7 +147,7 @@ class FrogPondDun extends TownState
 			eventManager.addEvents([new EventDialog(Strings.frogponddunStrings[25], this),
 									new EventUnlockPen(4),
 									new EventStringVarChange("%item%", "PiXcalibur"),
-							 		new EventDialog(Strings.inventoryStrings[_hood], this),
+							 		new EventDialog(Strings.inventoryStrings[0], this),
 									new EventFlag("dummy_prizes", 2),
 									]);
 		}
@@ -131,7 +155,7 @@ class FrogPondDun extends TownState
 		{
 			eventManager.addEvents([new EventDialog(Strings.frogponddunStrings[26], this),
 									new EventStringVarChange("%item%", "Pond Scum"),
-							 		new EventDialog(Strings.inventoryStrings[_hood], this),
+							 		new EventDialog(Strings.inventoryStrings[0], this),
 									new EventFlag("dummy_prizes", 4),
 									]);			
 		}
@@ -139,7 +163,7 @@ class FrogPondDun extends TownState
 		{
 			eventManager.addEvents([new EventDialog(Strings.frogponddunStrings[27], this),
 									new EventStringVarChange("%item%", "Pond Scum"),
-							 		new EventDialog(Strings.inventoryStrings[_hood], this),
+							 		new EventDialog(Strings.inventoryStrings[0], this),
 									new EventFlag("dummy_prizes", 6),
 									]);			
 		}
@@ -151,9 +175,9 @@ class FrogPondDun extends TownState
 		}
 		if (Reg.flags["owl_clan_attack"] == 5 && Reg.flags["fight_dummy"] == 0)
 			dummy.events = [new EventDialog(Strings.frogponddunStrings[22], this,
-											[new MenuItemDialogChoice(Strings.frogponddunStrings[29+_hood], null, 
+											[new MenuItemDialogChoice(Strings.frogponddunStrings[29], null, 
 																	new EventFlag("fight_dummy", 2)),
-											 new MenuItemDialogChoice(Strings.frogponddunStrings[31+_hood], null, 
+											 new MenuItemDialogChoice(Strings.frogponddunStrings[31], null, 
 																	new EventFlag("fight_dummy", -2))
 											 ])
 					   	   ];
@@ -170,16 +194,16 @@ class FrogPondDun extends TownState
 		// normal, non secret boss fight, stuff
 		else if (Reg.flags["fight_dummy"] == 0)		
 			dummy.events = [new EventDialog(Strings.frogponddunStrings[0], this,
-											[new MenuItemDialogChoice(Strings.frogponddunStrings[29+_hood], null, 
+											[new MenuItemDialogChoice(Strings.frogponddunStrings[29], null, 
 																	new EventFlag("fight_dummy", 1)),
-											 new MenuItemDialogChoice(Strings.frogponddunStrings[31+_hood], null, 
+											 new MenuItemDialogChoice(Strings.frogponddunStrings[31], null, 
 																	new EventFlag("fight_dummy", -1))
 											 ])
 					   	   ];
 		else if (Reg.flags["fight_dummy"] == 1)  // if you agreed to fight him
-			eventManager.addEvents([new EventFlag("tutorial_battle", 1),
-									new EventDialog(Strings.frogponddunStrings[3], this),
-									new EventBattle([new EnemyTest()], this),
+			eventManager.addEvents([new EventDialog(Strings.frogponddunStrings[3], this),
+									new EventFlag("tutorial_battle", 1),
+									new EventBattle([new EnemyTest()], this, "tutorial_battle", 2),
 									new EventFlag("fight_dummy", 0),
 									]);
 		else if (Reg.flags["fight_dummy"] == -1)  // if you reject his battle proposition

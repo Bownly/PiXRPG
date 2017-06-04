@@ -39,30 +39,22 @@ class CreditsState extends FlxState
 		_txtTitle = new FlxText(0, 0, FlxG.width, "Pi X RPG", 32);
 		_txtTitle.alignment = "center";
 		_txtTitle.y = (FlxG.height - _txtTitle.height * 3) / 2;
-		
-		_txtFurigana = new FlxText(0, 0, FlxG.width, "(Credits)", 8);
-		_txtFurigana.setPosition(120, _txtTitle.y - _txtFurigana.height);
-		
-		_txtTwitter = new FlxText(0, 0, 0, "@Bownly", 8);
+		_txtTwitter = new FlxText(0, 0, 0, "* Assets that were used without permission are placeholders.", 8);
 		_txtTwitter.y = FlxG.height - _txtTwitter.height;
-		_txtLD = new FlxText(0, _txtTwitter.y, 0, "mini Ludum Dare 63", 8);
-		_txtLD.x = FlxG.width - _txtLD.width;
+		_txtTwitter.alignment = "center";
 		
-		_txtCredits= new FlxText(8, _txtTitle.y + _txtTitle.height + 16, FlxG.width - 8, "\n-Music by cgMusic\n-Sound by YOU! (I cut out sounds to save time. Please make your own audible sfx when you play.)", 8);
+		_txtCredits = new FlxText(8, _txtTitle.y + _txtTitle.height + 16, FlxG.width - 8, "- Coding: Bownly\n- Scenario: Bownly\n- Graphics: Bownly, Mishuun, FF7 NES demake team\n- Music: Visager, \"Shadilay\" originally by P.E.P.E, covers by Katie Ross and Tuomas Heikkilä", 8);
 		
 		_txtControls = new FlxText(0, 0, FlxG.width, "J = care, K = not care, WASD/Arrows = stay still, m = mute");
 		_txtControls.alignment = "center";
 		
 		add(_txtCredits);		
 		add(_txtTitle);
-		add(_txtFurigana);
 		add(_txtTwitter);
-		add(_txtControls);
 		
 		FlxG.mouse.visible = false;		
 		super.create();	
-		SoundManager.stopMusic();
-		SoundManager.playMusic("shadilay");
+		// SoundManager.playMusic("shadilay");
 	}
 	
 	/**

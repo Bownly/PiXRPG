@@ -16,15 +16,21 @@ class DialogSubState extends FlxSubState
 {
 
 	var _dsGroup:DialogClasses.DialogSpriteGroup;
+	public var _grpEntities:FlxTypedGroup<Entity>;
 	
-	
-	public function new(DB:DialogClasses.DialogBox, ?Callback:String->Void, ?BGColor:Int=FlxColor.TRANSPARENT) 
+	public function new(DB:DialogClasses.DialogBox, ?GE:FlxTypedGroup<Entity>) 
 	{
 		super();
 
+		if (GE != null)
+			_grpEntities = GE;
+		else
+			_grpEntities = null;
+		// for (entity in _grpEntities)
+			// entity.setState(Entity.StateDialog);
+
 		_dsGroup = new DialogClasses.DialogSpriteGroup(DB, true);
 		add(_dsGroup);
-		
 	}
 	
 	public override function update(elapsed:Float)
@@ -41,6 +47,15 @@ class DialogSubState extends FlxSubState
 			else
 				this.close();
 		}
+		if (_grpEntities != null)
+		{
+			for (entity in _grpEntities)
+				entity.update(elapsed);
+		}
+
+		if (FlxG.keys.anyJustPressed(["M"]))
+			FlxG.sound.toggleMuted();
+
 		super.update(elapsed);
 	}
 	

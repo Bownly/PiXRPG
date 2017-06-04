@@ -176,6 +176,8 @@ class NamePlayerState extends FlxState
 			if (_txtName.text.length > 0)
 				_txtName.text = _txtName.text.substr(0, _txtName.text.length-1);
 		}
+		if (FlxG.keys.anyJustPressed(["ENTER"]))
+			_doneSelected = true;
 
 		super.update(elapsed);
 	}		

@@ -15,9 +15,9 @@ import MenuClasses;
 
 class FrogPondHouse1 extends TownState
 {
-
 	var npc:NPC;
 	var _events:Map<String, Array<BaseEvent>>;
+	var _arrObjs:Array<NPC> = new Array<NPC>();
 
 	public function new(EntranceID:Int, MapName:String, ?SongName:String, ?Dungeon:Bool) 
 		super(EntranceID, MapName, SongName, Dungeon);
@@ -28,6 +28,15 @@ class FrogPondHouse1 extends TownState
 		npc = new NPC(256, 256, FlxObject.DOWN, 3, this, "npc");
 		grpNPCs.add(npc);
 
+		for (barrel in 0...15)
+		{
+			var obj = new NPC(0, 0, FlxObject.RIGHT, 8, this, "obj " + barrel);
+			trace("obj " + barrel);
+			obj.setCanTurn(false);
+			grpNPCs.add(obj);
+			_arrObjs.push(obj);
+		}
+
 		super.create();
 		assignEvents();
 	}
@@ -35,6 +44,14 @@ class FrogPondHouse1 extends TownState
 	override public function assignEvents():Void
 	{
 		super.assignEvents();
+
+		for (barrel in 0...15)
+		{
+			// 5 is amound of unique strings, 4 is the starting index of the strings
+			_arrObjs[barrel].events = [new EventDialog(Strings.frogpondhouse1Strings[barrel%5+4], this)];
+		}	
+
+
 
 		if (Reg.flags["owl_clan_attack"] == 0)  // 0 = pre-attack
 			npc.events = [new EventDialog(Strings.frogpondStrings[37], this)];			

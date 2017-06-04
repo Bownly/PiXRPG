@@ -244,15 +244,15 @@ class MenuItemPen extends BaseMenuItem
 		grpRender.add(icon);
 	}
 
-	private function addEquipped(Anchor:Array<Float>)
-	{
-		var item = new FlxText(Anchor[0], 0, 10, "E", 8);
-		if (PenManager.equipped != _pen)
-			item.setFormat(item.size, FlxColor.BLACK);
-		else
-			item.setFormat(item.size, FlxColor.WHITE);
-		grpRender.add(item);
-	}
+	// private function addEquipped(Anchor:Array<Float>)
+	// {
+	// 	var item = new FlxText(Anchor[0], 0, 10, "E", 8);
+	// 	if (PenManager.equipped != _pen)
+	// 		item.setFormat(item.size, FlxColor.BLACK);
+	// 	else
+	// 		item.setFormat(item.size, FlxColor.WHITE);
+	// 	grpRender.add(item);
+	// }
 }
 
 class MenuItemSubMenu extends BaseMenuItem
@@ -418,7 +418,7 @@ class BaseMenu extends FlxGroup
 			if (openTimer <= 0)
 			{
 				_wasHighlighted = _highlighted;
-				if (FlxG.keys.anyJustPressed(["DOWN", "S"]))
+				if (FlxG.keys.anyJustPressed(Reg.keys["down"]))
 				{
 					if (_selected[1] < _arrSprite.length-1 && _arrSprite[_selected[1]+1][_selected[0]] != null)
 						_selected[1] += 1;
@@ -426,8 +426,9 @@ class BaseMenu extends FlxGroup
 						_selected[1] = 0;
 					_cursor.y = _arrSprite[_selected[1]][_selected[0]].y;
 					_highlighted = _arr[_selected[1]][_selected[0]];
+					SoundManager.playSound("menu");					
 				}
-				else if (FlxG.keys.anyJustPressed(["UP", "W"]))
+				else if (FlxG.keys.anyJustPressed(Reg.keys["up"]))
 				{
 					if (_selected[1]-1 >= 0)
 						do _selected[1] -= 1 while (_selected[1]-1 >= 0 && _arrSprite[_selected[1]-1][_selected[0]] == null);
@@ -438,8 +439,9 @@ class BaseMenu extends FlxGroup
 					}
 					_cursor.y = _arrSprite[_selected[1]][_selected[0]].y;
 					_highlighted = _arr[_selected[1]][_selected[0]];
+					SoundManager.playSound("menu");					
 				}
-				else if (FlxG.keys.anyJustPressed(["RIGHT", "D"]))
+				else if (FlxG.keys.anyJustPressed(Reg.keys["right"]))
 				{
 					if (_selected[0] >= _arrSprite[_selected[1]].length-1)
 						_selected[0] = 0;
@@ -447,8 +449,9 @@ class BaseMenu extends FlxGroup
 						_selected[0] += 1;
 					_cursor.x = _arrSprite[_selected[1]][_selected[0]].x - _cursor.width;
 					_highlighted = _arr[_selected[1]][_selected[0]];
+					SoundManager.playSound("menu");					
 				}
-				else if (FlxG.keys.anyJustPressed(["LEFT", "A"]))
+				else if (FlxG.keys.anyJustPressed(Reg.keys["left"]))
 				{
 					if (_selected[0] > 0)
 						_selected[0] -= 1;
@@ -459,12 +462,16 @@ class BaseMenu extends FlxGroup
 					}
 					_cursor.x = _arrSprite[_selected[1]][_selected[0]].x - _cursor.width;
 					_highlighted = _arr[_selected[1]][_selected[0]];
+					SoundManager.playSound("menu");					
 				}
 
-				if (FlxG.keys.anyJustPressed(["J"]))
+				if (FlxG.keys.anyJustPressed(Reg.keys["confirm"]))
+				{
 					_arr[_selected[1]][_selected[0]].selected();
+					SoundManager.playSound("menu");					
+				}
 				// note: the null check is to disallow backing out of a MenuDialogChoices
-				else if (FlxG.keys.anyJustPressed(["K"]) && _closeString != null)
+				else if (FlxG.keys.anyJustPressed(Reg.keys["cancel"]) && _closeString != null)
 					close();
 			}
 		}
@@ -472,7 +479,7 @@ class BaseMenu extends FlxGroup
 
 	public function close()
 	{
- 		refresh(arrItem);
+ 		// refresh(arrItem);
 		isAlive = false;
 		isActive = false;
 		MenuManager.popMenu();
@@ -612,8 +619,8 @@ class MenuDialogChoices extends BaseMenu
 		{
 			if (Type.getClassName(Type.getClass(ItemArray[choice])) == "MenuItemDialogChoice")
 			{
-				var i = cast(ItemArray[choice], MenuItemDialogChoice).dBox.arrLines[0].face;
-				_sprFaceIcon.animation.add(""+choice, [i*2, i*2+1], 4, false);
+				var i = cast(ItemArray[choice], MenuItemDialogChoice).dBox.arrLines[0].getFace();
+				_sprFaceIcon.animation.add(""+choice, [i, i+1], 4, false);
 			}
 		}
 		_grpEverything.add(_sprFaceIcon);
@@ -639,8 +646,8 @@ class MenuDialogChoices extends BaseMenu
 
 	override public function close()
 	{
-		super.close();
 		Reg.STATE = Reg.STATE_CUTSCENE;
+		super.close();
 	}
 }
 
@@ -687,9 +694,9 @@ class MenuInventory extends BaseMenu
 		
 		var item:BaseMenuItem = _arr[_selected[1]][_selected[0]];
 		if (Type.getClassName(Type.getClass(item)) == "MenuItemItem")
-			_dsGroup = new DialogSpriteGroup(new DialogBox([new DialogLine(_face, cast(item, MenuItemItem).item.desc)]), false, 60);
+			_dsGroup = new DialogSpriteGroup(new DialogBox([new DialogLine(_face, cast(item, MenuItemItem).item.desc)]), false);
 		else  // that pesky MenuItemClose isn't a MenuItemItem!
-			_dsGroup = new DialogSpriteGroup(new DialogBox([new DialogLine(_face, _closeString)]), false, 60);
+			_dsGroup = new DialogSpriteGroup(new DialogBox(Strings.inventoryStrings[2]), false);
 		add(_dsGroup);
 	}
 }

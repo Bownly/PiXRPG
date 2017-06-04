@@ -11,6 +11,7 @@ import EventClasses;
  */
 class Entity extends FlxSprite
 {
+	private var ANIMATION_SPEED:Int = 3;
 	private static inline var TILE_SIZE:Int = 16;
 	private static inline var MOVEMENT_SPEED:Int = 1;
 	

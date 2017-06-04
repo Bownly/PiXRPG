@@ -38,26 +38,20 @@ class Player extends Entity
 		facing = Facing;
 		
 		loadGraphic(AssetPaths.mctest__png, true, 16, 16);
-		animation.add("up_0", [10, 11], 3, true);
-		animation.add("dn_0", [12, 13], 3, true);
-		animation.add("lf_0", [14, 15], 3, true);
-		animation.add("rt_0", [16, 17], 3, true);
-		animation.add("up_1", [0, 1], 3, true);
-		animation.add("dn_1", [2, 3], 3, true);
-		animation.add("lf_1", [4, 5], 3, true);
-		animation.add("rt_1", [6, 7], 3, true);
+		animation.add("up_0", [10, 11], ANIMATION_SPEED, true);
+		animation.add("dn_0", [12, 13], ANIMATION_SPEED, true);
+		animation.add("lf_0", [14, 15], ANIMATION_SPEED, true);
+		animation.add("rt_0", [16, 17], ANIMATION_SPEED, true);
+		animation.add("up_1", [0, 1], ANIMATION_SPEED, true);
+		animation.add("dn_1", [2, 3], ANIMATION_SPEED, true);
+		animation.add("lf_1", [4, 5], ANIMATION_SPEED, true);
+		animation.add("rt_1", [6, 7], ANIMATION_SPEED, true);
 		
 		setFacing(facing);
 	}
 	
 	override public function update(elapsed:Float):Void
 	{
-
-		// if (FlxG.keys.anyJustPressed(["Z"]))
-		// 	Reg.STATE = 0;
-		// if (FlxG.keys.anyJustPressed(["X"]))
-		// 	Reg.STATE = 1;
-
 		if (Reg.STATE == Reg.STATE_NORMAL)
 		{
 			super.update(elapsed);  
@@ -127,46 +121,47 @@ class Player extends Entity
 				if (FlxG.keys.anyJustPressed(Reg.keys["confirm"]))
 					interactionCheck(facing);
 
-				// todo: debug stuff, remove before shipping
-				if (FlxG.keys.anyJustPressed(["P"]))
-				{
-					FlxG.switchState(new MenuState());
-				}
-				if (FlxG.keys.anyJustPressed(["H"]))
-				{
-					if (Reg.flags["p_hood"] == 0)
-						Reg.flags["p_hood"] = 1;
-					else
-						Reg.flags["p_hood"] = 0;
-					hasHood = Reg.flags["p_hood"];
-				}
-				if (FlxG.keys.anyJustPressed(["Q"]))
-				{
-					Reg.flags["owl_clan_attack"] += 1;
-					trace("flag incremented: " + Reg.flags["owl_clan_attack"]);
-				}
-				if (FlxG.keys.anyJustPressed(["E"]))
-				{
-					Reg.flags["frogponddun"] += 1;
-					trace("dun done ");
-				}
-				if (FlxG.keys.anyJustPressed(["V"]))
-				{
-					// Reg.flags["frogponddun"] = 1;
-					Reg.flags["difficulty"] = 1;
-					trace(Reg.flags["difficulty"]);
-				}
-				if (FlxG.keys.anyJustPressed(["R"]))
-				{
-					if (Reg.flags["monshou_fire"] == 1)
-						Reg.flags["monshou_gondola"] = 1;
-					if (Reg.flags["monshou_ice"] == 1)
-						Reg.flags["monshou_fire"] = 1;
-					if (Reg.flags["monshou_frog"] == 1)
-						Reg.flags["monshou_ice"] = 1;
-					Reg.flags["monshou_frog"] = 1;
-					trace("monshou++ ");
-				}
+				// // todo: debug stuff, remove before shipping
+				// if (FlxG.keys.anyJustPressed(["P"]))
+				// {
+				// 	FlxG.switchState(new MenuState());
+				// }
+				// if (FlxG.keys.anyJustPressed(["H"]))
+				// {
+				// 	if (Reg.flags["p_hood"] == 0)
+				// 		Reg.flags["p_hood"] = 1;
+				// 	else
+				// 		Reg.flags["p_hood"] = 0;
+				// 	hasHood = Reg.flags["p_hood"];
+				// 	_state.eventManager.addEvents([new EventClasses.EventSFXPlay("lvl")]);
+				// }
+				// if (FlxG.keys.anyJustPressed(["Q"]))
+				// {
+				// 	Reg.flags["owl_clan_attack"] += 1;
+				// 	trace("flag incremented: " + Reg.flags["owl_clan_attack"]);
+				// }
+				// if (FlxG.keys.anyJustPressed(["E"]))
+				// {
+				// 	Reg.flags["frogponddun"] += 1;
+				// 	trace("dun done ");
+				// }
+				// if (FlxG.keys.anyJustPressed(["V"]))
+				// {
+				// 	// Reg.flags["frogponddun"] = 1;
+				// 	Reg.flags["difficulty"] = 1;
+				// 	trace(Reg.flags["difficulty"]);
+				// }
+				// if (FlxG.keys.anyJustPressed(["R"]))
+				// {
+				// 	if (Reg.flags["monshou_fire"] == 1)
+				// 		Reg.flags["monshou_gondola"] = 1;
+				// 	if (Reg.flags["monshou_ice"] == 1)
+				// 		Reg.flags["monshou_fire"] = 1;
+				// 	if (Reg.flags["monshou_frog"] == 1)
+				// 		Reg.flags["monshou_ice"] = 1;
+				// 	Reg.flags["monshou_frog"] = 1;
+				// 	trace("monshou++ ");
+				// }
 				
 
 
@@ -190,15 +185,15 @@ class Player extends Entity
 			lp = 7;
 		else if (xp >= 1488)
 			lp = 6;
-		else if (xp >= 999)
+		else if (xp >= 1044)
 			lp = 5;
 		else if (xp >= 699)
 			lp = 4;
 		else if (xp >= 333)
 			lp = 3;
-		else if (xp >= 99)
+		else if (xp >= 111)
 			lp = 2;
-		maxmp = 30 + (lp) * 15;
+		maxmp = 20 + (lp) * 10;
 
 		if (lp != _curLP)
 		{
@@ -286,7 +281,7 @@ class Player extends Entity
 	}
 
 	public static function resetStats():Void
-		setStats(1, 30, 30, 0);
+		setStats(1, 20, 20, 0);
 	
 
 	public function moveTo(Direction:Int):Void

@@ -12,25 +12,6 @@ import ObstacleClasses;
  * @author Bownly
  */
 
-
-// 7 doors 15 xp
-// 1 door++ 21 xp
-// 1 owl 60 xp
-
-// 105
-// 126
-// 186
-
-
-// 2.5
-
-// tads 3 xp
-// mush 6
-// bees 9 xp
-// frogs 15 xp
-// dummy = 3 xp
-
-
 class BaseEnemy
 {
 	public var id:Int;
@@ -44,8 +25,9 @@ class BaseEnemy
 	public var timerAttack:Float = 0;
 	public var attackFreq:Int = 1;
 	public var fillcount:Int = 0;
-	public var damage:Int = 10;
+	public var damage:Int = 0;
 	public var sprite:FlxSprite;
+	public var escapable:Bool = true;
 
 	public function new(ID:Int, S:Array<Int>, C:Array<Int>, D:Int, M:Int, X:Int) 
 	{
@@ -112,9 +94,12 @@ class EnemyDoor extends BaseEnemy
 			dimens = Dimens;
 		else
 			dimens = [5, 4];
-		super(7, dimens, [7, 6], 3, 13, 15);
+		super(7, dimens, [7, 6], 3, 12, 15);
 		if (MP > 0)
+		{
 			mp = MP;
+			maxMP = MP;			
+		}
 		if (XP > 0)
 			mp = XP;
 	}
@@ -197,8 +182,8 @@ class EnemyMush extends BaseEnemy
 
 	public function new()
 	{
-		super(0, [4, 4], [21, 22], 6, 11, 6);
-		attackFreq = 5;
+		super(0, [4, 4], [23, 20], 6, 9, 6);
+		// attackFreq = 5;
 	}
 
 	override public function update(elapsed:Float)
@@ -218,11 +203,11 @@ class EnemyMush extends BaseEnemy
 	{
 		super.onSquareFilled();
 		removeObstacle();
-		if ((maxMP - mp) % attackFreq == 0)
-		{
-			timerAttack = 0;
-			spawnObstacle();
-		}
+		// if ((maxMP - mp) % attackFreq == 0)
+		// {
+		// 	timerAttack = 0;
+		// 	spawnObstacle();
+		// }
 	}
 
 
@@ -264,7 +249,7 @@ class EnemyBee extends BaseEnemy
 {
 	public function new()
 	{
-		super(1, [5, 5], [9, 32], 8, 14, 9);
+		super(1, [5, 5], [9, 32], 8, 12, 9);
 	}
 }
 
@@ -310,7 +295,7 @@ class EnemyFlower extends BaseEnemy
 {
 	public function new()
 	{
-		super(3, [6, 6], [3, 2], 5, 20, 15);
+		super(3, [6, 6], [3, 2], 5, 18, 15);
 	}
 }
 
@@ -326,8 +311,46 @@ class EnemyFrog extends BaseEnemy
 {
 	public function new()
 	{
-		super(5, [5, 5], [13, 14], 5, 15, 15);
+		super(5, [5, 5], [13, 14], 5, 13, 15);
 		attackFreq = 12;
+	}
+
+	override public function update(elapsed:Float)
+	{
+		timerAttack += elapsed;
+
+		if (timerAttack >= attackFreq)
+		{
+			spawnObstacle();
+			timerAttack = 0;
+		}
+
+		super.update(elapsed);
+	}
+
+	override public function onSquareFilled()
+	{
+		super.onSquareFilled();
+	}
+
+	override public function spawnObstacle()
+	{
+		var drop = new ObsLily(_board, this);
+		_grpObs.add(drop);
+	}
+}
+
+class EnemyFroggo extends BaseEnemy
+{
+	public function new()
+	{
+		super(10, [8, 8], [13, 14], 10, 32, 60);
+		attackFreq = 11;
+		escapable = false;
+	
+		var o:Int = 4;  // amount of tiles per enemy
+		o *= id;
+		sprite.animation.add("idle", [0 + o, 1 + o], 4, true);
 	}
 
 	override public function update(elapsed:Float)
@@ -359,8 +382,9 @@ class EnemyOwl extends BaseEnemy
 {
 	public function new()
 	{
-		super(8, [8, 8], [25, 24], 10, 40, 60);
+		super(8, [8, 8], [25, 24], 10, 36, 60);
 		attackFreq = 20;
+		escapable = false;
 
 		var o:Int = 4;  // amount of tiles per enemy
 		o *= id;
@@ -383,11 +407,6 @@ class EnemyOwl extends BaseEnemy
 	override public function onSquareFilled()
 	{
 		super.onSquareFilled();
-		// if ((maxMP - mp) % attackFreq == 0)
-		// {
-		// 	spawnObstacle();
-		// 	timerAttack = 0;
-		// }
 	}
 
 	override public function spawnObstacle()

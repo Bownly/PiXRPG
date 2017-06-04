@@ -130,7 +130,7 @@ class ObsEraser extends BaseObstacle
 			{
 				animation.play("splat");
 				if (_square.status == PicrossSquare.ON)
-					_board.curCount--;
+					_enemy.mp++;
 				_square.status = PicrossSquare.OFF;
 				_square.animation.play("off");
 				_square.isActive = true;
@@ -182,7 +182,7 @@ class ObsLily extends BaseObstacle
 			{
 				animation.play("splat");
 				if (_square.status == PicrossSquare.ON)
-					_board.curCount--;
+					_enemy.mp++;
 				_square.status = PicrossSquare.OFF;
 				_square.animation.play("mark");
 				_square.isActive = true;
@@ -214,10 +214,12 @@ class ObsRevCursor extends BaseObstacle
 		_enemy = Enemy;
 
 		// find the middle square
-		_square = _board.gridPicrossSquares[Std.int(_board.dimens[1]/2)][Std.int(_board.dimens[0]/2)];
-		_coords = [_square.x, _square.y];
+		// _square = _board.gridPicrossSquares[Std.int(_board.dimens[1]/2)][Std.int(_board.dimens[0]/2)];
+		_square = _board.gridPicrossSquares[0][0];
+		// _coords = [_square.x, _square.y];
+		_coords = [_square.x+Std.int(_board.dimens[1]/2)*10, _square.y+Std.int(_board.dimens[0]/2)*10];
 
-		super([_coords[0]-10, _coords[1]-10]);
+		super([_coords[0]-15, _coords[1]-10]);
 		loadGraphic(AssetPaths.owl_eyes__png, true, 40, 20);
 		x -= 5;
 		animation.add("opening", [0, 0, 1, 2, 3, 3], 4, false);

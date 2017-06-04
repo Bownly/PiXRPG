@@ -21,6 +21,14 @@ class DialogLine
 		line = Line;
 		face = Face;
 	}
+	public function getFace():Int
+	{
+		var i = face;
+		if (i <= 7 && Reg.flags["p_hood"] == 1)  // 7 = the index of the last mc sans hood face
+			i += 8;  // 8 is the amount of faces per character
+		i = i*2;  // 2 frames of animation per face
+		return i;
+	}
 }
 
 
@@ -51,11 +59,13 @@ class DialogSpriteGroup extends FlxGroup
 	var _curLine:String;
 	var _curLineMaster:String;
 	var _lineTimer:Float = 0;
-	var _scrollSpeed:Int = 5;
+	var _scrollSpeed:Float = 0.005;
 	var _canControl:Bool = true;
 
+	var _voice:String = "talk_normal";
+
 	// public function new(Coords:Array<Float>, Dimens:Array<Float>, DB:DialogBox) 
-	public function new(DB:DialogBox, CanControl:Bool, ?ScrollSpeed:Int) 
+	public function new(DB:DialogBox, CanControl:Bool, ?ScrollSpeed:Float) 
 	{
 		super();
 		dBox = DB;
@@ -63,7 +73,9 @@ class DialogSpriteGroup extends FlxGroup
 		if (ScrollSpeed > 0)
 			_scrollSpeed = ScrollSpeed;
 
-		endLine = dBox.arrLines.length - 1;		
+		endLine = dBox.arrLines.length - 1;	
+
+		_voice = calculateVoice(dBox.arrLines[0].face);
 
 		var iconsize = Reg.ICONSIZE;
 		var h = iconsize;
@@ -75,7 +87,7 @@ class DialogSpriteGroup extends FlxGroup
 		_sprFaceIcon.x = 0;
 		_sprFaceIcon.y = yanchor;
 		_sprFaceIcon.loadGraphic("assets/images/heads.png", true, iconsize, iconsize);
-		loadFace(dBox.arrLines[0].face);
+		loadFace(dBox.arrLines[0]);
 
 		xanchor += _sprFaceIcon.width;  // offset for the icon
 
@@ -85,9 +97,8 @@ class DialogSpriteGroup extends FlxGroup
 		_txtDialog = new FlxText(xanchor + window.pad*2, yanchor + window.pad*2, w - 20, "", 8);
 		_txtDialog.scrollFactor.set();
 		_txtDialog.wordWrap = false;
-		// _txtDialog.visible = false;
 		_sprFaceIcon.scrollFactor.set();
-		_txtDummy = new FlxText(xanchor + window.pad*2, yanchor + window.pad*2, w - 20, "", 8);
+		_txtDummy = new FlxText(xanchor + window.pad*2, yanchor + window.pad*2, w - 14, "", 8);
 		_txtDummy.visible = false;
 		_txtDummy.wordWrap = false;
 		
@@ -118,14 +129,18 @@ class DialogSpriteGroup extends FlxGroup
 
 		if (_curLine.length > 0)
 		{
-			_lineTimer += elapsed * (1/_scrollSpeed);
+			_lineTimer += elapsed;
 			var len = _curLine.indexOf(" ", 0) + 1;  // len = index of cur string + next word
 			if (len == 0)  // aka if the indexOf returned -1 aka if there are no more spaces left in the string
 				_txtDummy.text = _txtDialog.text + _curLine;
 			else
 				_txtDummy.text = _txtDialog.text + _curLine.substr(0, len);
 
+			if (_curLine.length % 6 == 0)
+				SoundManager.playSound(_voice);
+
 			if (_txtDummy.textField.textWidth >= _txtDummy.width - 8)  // the 8 is the default leftside spacing on textfields
+			// if (_txtDummy.textField.textWidth >= _txtDummy.width)
 			{
 				if (_txtDialog.text.substr(_txtDialog.text.length-1, 1) == " ")  // if a space is activating the wordwrap
 				{
@@ -134,7 +149,7 @@ class DialogSpriteGroup extends FlxGroup
 				}
 			}
 			_sprFaceIcon.animation.play("idle");
-			if (_lineTimer >= 0)
+			if (_lineTimer >= _scrollSpeed)
 			{
 				_txtDialog.text += _curLine.substr(0, 1);
 				_curLine = _curLine.substr(1);
@@ -143,8 +158,6 @@ class DialogSpriteGroup extends FlxGroup
 		}
 		else
 			_sprFaceIcon.animation.play("stop");
-
-		// _txtDialog.text = _curLine.substr(0, Std.int(_lineTimer));
 
 		if (_canControl && FlxG.keys.anyJustPressed(["J", "SPACE", "W", "A", "S", "D", "UP", "DOWN", "LEFT", "RIGHT", "K"]))
 		{
@@ -161,7 +174,7 @@ class DialogSpriteGroup extends FlxGroup
 				_lineTimer = 0;
 				if (lineNumber <= endLine)
 				{
-					loadFace(dBox.arrLines[lineNumber].face);
+					loadFace(dBox.arrLines[lineNumber]);
 					setCurLine();
 				}
 			}
@@ -175,9 +188,18 @@ class DialogSpriteGroup extends FlxGroup
 		super.update(elapsed);
 	}
 
-	public function loadFace(I:Int):Void
+	public function calculateVoice(F:Int):String
 	{
-		var i = I*2;
+
+		if (F <= 39 || F >= 88)
+			return "talk_high";
+		else
+			return "talk_normal";
+	}
+
+	public function loadFace(DL:DialogLine):Void
+	{
+		var i = DL.getFace();
 		_sprFaceIcon.animation.add("idle", [i, i+1], 3, true);
 		_sprFaceIcon.animation.add("stop", [i], 3, true);
 		_sprFaceIcon.animation.play("idle");

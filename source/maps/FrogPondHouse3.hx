@@ -15,7 +15,6 @@ import MenuClasses;
 
 class FrogPondHouse3 extends TownState
 {
-
 	var npc:NPC;
 	var _events:Map<String, Array<BaseEvent>>;
 
@@ -40,14 +39,17 @@ class FrogPondHouse3 extends TownState
 		if (Reg.flags["owl_clan_attack"] == 0)  // 0 = pre-attack
 		{
 			if (Reg.flags["frogponddun"] == 0)  // 0 = dun not done
-				npc.events = [new EventDialog(Strings.frogpondStrings[38], this)];			
+				npc.events = [new EventDialog(Strings.frogpondhouse3Strings[0], this),
+							  new EventDialog(Strings.frogpondhouse3Strings[1], this),
+							  new EventDialog(Strings.frogpondhouse3Strings[2], this)
+			];			
 			else
-				npc.events = [new EventDialog(Strings.frogpondStrings[41], this)];			
+				npc.events = [new EventDialog(Strings.frogpondhouse3Strings[3], this)];			
 		}
 		else if (Reg.flags["owl_clan_attack"] <= 2)  // 1 = post-attack; 2 = return home
-			npc.events = [new EventDialog(Strings.frogpondStrings[45], this)];			
+			npc.events = [new EventDialog(Strings.frogpondhouse3Strings[4], this)];			
 		else if (Reg.flags["owl_clan_attack"] >= 3)  // 3 = return to The Pond; 4 = docks; 5 = done
-			npc.events = [new EventDialog(Strings.frogpondStrings[49], this)];		
+			npc.events = [new EventDialog(Strings.frogpondhouse3Strings[5], this)];		
 	}
 
 
