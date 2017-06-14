@@ -203,7 +203,7 @@ class FrogPondDun extends TownState
 		else if (Reg.flags["fight_dummy"] == 1)  // if you agreed to fight him
 			eventManager.addEvents([new EventDialog(Strings.frogponddunStrings[3], this),
 									new EventFlag("tutorial_battle", 1),
-									new EventBattle([new EnemyTest()], this, "tutorial_battle", 2),
+									new EventBattle([new EnemyTest()], this, "tutorial_battle", 0),
 									new EventFlag("fight_dummy", 0),
 									]);
 		else if (Reg.flags["fight_dummy"] == -1)  // if you reject his battle proposition

@@ -16,9 +16,6 @@ import flixel.math.FlxMath;
  */
 class NamePlayerState extends FlxState
 {
-	var colorDefault = 0xffffff;
-	var colorSelected = 0x0099FF;
-	
 	var _sprCharacter:FlxSprite;
 	var _txtInstructions:FlxText;
 	var _txtName:FlxText;
@@ -53,7 +50,7 @@ class NamePlayerState extends FlxState
 		var yanchor:Float = 48;  // arbitray spacing number determined to look good
 
 		_txtInstructions = new FlxText(xanchor, yanchor, FlxG.width, "Enter your name:", 8);
-		_txtInstructions.setFormat(8, colorDefault, "center");
+		_txtInstructions.setFormat(8, Reg.COLORDEFAULT, "center");
 		yanchor += _txtInstructions.height;
 
 		_sprCharacter = new FlxSprite(FlxG.width / 2 - 8, _txtInstructions.y - 24);
@@ -62,7 +59,7 @@ class NamePlayerState extends FlxState
 		_sprCharacter.animation.play("dn_0");
 
 		_txtName = new FlxText(xanchor, yanchor, FlxG.width, "", 8);
-		_txtName.setFormat(16, colorDefault, "center");
+		_txtName.setFormat(16, Reg.COLORDEFAULT, "center");
 
 		xanchor += 56;  // arbitray spacing number determined to look good
 		yanchor += _txtName.height;
@@ -95,6 +92,7 @@ class NamePlayerState extends FlxState
 		add(_grpLetters);
 				
 		FlxG.mouse.visible = false;		
+		SoundManager.initializeSFX();
 		super.create();	
 	}
 	
@@ -113,6 +111,9 @@ class NamePlayerState extends FlxState
 	override public function update(elapsed:Float):Void
 	{
 		colorize();
+		
+		if (FlxG.keys.anyJustPressed(Reg.keys["dpad"]))
+			SoundManager.playSound("menu");
 		
 		// cursor movement
 		if (FlxG.keys.anyJustPressed(Reg.keys["up"])) 
@@ -164,6 +165,7 @@ class NamePlayerState extends FlxState
 			
 		if (FlxG.keys.anyJustPressed(Reg.keys["confirm"]))
 		{
+			// SoundManager.playSound("menu");
 			if (!_doneSelected && _txtName.text.length < MAX_LENGTH)
 				_txtName.text += _arrLetters[_selected[0]][_selected[1]].text;
 			else if (!_doneSelected && _txtName.text.length == MAX_LENGTH)
@@ -186,19 +188,19 @@ class NamePlayerState extends FlxState
 	function colorize():Void
 	{
 		for (txt in _grpLetters)
-			txt.setFormat(8, colorDefault, "center");
+			txt.setFormat(8, Reg.COLORDEFAULT, "center");
 		
 		if (!_doneSelected)
-			_arrLetters[_selected[0]][_selected[1]].setFormat(8, colorSelected, "center");
+			_arrLetters[_selected[0]][_selected[1]].setFormat(8, Reg.COLORSELECTED, "center");
 		else
-			_txtDone.setFormat(8, colorSelected, "center");
+			_txtDone.setFormat(8, Reg.COLORSELECTED, "center");
 	}
 
 	function done():Void
 	{
-		// record pname
-		if (_txtName.text == "")
-			Strings.stringVars["%pname%"] = "Pepe";
+		// record rival's name
+		if (_txtName.text.length <= 0)
+			Strings.stringVars["%pname%"] = Strings.stringVars["%pnameDefault%"];
 		else
 			Strings.stringVars["%pname%"] = _txtName.text;
 

@@ -31,7 +31,6 @@ class FrogPondHouse1 extends TownState
 		for (barrel in 0...15)
 		{
 			var obj = new NPC(0, 0, FlxObject.RIGHT, 8, this, "obj " + barrel);
-			trace("obj " + barrel);
 			obj.setCanTurn(false);
 			grpNPCs.add(obj);
 			_arrObjs.push(obj);

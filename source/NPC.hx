@@ -16,8 +16,6 @@ class NPC extends Entity
 	var _species:Int;
 
 	public var name:String;
-	public var baseX:Float;
-	public var baseY:Float;
 	public var events:Array<BaseEvent>;
 	
 	public function new(X:Float=0, Y:Float=0, Direction:Int, Species:Int, State:TownState, Name:String, ?Dead:Bool) 

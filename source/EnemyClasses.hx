@@ -83,6 +83,7 @@ class EnemyTest extends BaseEnemy
 	public function new()
 	{
 		super(6, [4, 4], [11, 26], 0, 12, 3);
+		escapable = false;
 	}
 }
 
@@ -94,14 +95,19 @@ class EnemyDoor extends BaseEnemy
 			dimens = Dimens;
 		else
 			dimens = [5, 4];
-		super(7, dimens, [7, 6], 3, 12, 15);
 		if (MP > 0)
 		{
 			mp = MP;
 			maxMP = MP;			
 		}
+		else
+		{
+			mp = 12;
+			maxMP = 12;			
+		}
 		if (XP > 0)
-			mp = XP;
+			xp = XP;
+		super(7, dimens, [7, 6], 3, mp, 15);
 	}
 }
 

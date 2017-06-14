@@ -17,14 +17,10 @@ import flixel.util.FlxSave;
  */
 class MenuState extends FlxState
 {
-	var _colorDefault = 0xffffff;
-	var _colorSelected = 0x0099FF;
 	var _selectedSelection = 0;
 	
+	var _sprTitle:FlxSprite;
 	var _txtTwitter:FlxText;
-	var _txtLD:FlxText;
-	var _txtTitle:FlxText;
-	var _txtFurigana:FlxText;
 	var _txtControls:FlxText;
 	
 	var _txtSelection0:FlxText;
@@ -42,24 +38,17 @@ class MenuState extends FlxState
 	override public function create():Void
 	{
 		FlxG.camera.bgColor = 0x0000000;
-		
-		_txtTitle = new FlxText(0, 0, FlxG.width, "Pi X RPG", 32);
-		_txtTitle.alignment = "center";
-		_txtTitle.y = (FlxG.height - _txtTitle.height * 3) / 2;
-		
-		_txtFurigana = new FlxText(0, 0, FlxG.width, "(Cross)", 8);
-		_txtFurigana.setPosition(124, _txtTitle.y - _txtFurigana.height);
-		
+		_sprTitle = new FlxSprite(0, 48);
+		_sprTitle.loadGraphic(AssetPaths.title_logo__png, true, 320, 32);
+
 		_txtTwitter = new FlxText(0, 0, 0, "@Bownly", 8);
 		_txtTwitter.y = FlxG.height - _txtTwitter.height;
-		_txtLD = new FlxText(0, _txtTwitter.y, 0, "mini Ludum Dare 63", 8);
-		_txtLD.x = FlxG.width - _txtLD.width;
 		
 		_grpSelections = new FlxTypedGroup<FlxText>();
-		_txtSelection0 = new FlxText(120, _txtTitle.y + _txtTitle.height + 16, "Continue", 8);
-		_txtSelection1 = new FlxText(120, _txtSelection0.y + _txtSelection0.height + 16, "New Game", 8);
-		_txtSelection2 = new FlxText(120, _txtSelection1.y + _txtSelection1.height + 16, "Credits", 8);
-		_txtSelection3 = new FlxText(120, _txtSelection2.y + _txtSelection2.height + 16, "Sound Room", 8);
+		_txtSelection0 = new FlxText(0, _sprTitle.y + _sprTitle.height + 24, FlxG.width, "Continue", 8);
+		_txtSelection1 = new FlxText(0, _txtSelection0.y + _txtSelection0.height + 16, FlxG.width, "New Game", 8);
+		_txtSelection2 = new FlxText(0, _txtSelection1.y + _txtSelection1.height + 16, FlxG.width, "Credits", 8);
+		_txtSelection3 = new FlxText(0, _txtSelection2.y + _txtSelection2.height + 16, FlxG.width, "Sound Room", 8);
 		
 		_txtControls = new FlxText(0, 0, FlxG.width, "J/Z = confirm, K/X = not confirm, WASD/Arrows = move, m = mute");
 		_txtControls.alignment = "center";
@@ -70,11 +59,7 @@ class MenuState extends FlxState
 		
 		add(_grpSelections);
 		
-		add(_txtTitle);
-		add(_txtFurigana);
-		add(_txtTwitter);
-		// add(_txtLD);
-		add(_txtControls);
+		add(_sprTitle);
 		
 		FlxG.mouse.visible = false;		
 		super.create();	
@@ -91,6 +76,7 @@ class MenuState extends FlxState
 			_txtSelection1.y -= (_txtSelection1.height + 8);	
 			_txtSelection2.y -= (_txtSelection2.height + 8);	
 			_txtSelection3.y -= (_txtSelection3.height + 8);	
+			add(_txtControls);
 		}
 		else
 		{
@@ -125,10 +111,12 @@ class MenuState extends FlxState
 		if (FlxG.keys.anyJustPressed(Reg.keys["down"])) 
 		{
 			_selectedSelection++;
+			SoundManager.playSound("menu");
 		}
 		else if (FlxG.keys.anyJustPressed(Reg.keys["up"]))
 		{
 			_selectedSelection--;
+			SoundManager.playSound("menu");
 		}
 		var temp = 0;
 		if (_continue == false)
@@ -140,6 +128,7 @@ class MenuState extends FlxState
 			
 		if (FlxG.keys.anyJustPressed(Reg.keys["confirm"]) || FlxG.keys.anyJustPressed(["ENTER"]))
 		{
+			// SoundManager.playSound("menu");
 			switch (_selectedSelection)
 			{
 				case (0):
@@ -159,17 +148,17 @@ class MenuState extends FlxState
 	function colorize():Void
 	{
 		for (level in _grpSelections)
-			level.setFormat(8, _colorDefault, "center");
+			level.setFormat(8, Reg.COLORDEFAULT, "center");
 		switch (_selectedSelection)
 		{
 			case (0):
-				_txtSelection0.setFormat(8, _colorSelected);
+				_txtSelection0.setFormat(8, Reg.COLORSELECTED);
 			case (1):
-				_txtSelection1.setFormat(8, _colorSelected);
+				_txtSelection1.setFormat(8, Reg.COLORSELECTED);
 			case (2):
-				_txtSelection2.setFormat(8, _colorSelected);
+				_txtSelection2.setFormat(8, Reg.COLORSELECTED);
 			case (3):
-				_txtSelection3.setFormat(8, _colorSelected);
+				_txtSelection3.setFormat(8, Reg.COLORSELECTED);
 		}
 	}
 

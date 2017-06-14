@@ -2,6 +2,7 @@ package maps;
 
 import flixel.FlxG;
 import flixel.FlxObject;
+import flixel.FlxSprite;
 import flixel.group.FlxGroup;
 import flixel.text.FlxText;
 
@@ -20,6 +21,7 @@ class FrogPondDocks extends TownState
 	var npcBoat:NPC;
 	var npcDoor:NPC;
 	var npcFroggo:NPC;
+	var _sprTitle:FlxSprite;
 	var _txtTitle:FlxText;
 	var _txtPrologue:FlxText;
 	var _txtThanks:FlxText;
@@ -54,13 +56,16 @@ class FrogPondDocks extends TownState
 
 		super.create();
 		
+		_sprTitle = new FlxSprite(0, 48);
+		_sprTitle.loadGraphic(AssetPaths.title_logo__png, true, 320, 32);
+		_sprTitle.x = (player.x - _sprTitle.width/2 + 8);  // 9 is a somewhat arbitrary spacing to match the credits state
 
-		_txtTitle = new FlxText(0, 0, "Pi X RPG", 32);
-		_txtTitle.y = (FlxG.height - _txtTitle.height * 3) / 2;
-		_txtTitle.x = (player.x - _txtTitle.width/2 + 8);
+		// _txtTitle = new FlxText(0, 0, Strings.stringVars["%title%"], 32);
+		// _txtTitle.y = (FlxG.height - _txtTitle.height * 3) / 2;
+		// _txtTitle.x = (player.x - _txtTitle.width/2 + 9);  // 9 is a somewhat arbitrary spacing to match the credits state
 
 		_txtPrologue = new FlxText(0, 0, "End of Prologue", 24);
-		_txtPrologue.y = (_txtTitle.y + _txtTitle.height + 8);
+		_txtPrologue.y = (_sprTitle.y + _sprTitle.height + 8);
 		_txtPrologue.x = (player.x - _txtPrologue.width/2 + 8);
 		_txtPrologue.visible = false;
 
@@ -69,7 +74,7 @@ class FrogPondDocks extends TownState
 		_txtThanks.x = (player.x - _txtThanks.width/2 + 8);
 		_txtThanks.visible = false;
 
-		add(_txtTitle);
+		add(_sprTitle);
 		add(_txtPrologue);
 		// add(_txtThanks);
 		assignEvents();

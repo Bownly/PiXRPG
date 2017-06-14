@@ -15,8 +15,7 @@ import DialogClasses.DialogLine;
  */
 class Strings
 {
-	public static var faces:Map<String, Int> = 
-	[
+	public static var faces:Map<String, Int> = [
 		"p_normal"            => 0,
 		"p_shock"             => 1,
 		"p_glad"              => 2,
@@ -121,10 +120,11 @@ class Strings
 		"gondolagirl"         => 90
 	];
 
-	public static var stringVars:Map<String, String> =
-	[
+	public static var stringVars:Map<String, String> = [
+		"%title%"        => "Frogicross",
 		"%pname%"        => "Player",
-		"%rnameDefault%" => "Jacob",
+		"%pnameDefault%" => "Tad",
+		"%rnameDefault%" => "Seth",
 		"%rivalname%"    => "Brother",
 		"%item%"         => ":O",
 		"%level%"        => "2",
@@ -915,7 +915,7 @@ class Strings
 		// 3
 		[new DialogLine(faces["froggo_shock"], "Well done, %pname%! You've cleared up all of my doubts--both figuratively and magically! Hohoho!"),
 		 new DialogLine(faces["froggo_normal"], "With the skills you just demonstrated to me, you should have no problem making it to the Frog Kingdom."),
-		 new DialogLine(faces["froggo_normal"], "The trip to the Frog Kingdom is a short one. Just head east past the FireIce Bay, and when you get to the mainland, follow the coast in a counterclockwise direction."),
+		 new DialogLine(faces["froggo_normal"], "The trip to the Frog Kingdom is a short one. Just head east past the Frostfire Bay, and when you get to the mainland, follow the coast in a counterclockwise direction."),
 		 new DialogLine(faces["froggo_normal"], "Frogspeed, %pname%. Though it was brief, remember your training.")
 		],
 
@@ -1071,7 +1071,6 @@ class Strings
 
 		// 34  // rival says this when you enter the dungeon the first time
 		[new DialogLine(faces["r_glad"], "I've used Dad's pens enough to where I don't need a dummy to lecture me. I'm going straight to the end of the cave.")],
-
 	];
 
 	public static var worldmapStrings:Array<Array<DialogLine>> = [

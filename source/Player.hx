@@ -17,8 +17,8 @@ class Player extends Entity
 	private static inline var MOVEMENT_SPEED:Float = 2;
 
 	public static var lp:Int = 1;
-	public static var mp:Int = 60;
-	public static var maxmp:Int = 60;
+	public static var mp:Int = 30;
+	public static var maxmp:Int = 30;
 	public static var xp:Int = 0;
 	public static var gp:Int = 0;
 	public static var MAXXP:Int = 6911;	
@@ -181,9 +181,9 @@ class Player extends Entity
 
 		if (xp >= 2400)
 			lp = 8;
-		else if (xp >= 1899)
+		else if (xp >= 2100)
 			lp = 7;
-		else if (xp >= 1488)
+		else if (xp >= 1500)
 			lp = 6;
 		else if (xp >= 1044)
 			lp = 5;
@@ -193,7 +193,7 @@ class Player extends Entity
 			lp = 3;
 		else if (xp >= 111)
 			lp = 2;
-		maxmp = 20 + (lp) * 10;
+		maxmp = 30 + (lp) * 10;
 
 		if (lp != _curLP)
 		{
@@ -281,7 +281,7 @@ class Player extends Entity
 	}
 
 	public static function resetStats():Void
-		setStats(1, 20, 20, 0);
+		setStats(1, 30, 30, 0);
 	
 
 	public function moveTo(Direction:Int):Void

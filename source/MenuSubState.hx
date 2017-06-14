@@ -61,7 +61,7 @@ class MenuSubState extends FlxSubState
 		if (Reg.flags["monshou_frog"] == 1)
 		{
 			_sprMonshouFrog = new FlxSprite(_txtName.x + _MONSHOU_GAP, _txtXP.y + BaseMenu.ITEM_GAP + _MONSHOU_GAP);
-			_sprMonshouFrog.loadGraphic(AssetPaths.monshou__png, true, 8, 8);
+			_sprMonshouFrog.loadGraphic(AssetPaths.seals__png, true, 8, 8);
 			_sprMonshouFrog.animation.add("idle", [0]);
 			_sprMonshouFrog.animation.play("idle");
 			_grpEverything.add(_sprMonshouFrog);
@@ -69,7 +69,7 @@ class MenuSubState extends FlxSubState
 		if (Reg.flags["monshou_ice"] == 1)
 		{
 			_sprMonshouIce = new FlxSprite(_txtName.x + 8 + _MONSHOU_GAP * 2, _txtXP.y + BaseMenu.ITEM_GAP + _MONSHOU_GAP);
-			_sprMonshouIce.loadGraphic(AssetPaths.monshou__png, true, 8, 8);
+			_sprMonshouIce.loadGraphic(AssetPaths.seals__png, true, 8, 8);
 			_sprMonshouIce.animation.add("idle", [1]);
 			_sprMonshouIce.animation.play("idle");
 			_grpEverything.add(_sprMonshouIce);
@@ -77,7 +77,7 @@ class MenuSubState extends FlxSubState
 		if (Reg.flags["monshou_fire"] == 1)
 		{
 			_sprMonshouFire = new FlxSprite(_txtName.x + _MONSHOU_GAP + (8 + _MONSHOU_GAP) * 2, _txtXP.y + BaseMenu.ITEM_GAP + _MONSHOU_GAP);
-			_sprMonshouFire.loadGraphic(AssetPaths.monshou__png, true, 8, 8);
+			_sprMonshouFire.loadGraphic(AssetPaths.seals__png, true, 8, 8);
 			_sprMonshouFire.animation.add("idle", [2]);
 			_sprMonshouFire.animation.play("idle");
 			_grpEverything.add(_sprMonshouFire);
@@ -85,7 +85,7 @@ class MenuSubState extends FlxSubState
 		if (Reg.flags["monshou_gondola"] == 1)
 		{
 			_sprMonshouGondola = new FlxSprite(_txtName.x + _MONSHOU_GAP + (8 + _MONSHOU_GAP) * 3, _txtXP.y + BaseMenu.ITEM_GAP + _MONSHOU_GAP);
-			_sprMonshouGondola.loadGraphic(AssetPaths.monshou__png, true, 8, 8);
+			_sprMonshouGondola.loadGraphic(AssetPaths.seals__png, true, 8, 8);
 			_sprMonshouGondola.animation.add("idle", [3]);
 			_sprMonshouGondola.animation.play("idle");
 			_grpEverything.add(_sprMonshouGondola);

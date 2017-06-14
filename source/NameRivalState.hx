@@ -16,9 +16,6 @@ import flixel.math.FlxMath;
  */
 class NameRivalState extends FlxState
 {
-	var colorDefault = 0xffffff;
-	var colorSelected = 0x0099FF;
-	
 	var _sprCharacter:FlxSprite;
 	var _txtInstructions:FlxText;
 	var _txtName:FlxText;
@@ -53,7 +50,7 @@ class NameRivalState extends FlxState
 		var yanchor:Float = 48;  // arbitray spacing number determined to look good
 
 		_txtInstructions = new FlxText(xanchor, yanchor, FlxG.width, "Enter your brother's name:", 8);
-		_txtInstructions.setFormat(8, colorDefault, "center");
+		_txtInstructions.setFormat(8, Reg.COLORDEFAULT, "center");
 		yanchor += _txtInstructions.height;
 
 		_sprCharacter = new FlxSprite(FlxG.width / 2 - 8, _txtInstructions.y - 24);
@@ -62,7 +59,7 @@ class NameRivalState extends FlxState
 		_sprCharacter.animation.play("idle");
 
 		_txtName = new FlxText(xanchor, yanchor, FlxG.width, "", 8);
-		_txtName.setFormat(16, colorDefault, "center");
+		_txtName.setFormat(16, Reg.COLORDEFAULT, "center");
 
 		xanchor += 56;  // arbitray spacing number determined to look good
 		yanchor += _txtName.height;
@@ -95,6 +92,7 @@ class NameRivalState extends FlxState
 		add(_grpLetters);
 				
 		FlxG.mouse.visible = false;		
+		SoundManager.initializeSFX();
 		super.create();	
 	}
 	
@@ -114,6 +112,9 @@ class NameRivalState extends FlxState
 	{
 		colorize();
 		
+		if (FlxG.keys.anyJustPressed(Reg.keys["dpad"]))
+			SoundManager.playSound("menu");
+
 		// cursor movement
 		if (FlxG.keys.anyJustPressed(Reg.keys["up"])) 
 		{
@@ -164,6 +165,7 @@ class NameRivalState extends FlxState
 			
 		if (FlxG.keys.anyJustPressed(Reg.keys["confirm"]))
 		{
+			// SoundManager.playSound("menu");
 			if (!_doneSelected && _txtName.text.length < MAX_LENGTH)
 				_txtName.text += _arrLetters[_selected[0]][_selected[1]].text;
 			else if (!_doneSelected && _txtName.text.length == MAX_LENGTH)
@@ -186,12 +188,12 @@ class NameRivalState extends FlxState
 	function colorize():Void
 	{
 		for (txt in _grpLetters)
-			txt.setFormat(8, colorDefault, "center");
+			txt.setFormat(8, Reg.COLORDEFAULT, "center");
 		
 		if (!_doneSelected)
-			_arrLetters[_selected[0]][_selected[1]].setFormat(8, colorSelected, "center");
+			_arrLetters[_selected[0]][_selected[1]].setFormat(8, Reg.COLORSELECTED, "center");
 		else
-			_txtDone.setFormat(8, colorSelected, "center");
+			_txtDone.setFormat(8, Reg.COLORSELECTED, "center");
 	}
 
 	function done():Void

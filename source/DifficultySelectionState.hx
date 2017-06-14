@@ -15,8 +15,6 @@ import flixel.math.FlxMath;
  */
 class DifficultySelectionState extends FlxState
 {
-	var colorDefault = 0xffffff;
-	var colorSelected = 0x0099FF;
 	var selectedSelection = 0;
 	
 	var _txtInstructions:FlxText;
@@ -36,7 +34,7 @@ class DifficultySelectionState extends FlxState
 		var yanchor:Float = 48;  // arbitray spacing number determined to look good
 
 		_txtInstructions = new FlxText(xanchor, yanchor, FlxG.width, "Select a difficulty:", 16);
-		_txtInstructions.setFormat(16, colorDefault, "center");
+		_txtInstructions.setFormat(16, Reg.COLORDEFAULT, "center");
 		yanchor += _txtInstructions.height;
 
 		_grpSelections = new FlxTypedGroup<FlxText>();
@@ -57,6 +55,7 @@ class DifficultySelectionState extends FlxState
 		FlxG.mouse.visible = false;		
 		super.create();	
 
+		SoundManager.initializeSFX();
 		SoundManager.stopMusic();
 	}
 	
@@ -79,20 +78,23 @@ class DifficultySelectionState extends FlxState
 		if (FlxG.keys.anyJustPressed(Reg.keys["right"])) 
 		{
 			selectedSelection++;
+			SoundManager.playSound("menu");
 		}
 		else if (FlxG.keys.anyJustPressed(Reg.keys["left"]))
 		{
 			selectedSelection--;
+			SoundManager.playSound("menu");
 		}
 		if (selectedSelection >= 2)
 			selectedSelection = 1;
 		else if (selectedSelection < 0)
 			selectedSelection = 0;
 			
-		if (FlxG.keys.anyJustPressed(["J"]))
+		if (FlxG.keys.anyJustPressed(Reg.keys["confirm"]))
 		{
 			Reg.flags["difficulty"] = selectedSelection;
 			FlxG.switchState(new NamePlayerState());	
+			// SoundManager.playSound("menu");
 		}
 		super.update(elapsed);
 	}		
@@ -100,13 +102,13 @@ class DifficultySelectionState extends FlxState
 	function colorize():Void
 	{
 		for (item in _grpSelections)
-			item.setFormat(8, colorDefault, "center");
+			item.setFormat(8, Reg.COLORDEFAULT, "center");
 		switch (selectedSelection)
 		{
 			case (0):
-				_txtSelectionNormal.setFormat(8, colorSelected);
+				_txtSelectionNormal.setFormat(8, Reg.COLORSELECTED);
 			case (1):
-				_txtSelectionHard.setFormat(8, colorSelected);
+				_txtSelectionHard.setFormat(8, Reg.COLORSELECTED);
 		}
 	}
 

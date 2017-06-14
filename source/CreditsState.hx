@@ -20,10 +20,8 @@ class CreditsState extends FlxState
 	var colorSelected = 0x0099FF;
 	var selectedSelection = 0;
 	
+	var _sprTitle:FlxSprite;
 	var _txtTwitter:FlxText;
-	var _txtLD:FlxText;
-	var _txtTitle:FlxText;
-	var _txtFurigana:FlxText;
 	var _txtControls:FlxText;
 	
 	var _txtCredits:FlxText;
@@ -36,21 +34,16 @@ class CreditsState extends FlxState
 	{
 		FlxG.camera.bgColor = 0x0000000;
 		
-		_txtTitle = new FlxText(0, 0, FlxG.width, "Pi X RPG", 32);
-		_txtTitle.alignment = "center";
-		_txtTitle.y = (FlxG.height - _txtTitle.height * 3) / 2;
-		_txtTwitter = new FlxText(0, 0, 0, "* Assets that were used without permission are placeholders.", 8);
-		_txtTwitter.y = FlxG.height - _txtTwitter.height;
-		_txtTwitter.alignment = "center";
-		
-		_txtCredits = new FlxText(8, _txtTitle.y + _txtTitle.height + 16, FlxG.width - 8, "- Coding: Bownly\n- Scenario: Bownly\n- Graphics: Bownly, Mishuun, FF7 NES demake team\n- Music: Visager, \"Shadilay\" originally by P.E.P.E, covers by Katie Ross and Tuomas Heikkilä", 8);
+		_sprTitle = new FlxSprite(0, 48);
+		_sprTitle.loadGraphic(AssetPaths.title_logo__png, true, 320, 32);
+
+		_txtCredits = new FlxText(8, _sprTitle.y + _sprTitle.height + 24, FlxG.width - 8, "- Coding: Bownly\n\n- Scenario: Bownly\n\n- Graphics: Bownly, (some tiles adapted from tiles by the FF7 NES demake team)\n\n- Music: Visager, \"Shadilay\" originally by P.E.P.E, covers by Katie Ross and Tuomas Heikkilä", 8);
 		
 		_txtControls = new FlxText(0, 0, FlxG.width, "J = care, K = not care, WASD/Arrows = stay still, m = mute");
 		_txtControls.alignment = "center";
 		
 		add(_txtCredits);		
-		add(_txtTitle);
-		add(_txtTwitter);
+		add(_sprTitle);
 		
 		FlxG.mouse.visible = false;		
 		super.create();	
@@ -72,7 +65,7 @@ class CreditsState extends FlxState
 	override public function update(elapsed:Float):Void
 	{
 		
-		if (FlxG.keys.anyJustPressed(["K"]))
+		if (FlxG.keys.anyJustPressed(Reg.keys["cancel"]))
 			FlxG.switchState(new MenuState());
 		if (FlxG.keys.anyJustPressed(["M"]))
 			FlxG.sound.toggleMuted();

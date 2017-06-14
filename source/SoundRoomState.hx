@@ -17,8 +17,6 @@ import flixel.math.FlxMath;
  */
 class SoundRoomState extends FlxState
 {
-	var colorDefault = 0xffffff;
-	var colorSelected = 0x0099FF;
 	var selectedSelection = 0;
 	var _SPACER = 4;
 	
@@ -176,19 +174,19 @@ class SoundRoomState extends FlxState
 	function colorize():Void
 	{
 		for (level in _grpSelections)
-			level.setFormat(8, colorDefault, "center");
+			level.setFormat(8, Reg.COLORDEFAULT, "center");
 		switch (selectedSelection)
 		{
-			case (0): _txtSelection0.setFormat(8, colorSelected);
-			case (1): _txtSelection1.setFormat(8, colorSelected);
-			case (2): _txtSelection2.setFormat(8, colorSelected);
-			case (3): _txtSelection3.setFormat(8, colorSelected);
-			case (4): _txtSelection4.setFormat(8, colorSelected);
-			case (5): _txtSelection5.setFormat(8, colorSelected);
-			case (6): _txtSelection6.setFormat(8, colorSelected);
-			case (7): _txtSelection7.setFormat(8, colorSelected);
-			case (8): _txtSelection8.setFormat(8, colorSelected);
-			case (9): _txtSelection9.setFormat(8, colorSelected);
+			case (0): _txtSelection0.setFormat(8, Reg.COLORSELECTED);
+			case (1): _txtSelection1.setFormat(8, Reg.COLORSELECTED);
+			case (2): _txtSelection2.setFormat(8, Reg.COLORSELECTED);
+			case (3): _txtSelection3.setFormat(8, Reg.COLORSELECTED);
+			case (4): _txtSelection4.setFormat(8, Reg.COLORSELECTED);
+			case (5): _txtSelection5.setFormat(8, Reg.COLORSELECTED);
+			case (6): _txtSelection6.setFormat(8, Reg.COLORSELECTED);
+			case (7): _txtSelection7.setFormat(8, Reg.COLORSELECTED);
+			case (8): _txtSelection8.setFormat(8, Reg.COLORSELECTED);
+			case (9): _txtSelection9.setFormat(8, Reg.COLORSELECTED);
 		}
 	}
 

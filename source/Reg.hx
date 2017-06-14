@@ -41,9 +41,13 @@ class Reg
 	public static inline var SAVE_NAME:String = "Save file";
 
 	public static var STATE:Int = 0;
-	public static inline var STATE_NORMAL:Int = 0;
-	public static inline var STATE_CUTSCENE:Int = 1;
+	public static inline var STATE_NORMAL:Int     = 0;
+	public static inline var STATE_CUTSCENE:Int   = 1;
 	public static inline var STATE_TRANSITION:Int = 2;
+
+	public static var COLORDEFAULT:Int  = 0xffffff;
+	public static var COLORSELECTED:Int = 0xA5FF7F;
+	public static var COLORBG:Int       = 0x000000;
 
 	public static var pLV:Int = 1;
 	public static var pMP:Int = 60;

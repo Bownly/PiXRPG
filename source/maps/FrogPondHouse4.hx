@@ -18,6 +18,10 @@ class FrogPondHouse4 extends TownState
 	var npcDad:NPC;
 	var npcFroggo:NPC;
 	var npcRival:NPC;
+	var obj0:NPC;
+	var obj1:NPC;
+	var obj2:NPC;
+	var obj3:NPC;
 	var _arrObjs:Array<NPC> = new Array<NPC>();
 	var _events:Map<String, Array<BaseEvent>>;
 
@@ -64,6 +68,18 @@ class FrogPondHouse4 extends TownState
 			grpNPCs.add(npcDad);
 			npcRival = new NPC(256, 256, FlxObject.LEFT, 2, this, "npc 5", true);
 			grpNPCs.add(npcRival);
+			obj0 = new NPC(0, 0, FlxObject.RIGHT, 8, this, "obj 10");
+			obj1 = new NPC(0, 0, FlxObject.RIGHT, 8, this, "obj 11");
+			obj2 = new NPC(0, 0, FlxObject.RIGHT, 8, this, "obj 12");
+			obj3 = new NPC(0, 0, FlxObject.RIGHT, 8, this, "obj 13");
+			obj0.setCanTurn(false);
+			obj1.setCanTurn(false);
+			obj2.setCanTurn(false);
+			obj3.setCanTurn(false);
+			grpNPCs.add(obj0);
+			grpNPCs.add(obj1);
+			grpNPCs.add(obj2);
+			grpNPCs.add(obj3);
 		}
 
 		super.create();
@@ -173,13 +189,17 @@ class FrogPondHouse4 extends TownState
 									new EventFlag("owl_clan_attack", 4)
 									]);		
 
-			npcDad.events = [new EventDialog(Strings.frogpondhouse4Strings[20], this)];
-			npcRival.events = [new EventDialog(Strings.frogpondhouse4Strings[20], this)];
+			obj0.events = [new EventDialog(Strings.frogpondhouse4Strings[20], this)];
+			obj1.events = [new EventDialog(Strings.frogpondhouse4Strings[20], this)];
+			obj2.events = [new EventDialog(Strings.frogpondhouse4Strings[20], this)];
+			obj3.events = [new EventDialog(Strings.frogpondhouse4Strings[20], this)];
 		}
 		else if (Reg.flags["owl_clan_attack"] > 3)  // return to The Pond
 		{
-			npcDad.events = [new EventDialog(Strings.frogpondhouse4Strings[20], this)];
-			npcRival.events = [new EventDialog(Strings.frogpondhouse4Strings[20], this)];
+			obj0.events = [new EventDialog(Strings.frogpondhouse4Strings[20], this)];
+			obj1.events = [new EventDialog(Strings.frogpondhouse4Strings[20], this)];
+			obj2.events = [new EventDialog(Strings.frogpondhouse4Strings[20], this)];
+			obj3.events = [new EventDialog(Strings.frogpondhouse4Strings[20], this)];
 		}
 
 	}
