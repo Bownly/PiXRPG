@@ -281,6 +281,12 @@ class MenuItemSubMenu extends BaseMenuItem
 
 		switch (_menuKind)
 		{
+			case "Coins":
+			{
+				var _menu = new MenuCoins(_coords, _dimens);
+				_substate.add(_menu);
+				_menu.open();
+			}
 			case "Pens":
 			{
 				var _menu = new MenuPens(_coords, _dimens);
@@ -532,7 +538,7 @@ class BaseMenu extends FlxGroup
 			var tempArr:Array<FlxTypedSpriteGroup<FlxSprite>> = new Array<FlxTypedSpriteGroup<FlxSprite>>();
 			for (j in 0..._arr[i].length)
 			{
-				var grp = _arr[i][j].renderLine([coords[0] + _cursor.width + _window.pad*2 + (dimens[0] * (j/_itemDimens)),
+				var grp = _arr[i][j].renderLine([coords[0] + _cursor.width + _window.pad*2 - j*_window.pad + (dimens[0] * (j/_itemDimens)),
 												 coords[1] + i * ITEM_GAP + _window.pad*2]);
 				tempArr.push(grp);
 				_grpEverything.add(grp);
@@ -598,6 +604,69 @@ class BaseMenu extends FlxGroup
 		_cursor.y = _arrSprite[_selected[1]][_selected[0]].y;
 	}
 }
+
+class MenuCoins extends BaseMenu
+{
+	public var itemArray:Array<BaseMenuItem> = [];
+
+	public function new(Coords:Array<Float>, Dimens:Array<Float>)
+	{
+		_grpEverything = new FlxTypedGroup<FlxSprite>();
+
+		var _sprFrog = new FlxSprite(Coords[0] + 14, Coords[1] + 6);
+		_sprFrog.loadGraphic(AssetPaths.item_icons__png, true, 8, 8);
+		_sprFrog.animation.add("idle", [16, 16], 999, true);
+		_sprFrog.animation.play("idle");
+		_grpEverything.add(_sprFrog);
+
+		var _sprFrost = new FlxSprite(_sprFrog.x, _sprFrog.y + 12);
+		_sprFrost.loadGraphic(AssetPaths.item_icons__png, true, 8, 8);
+		_sprFrost.animation.add("idle", [17, 17], 999, true);
+		_sprFrost.animation.play("idle");
+		_grpEverything.add(_sprFrost);
+
+		var _sprFire = new FlxSprite(_sprFrost.x, _sprFrost.y + 12);
+		_sprFire.loadGraphic(AssetPaths.item_icons__png, true, 8, 8);
+		_sprFire.animation.add("idle", [18, 18], 999, true);
+		_sprFire.animation.play("idle");
+		_grpEverything.add(_sprFire);
+
+		var _sprChess = new FlxSprite(_sprFire.x, _sprFire.y + 12);
+		_sprChess.loadGraphic(AssetPaths.item_icons__png, true, 8, 8);
+		_sprChess.animation.add("idle", [19, 19], 999, true);
+		_sprChess.animation.play("idle");
+		_grpEverything.add(_sprChess);
+
+		var _sprGondola = new FlxSprite(_sprChess.x, _sprChess.y + 12);
+		_sprGondola.loadGraphic(AssetPaths.item_icons__png, true, 8, 8);
+		_sprGondola.animation.add("idle", [20], 999, true);
+		_sprGondola.animation.play("idle");
+		_grpEverything.add(_sprGondola);
+
+		// var _sprChess = new FlxSprite(_sprFire.x, _sprFire.y + 12);
+		// _sprChess.loadGraphic(AssetPaths.item_icons__png, true, 8, 8);
+		// _sprChess.animation.add("idle", [17, 17], 999, true);
+		// _sprChess.animation.play("idle");
+		// _grpEverything.add(_sprChess);
+
+
+
+
+		var _txtFrog = new FlxText(_sprFrog.x + _sprFrog.width + 2, _sprFrog.y - 2, Dimens[0] - 16, ""+Reg.flags["coins_frog"], 8);
+		var _txtFrost = new FlxText(_sprFrog.x + _sprFrog.width + 2, _sprFrost.y - 2, Dimens[0] - 16, ""+Reg.flags["coins_frost"], 8);
+		var _txtFire = new FlxText(_sprFrog.x + _sprFrog.width + 2, _sprFire.y - 2, Dimens[0] - 16, ""+Reg.flags["coins_frost"], 8);
+		var _txtChess = new FlxText(_sprFrog.x + _sprFrog.width + 2, _sprChess.y - 2, Dimens[0] - 16, ""+Reg.flags["coins_frost"], 8);
+		var _txtGondola = new FlxText(_sprFrog.x + _sprFrog.width + 2, _sprGondola.y - 2, Dimens[0] - 16, ""+Reg.flags["coins_frost"], 8);
+		_grpEverything.add(_txtFrog);
+		_grpEverything.add(_txtFrost);
+		_grpEverything.add(_txtFire);
+		_grpEverything.add(_txtChess);
+		_grpEverything.add(_txtGondola);
+
+		super(Coords, Dimens, 1, itemArray, "back", 10);
+	}
+}
+
 
 class MenuDialogChoices extends BaseMenu
 {
@@ -728,7 +797,8 @@ class MenuPause extends BaseMenu
 		// y dimens are calculated by BaseMenu.ITEM_GAP (12) * (BaseMenuItem count) + Window.pad*4
 		// item menu's + 4 is kinda arbitrary and was chosen because it looks good
 		_itemArray = [  new MenuItemSubMenu("Items", 9, [SubMenuAnchor[0], SubMenuAnchor[1] + 4], [FlxG.width - SubMenuAnchor[0] - 16, 128], ItemDimens, Sub, "Items"),
-						new MenuItemSubMenu("Pens", 5, SubMenuAnchor, [100, 80], ItemDimens, Sub, "Pens")
+						new MenuItemSubMenu("Pens", 5, SubMenuAnchor, [100, 80], ItemDimens, Sub, "Pens"),
+						new MenuItemSubMenu("Coins", 15, SubMenuAnchor, [64, 80], ItemDimens, Sub, "Coins")
 		];
 		super(Coords, Dimens, ItemDimens, _itemArray, "Close");
 	}

@@ -80,6 +80,7 @@ class DialogChoiceSubState extends FlxSubState
 			FlxG.sound.toggleMuted();
 
 		super.update(elapsed);
+		Reg.playTime += elapsed;
 	}
 
 	public function setMenu(Menu:MenuDialogChoices)

@@ -204,6 +204,9 @@ class NamePlayerState extends FlxState
 		else
 			Strings.stringVars["%pname%"] = _txtName.text;
 
+		if (_txtName.text == "Jason")
+			Strings.stringVars["%Jason%"] = "Tad";
+
 		// goto next state
 		FlxG.switchState(new NameRivalState());
 

@@ -31,6 +31,33 @@ class BaseObstacle extends FlxSprite
 	}
 }
 
+
+// Bat
+class ObsBatSymbol extends BaseObstacle
+{
+	var _coords:Array<Float>;
+	var _board:PicrossBoard;
+	var _square:PicrossSquare;
+
+	public function new(Board:PicrossBoard)
+	{
+		_board = Board;
+		//-28 is a magic number that set the coords to the top left corner of the black battle bg
+		_coords = [_board.coords[0]-28, _board.coords[1]-28];
+		super(_coords);
+		loadGraphic(AssetPaths.bat__png, true, 236, 236);
+		animation.add("idle", [0, 1], 4, true);
+		animation.play("idle");
+		scrollFactor.set();	
+	}
+
+	override public function update(elapsed:Float)
+	{
+		super.update(elapsed);
+	}
+}
+
+
 // Mush
 class ObsHintHider extends BaseObstacle
 {
@@ -44,12 +71,12 @@ class ObsHintHider extends BaseObstacle
 		if (isVert)
 		{
 			super([Coords[0], Coords[1]-50]);
-			loadGraphic(AssetPaths.vial__png, true, 10, 50);
+			loadGraphic(AssetPaths.carrotvert__png, true, 10, 50);
 		}
 		else
 		{
 			super([Coords[0]-50, Coords[1]]);
-			loadGraphic(AssetPaths.vialhorz__png, true, 50, 10);
+			loadGraphic(AssetPaths.carrothorz__png, true, 50, 10);
 		}
 		animation.add("idle", [0], 1, true);
 		animation.add("hurt", [1], 1, true);
@@ -255,6 +282,25 @@ class ObsRevCursor extends BaseObstacle
 		}
 	}
 }
+
+// Reindeer
+class ChristmasLights extends BaseObstacle
+{
+	var _board:PicrossBoard;
+
+	public function new(Board:PicrossBoard)
+	{
+		_board = Board;
+		super([0,0]);
+	}
+
+	override public function update(elapsed:Float)
+	{
+		super.update(elapsed);
+		_board.state = PicrossBoard.CHRISTMASLIGHTS;
+	}
+}
+
 
 
 // some kind of obstacle that splats down on the board, and has to be "wiped" off by the cursor; also vanishes after x seconds

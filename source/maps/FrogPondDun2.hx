@@ -13,7 +13,7 @@ import MenuClasses;
  * @author Bownly
  */
 
-class FrogPondDun2 extends TownState
+class FrogPondDun2 extends Dungeon
 {
 	var shrine:NPC;
 	var npcRival:NPC;
@@ -30,22 +30,22 @@ class FrogPondDun2 extends TownState
 	{
 		grpNPCs = new FlxTypedGroup<NPC>();
 		
-		shrine = new NPC(0, 0, FlxObject.UP, 16, this, "npc shrine");
+		shrine = new NPC(0, 0, FlxObject.UP, Reg.npcs["pedestal1"], this, "npc shrine");
 		grpNPCs.add(shrine);
 		shrine.setCanTurn(false);
 
 		if (Reg.flags["frogponddun"] == 0)
 		{
-			npcRival = new NPC(0, 0, FlxObject.UP, 2, this, "npc 0");
+			npcRival = new NPC(0, 0, FlxObject.UP, Reg.npcs["rival"], this, "npc 0");
 			grpNPCs.add(npcRival);
-			npcMonshou = new NPC(0, 0, FlxObject.UP, 17, this, "npc monshou");
+			npcMonshou = new NPC(0, 0, FlxObject.UP, Reg.npcs["seals1"], this, "npc monshou");
 			npcMonshou.setCanTurn(false);
 			grpNPCs.add(npcMonshou);
 		}
 
 		if (Reg.flags["frogpond_door8"] == 0)
 		{
-			door8 = new NPC(0, 0, FlxObject.DOWN, 9, this, "frogpond_door8");
+			door8 = new NPC(0, 0, FlxObject.DOWN, Reg.npcs["door1"], this, "frogpond_door8");
 			grpNPCs.add(door8);
 		}
 
@@ -67,18 +67,18 @@ class FrogPondDun2 extends TownState
 		{
 			eventManager.addEvents([new EventNPCRemove(door8),
 									new EventFlag("frogpond_door8", 2),
-								 	new EventNPCWalk(player, [[FlxObject.UP, 3]]),
-								 	new EventNPCWalk(npcRival, [[FlxObject.DOWN, 0]]),
+								 	new EventNPCWalk([player], [[[FlxObject.UP, 3]]]),
+								 	new EventNPCWalk([npcRival], [[[FlxObject.DOWN, 0]]]),
 									new EventDialog(Strings.frogponddunStrings[17], this),
-								 	new EventNPCWalk(npcRival, [[FlxObject.LEFT, 1], [FlxObject.UP, 3], 
-								 								[FlxObject.RIGHT, 1], [FlxObject.DOWN, 0]]),
+								 	new EventNPCWalk([npcRival], [[ [FlxObject.LEFT, 1], [FlxObject.UP, 3], 
+								 									[FlxObject.RIGHT, 1], [FlxObject.DOWN, 0]]]),
 									new EventDialog(Strings.frogponddunStrings[18], this),								 	
 								 	new EventNPCRemove(npcRival),
 									new EventDialog(Strings.frogponddunStrings[19], this),
-								 	new EventNPCWalk(player, [[FlxObject.UP, 2]]),
+								 	new EventNPCWalk([player], [[[FlxObject.UP, 2]]]),
 									new EventDialog(Strings.frogponddunStrings[20], this),
 									new EventZaWarudo(0.5),
-									new EventNPCWalk(npcMonshou, [[FlxObject.DOWN, 2]], false),
+									new EventNPCWalk([npcMonshou], [[[FlxObject.DOWN, 2]]], [false]),
 									new EventNPCRemove(npcMonshou),
 									new EventSFXPlay("lvl"),
 									new EventZaWarudo(0.25),

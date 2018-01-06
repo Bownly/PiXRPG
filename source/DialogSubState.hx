@@ -57,6 +57,7 @@ class DialogSubState extends FlxSubState
 			FlxG.sound.toggleMuted();
 
 		super.update(elapsed);
+		Reg.playTime += elapsed;
 	}
 	
 	override public function close():Void

@@ -35,22 +35,22 @@ class FrogPondDocks extends TownState
 
 		if (Reg.flags["owl_clan_attack"] == 4)
 		{
-			npcFroggo = new NPC(256, 256, FlxObject.UP, 0, this, "npc 0");
+			npcFroggo = new NPC(256, 256, FlxObject.UP, Reg.npcs["froggo"], this, "npc 0");
 			grpNPCs.add(npcFroggo);
 			npcFroggo.visible = false;		
 		}
 		if (Reg.flags["owl_clan_attack"] == 5)
 		{
-			npcFroggo = new NPC(256, 256, FlxObject.LEFT, 0, this, "npc 2");
+			npcFroggo = new NPC(256, 256, FlxObject.LEFT, Reg.npcs["froggo"], this, "npc 2");
 			grpNPCs.add(npcFroggo);
 		}
 		else
 		{
-			npcDoor = new NPC(0, 0, FlxObject.DOWN, 9, this, "npc door");
+			npcDoor = new NPC(0, 0, FlxObject.DOWN, Reg.npcs["door1"], this, "npc door");
 			grpNPCs.add(npcDoor);	
 		}
 
-		npcBoat = new NPC(0, 0, FlxObject.RIGHT, 12, this, "npc 1");
+		npcBoat = new NPC(0, 0, FlxObject.RIGHT, Reg.npcs["boat"], this, "npc 1");
 		grpNPCs.add(npcBoat);
 
 
@@ -89,18 +89,18 @@ class FrogPondDocks extends TownState
 
 		if (Reg.flags["owl_clan_attack"] == 4)
 			npcDoor.events = [new EventNPCAdd(npcFroggo, grpNPCs),
-							  new EventNPCWalk(npcFroggo, [[FlxObject.RIGHT, 1], [FlxObject.LEFT, 0]]),
+							  new EventNPCWalk([npcFroggo], [[[FlxObject.RIGHT, 1], [FlxObject.LEFT, 0]]]),
 							  new EventDialog(Strings.frogponddocksStrings[1], this),  // hold on a moment, I'll have to unlock the door
-							  new EventNPCWalk(player, [[FlxObject.LEFT, 1], [FlxObject.RIGHT, 0]]),
-							  new EventNPCWalk(npcFroggo, [[FlxObject.LEFT, 1], [FlxObject.UP, 0]]),
+							  new EventNPCWalk([player], [[[FlxObject.LEFT, 1], [FlxObject.RIGHT, 0]]]),
+							  new EventNPCWalk([npcFroggo], [[[FlxObject.LEFT, 1], [FlxObject.UP, 0]]]),
 							  new EventZaWarudo(0.5),
 							  new EventNPCRemove(npcDoor),
-							  new EventNPCWalk(npcFroggo, [[FlxObject.LEFT, 0]]),
+							  new EventNPCWalk([npcFroggo], [[[FlxObject.LEFT, 0]]]),
 							  new EventZaWarudo(0.5),
 							  new EventDialog(Strings.frogponddocksStrings[2], this),  // but first, I want to test you
 							  new EventBattle([new EnemyFroggo()], this, "owl_clan_attack", 5),
 							  new EventDialog(Strings.frogponddocksStrings[3], this),  // good job kid, peace out, door removed
-							  new EventNPCWalk(npcFroggo, [[FlxObject.RIGHT, 1], [FlxObject.LEFT, 0]]),
+							  new EventNPCWalk([npcFroggo], [[[FlxObject.RIGHT, 1], [FlxObject.LEFT, 0]]]),
 							];
 		else if (Reg.flags["owl_clan_attack"] == 5)
 		{
@@ -117,20 +117,20 @@ class FrogPondDocks extends TownState
 		{
 			eventManager.addEvents([new EventMusicStop(),
 									new EventMusicPlay("shadilay"),
-									new EventNPCWalk(player, [[FlxObject.UP, 1]]),
+									new EventNPCWalk([player], [[[FlxObject.UP, 1]]]),
 									new EventNPCRemove(player),
-									new EventNPCWalk(npcFroggo, [[FlxObject.UP, 0]]),
-									new EventNPCWalk(npcBoat, [[FlxObject.RIGHT, 12]]),
+									new EventNPCWalk([npcFroggo], [[[FlxObject.UP, 0]]]),
+									new EventNPCWalk([npcBoat], [[[FlxObject.RIGHT, 12]]]),
 									new EventZaWarudo(1.7),
-									new EventNPCWalk(player, [[FlxObject.DOWN, 8]]),
+									new EventNPCWalk([player], [[[FlxObject.DOWN, 8]]]),
 									new EventZaWarudo(1.95),
-									new EventNPCWalk(npcFroggo, [[FlxObject.DOWN, 0]]),
+									new EventNPCWalk([npcFroggo], [[[FlxObject.DOWN, 0]]]),
 									new EventZaWarudo(1.1),
-									new EventNPCWalk(npcFroggo, [[FlxObject.DOWN, 4], [FlxObject.LEFT, 1], 
-																 [FlxObject.DOWN, 2]]),
+									new EventNPCWalk([npcFroggo], [[[FlxObject.DOWN, 4], [FlxObject.LEFT, 1], 
+																									 [FlxObject.DOWN, 2]]]),
 									new EventNPCRemove(npcFroggo),
 									new EventZaWarudo(1.35),
-									new EventNPCWalk(player, [[FlxObject.UP, 44]]),
+									new EventNPCWalk([player], [[[FlxObject.UP, 44]]]),
 									new EventZaWarudo(3),
 									new EventTextShowOrHide(_txtPrologue, true),
 									// new EventTextShowOrHide(_txtThanks, true),
@@ -141,7 +141,7 @@ class FrogPondDocks extends TownState
 		}
 		else if (Reg.flags["end_prologue"] == -1)
 		{
-			eventManager.addEvents([new EventNPCWalk(player, [[FlxObject.DOWN, 1]]),
+			eventManager.addEvents([new EventNPCWalk([player], [[[FlxObject.DOWN, 1]]]),
 									new EventFlag("end_prologue", 0)
 									]);
 		}

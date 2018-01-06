@@ -205,7 +205,7 @@ class NameRivalState extends FlxState
 			Strings.stringVars["%rivalname%"] = _txtName.text;
 
 		// goto next state
-		Reg.goToNextLevel(1, "mchouse-1.tmx");
+		Reg.goToNextLevel(1, "worldmap.tmx");
 
 	}
 

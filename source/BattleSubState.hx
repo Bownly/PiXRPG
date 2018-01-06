@@ -50,7 +50,8 @@ class BattleSubState extends FlxSubState
 	
 	var _grpTexts:FlxTypedGroup<FlxText>;
 	var _grpSprites:FlxTypedGroup<FlxSprite>;
-	var _grpObstacles:FlxTypedGroup<ObstacleClasses.BaseObstacle>;
+	var _grpObsBot:FlxTypedGroup<ObstacleClasses.BaseObstacle>;
+	var _grpObsTop:FlxTypedGroup<ObstacleClasses.BaseObstacle>;
 	var _grpPicrossSquaresBoards:FlxTypedGroup<PicrossBoard>;
 	var _arrPicrossBoards:Array<PicrossBoard>;
 	var _curBoard:PicrossBoard;
@@ -73,6 +74,7 @@ class BattleSubState extends FlxSubState
 	var _arrEnemies:Array<BaseEnemy>;
 	var _dimens:Array<Int>;
 	var _winCount:Int = 0;
+	var _didWin:Bool = false;
 	
 	var _sprTransition:FlxSprite;
 	var _transitionTimer:Float = 1;
@@ -230,9 +232,10 @@ class BattleSubState extends FlxSubState
 			}
 			
 			// if you win
-			if (winCheck() == true || _WINCHEAT == true)
+			if (_didWin == true || _WINCHEAT == true)
 			{
-				_grpObstacles.clear();
+				_grpObsBot.clear();
+				_grpObsTop.clear();
 
 				if (battleState != STATE_VICTORY && battleState != STATE_EXP)
 				{
@@ -275,7 +278,8 @@ class BattleSubState extends FlxSubState
 					{
 						_arrPicrossBoards[_enemyNum].flipActive();
 						_arrEnemies[_enemyNum].removeAllObstacles();
-						_grpObstacles.clear();
+						_grpObsBot.clear();
+						_grpObsTop.clear();
 						_enemyNum += 1;
 						setUpMenu("Next round");
 						battleState = STATE_MENU;
@@ -289,6 +293,7 @@ class BattleSubState extends FlxSubState
 			}
 		}
 		super.update(elapsed);
+		Reg.playTime += elapsed;
 	}
 	
 	override public function close():Void
@@ -309,14 +314,27 @@ class BattleSubState extends FlxSubState
 			if (Guess != PEN_IDLE)
 				_lastMarkedSquare = _cell;
 			var result:Int = _cell.turnOnOrOff(Guess);
+
+			var tempColor = FlxColor.WHITE;
+			var tempGray = FlxColor.GRAY;
+			if (_curBoard.state == PicrossBoard.CHRISTMASLIGHTS)
+			{
+				var colorArr = [0xFF006E, FlxColor.ORANGE, FlxColor.PINK, FlxColor.YELLOW, 
+								0x4CFF00, 0x65ECFF, 0x8343A2];
+				tempColor = colorArr[FlxG.random.int(0, 6)];
+				tempGray = colorArr[FlxG.random.int(0, 6)];
+				
+			}
+
 			switch (result)
 			{
 				case PicrossSquare.CORRECT:
 				{
 					_arrEnemies[_enemyNum].onSquareFilled();
 					// _arrPicrossBoards[_enemyNum].enemy.onSquareFilled();
-					_arrPicrossBoards[_enemyNum].checkRowCorrect(_cell.rowID);
-					_arrPicrossBoards[_enemyNum].checkColCorrect(_cell.colID);
+					_arrPicrossBoards[_enemyNum].checkRowCorrect(_cell.rowID, tempColor, tempGray);
+					_arrPicrossBoards[_enemyNum].checkColCorrect(_cell.colID, tempColor, tempGray);
+					_didWin = winCheck();
 					return 1;
 				}
 				case PicrossSquare.GOODHURT:
@@ -324,8 +342,9 @@ class BattleSubState extends FlxSubState
 					_arrEnemies[_enemyNum].onSquareFilled();
 					_arrEnemies[_enemyNum].onSquareHurt();
 					takeDamage();
-					_arrPicrossBoards[_enemyNum].checkRowCorrect(_cell.rowID);
-					_arrPicrossBoards[_enemyNum].checkColCorrect(_cell.colID);
+					_arrPicrossBoards[_enemyNum].checkRowCorrect(_cell.rowID, tempColor, tempGray);
+					_arrPicrossBoards[_enemyNum].checkColCorrect(_cell.colID, tempColor, tempGray);
+					_didWin = winCheck();
 					return 1;
 				}
 				case PicrossSquare.HURT:
@@ -402,7 +421,8 @@ class BattleSubState extends FlxSubState
 		_grpSprites = new FlxTypedGroup<FlxSprite>();
 		_grpPicrossSquaresBoards = new FlxTypedGroup<PicrossBoard>();
 		_grpCursor = new FlxTypedGroup<FlxSprite>();
-		_grpObstacles = new FlxTypedGroup<ObstacleClasses.BaseObstacle>();
+		_grpObsBot = new FlxTypedGroup<ObstacleClasses.BaseObstacle>();
+		_grpObsTop = new FlxTypedGroup<ObstacleClasses.BaseObstacle>();
 		_grpMenus = new FlxTypedGroup<BaseMenu>();
 
 		// remove(_sprTransition);
@@ -416,10 +436,12 @@ class BattleSubState extends FlxSubState
 		
 		_sprPlayer = new FlxSprite(xanchor, _txtMP.y + _txtMP.height);
 		_sprPlayer.loadGraphic("assets/images/mctest.png", true, 16, 16);
-		_sprPlayer.animation.add("idle_1", [2, 3], 4, true);
-		_sprPlayer.animation.add("dead_1", [8, 9], 4, true);
-		_sprPlayer.animation.add("idle_0", [12, 13], 4, true);
-		_sprPlayer.animation.add("dead_0", [18, 19], 4, true);
+		_sprPlayer.animation.add("idle_0", [2, 3], 4, true);
+		_sprPlayer.animation.add("dead_0", [8, 9], 4, true);
+		_sprPlayer.animation.add("idle_1", [12, 13], 4, true);
+		_sprPlayer.animation.add("dead_1", [18, 19], 4, true);
+		_sprPlayer.animation.add("idle_2", [22, 23], 4, true);
+		_sprPlayer.animation.add("dead_2", [28, 29], 4, true);
 		_sprPlayer.animation.play("idle_" + Reg.flags["p_hood"]);
 		
 		_txtVS = new FlxText(_sprPlayer.x + _sprPlayer.width, _sprPlayer.y + 8, 16, "vs", 8);
@@ -496,7 +518,7 @@ class BattleSubState extends FlxSubState
 			var picross = new PicrossBoard(e.dimens, e.color, e.maxMP, [xanchor, yanchor]);
 	   		_arrPicrossBoards.push(picross);
 	   		e.setBoard(picross);
-	   		e.setGrpObs(_grpObstacles);
+	   		e.setGrpObs(_grpObsBot, _grpObsTop);
 		}
 
    		for(pc in _arrPicrossBoards)
@@ -513,10 +535,11 @@ class BattleSubState extends FlxSubState
 		_grpTexts.add(_txtVS);
 		_grpTexts.add(_txtMessage);
 		
+		add(_grpPicrossSquaresBoards);
+		add(_grpObsBot);
 		add(_grpSprites);
 		add(_grpTexts);
-		add(_grpPicrossSquaresBoards);
-		add(_grpObstacles);
+		add(_grpObsTop);
 		add(_grpCursor);  
 	
 		// sets all of the elements to stay centered to the current camera location
@@ -715,7 +738,7 @@ class BattleSubState extends FlxSubState
 		refreshCursorsPos();
 
 		for (e in _arrEnemies)
-	   		e.setGrpObs(_grpObstacles);
+	   		e.setGrpObs(_grpObsBot, _grpObsTop);
 
 		_sprEnemy =_arrEnemies[_enemyNum].sprite;
 		_sprEnemy.x = _sprPlayer.x + _sprPlayer.width * 2;
@@ -786,7 +809,7 @@ class BattleSubState extends FlxSubState
 	{
 		for (row in 0..._arrPicrossBoards[_enemyNum].dimens[0])
 		{
-			if (_arrPicrossBoards[_enemyNum].checkRowCorrect(row) == false)
+			if (_arrPicrossBoards[_enemyNum].checkRowCorrect(row, false) == false)
 			{
 				return false;
 			}

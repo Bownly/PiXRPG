@@ -33,16 +33,19 @@ class FrogPond extends TownState
 	override public function create():Void
 	{
 		grpNPCs = new FlxTypedGroup<NPC>();
-		npc1 = new NPC(336, 32, FlxObject.DOWN, 3, this, "npc 1");
-		npcGondola = new NPC(0, 0, FlxObject.DOWN, 13, this, "npc gondola");
-		npcSign1 = new NPC(0, 0, FlxObject.UP, 15, this, "npc sign 0");
-		npcSign2 = new NPC(0, 0, FlxObject.DOWN, 15, this, "npc sign 1");
-		npcSign3 = new NPC(0, 0, FlxObject.DOWN, 15, this, "npc sign 2");
+		npc1 = new NPC(336, 32, FlxObject.DOWN, Reg.npcs["frogman"], this, "npc 1");
+		npcGondola = new NPC(0, 0, FlxObject.DOWN, Reg.npcs["gondolagirl"], this, "npc gondola");
+		npcSign1 = new NPC(0, 0, FlxObject.UP, Reg.npcs["sign1"], this, "npc sign 0");
+		npcSign2 = new NPC(0, 0, FlxObject.DOWN, Reg.npcs["sign1"], this, "npc sign 1");
+		npcSign3 = new NPC(0, 0, FlxObject.DOWN, Reg.npcs["sign1"], this, "npc sign 2");
+		npcSign1.setCanTurn(false);
+		npcSign2.setCanTurn(false);
+		npcSign3.setCanTurn(false);
 
 		if (Reg.flags["first_froggo"] == 0)
 		{
-			npcFroggo = new NPC(256, 256, FlxObject.DOWN, 0, this, "npc 0");
-			npcRival = new NPC(0, 0, FlxObject.DOWN, 2, this, "npc 2");
+			npcFroggo = new NPC(256, 256, FlxObject.DOWN, Reg.npcs["froggo"], this, "npc 0");
+			npcRival = new NPC(0, 0, FlxObject.DOWN, Reg.npcs["rival"], this, "npc 2");
 			grpNPCs.add(npcFroggo);
 			grpNPCs.add(npcRival);
 			npcRival.visible = false;
@@ -52,7 +55,7 @@ class FrogPond extends TownState
 		grpNPCs.add(npcSign1);
 		grpNPCs.add(npcSign2);
 		grpNPCs.add(npcSign3);
-		// grpNPCs.add(npcGondola);
+		grpNPCs.add(npcGondola);
 
 		super.create();
 
@@ -92,15 +95,15 @@ class FrogPond extends TownState
 			if (Reg.flags["first_froggo"] == 0)  // first meeting
 			{
 				npcFroggo.events = [new EventNPCAdd(npcRival, grpNPCs),
-									new EventNPCWalk(npcRival, [[FlxObject.LEFT, 1], [FlxObject.UP, 0]]),
+									new EventNPCWalk([npcRival], [[[FlxObject.LEFT, 1], [FlxObject.UP, 0]]]),
 									new EventDialog(Strings.frogpondStrings[0], this),
 									new EventFlag("first_froggo", 1),
-									new EventNPCWalk(npcFroggo, [[FlxObject.UP, 1]]),
+									new EventNPCWalk([npcFroggo], [[[FlxObject.UP, 1]]]),
 								 	new EventNPCRemove(npcFroggo),
-								 	new EventNPCWalk(npcRival, [[FlxObject.RIGHT, 0]]),
-								 	new EventNPCWalk(player, [[FlxObject.LEFT, 0]]),
+								 	new EventNPCWalk([npcRival], [[[FlxObject.RIGHT, 0]]]),
+								 	new EventNPCWalk([player], [[[FlxObject.LEFT, 0]]]),
 									new EventDialog(Strings.frogpondStrings[6], this),
-								 	new EventNPCWalk(npcRival, [[FlxObject.RIGHT, 1]]),
+								 	new EventNPCWalk([npcRival], [[[FlxObject.RIGHT, 1]]]),
 								 	new EventNPCRemove(npcRival)
 								 	];
 			}

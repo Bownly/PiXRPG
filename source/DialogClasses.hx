@@ -24,8 +24,8 @@ class DialogLine
 	public function getFace():Int
 	{
 		var i = face;
-		if (i <= 7 && Reg.flags["p_hood"] == 1)  // 7 = the index of the last mc sans hood face
-			i += 8;  // 8 is the amount of faces per character
+		if (i <= 7 && Reg.flags["p_hood"] >= 1)  // 7 = the index of the last mc sans hood face
+			i += 8 * Reg.flags["p_hood"];  // 8 is the amount of faces per character
 		i = i*2;  // 2 frames of animation per face
 		return i;
 	}
@@ -159,7 +159,7 @@ class DialogSpriteGroup extends FlxGroup
 		else
 			_sprFaceIcon.animation.play("stop");
 
-		if (_canControl && FlxG.keys.anyJustPressed(["J", "SPACE", "W", "A", "S", "D", "UP", "DOWN", "LEFT", "RIGHT", "K"]))
+		if (_canControl && FlxG.keys.anyJustPressed(Reg.keys["any"]))
 		{
 			if (_curLine.length > 0)
 			{

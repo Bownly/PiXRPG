@@ -11,9 +11,10 @@ import EventClasses;
  */
 class Entity extends FlxSprite
 {
-	private var ANIMATION_SPEED:Int = 3;
+	private var ANIMATION_SPEED:Int = 0;
 	private static inline var TILE_SIZE:Int = 16;
-	private static inline var MOVEMENT_SPEED:Int = 1;
+	public static inline var WALK_SPEED:Int = 1;
+	public static inline var RUN_SPEED:Int = 2;
 	
 	var _state:TownState;
 
@@ -25,7 +26,12 @@ class Entity extends FlxSprite
 		facing = Direction;
 		immovable = true;
 	}
-	
+
+	override public function update(elapsed:Float):Void
+	{
+		animation.curAnim.curFrame = (Std.int(Reg.playTime * 2)) % 2;
+	}
+
 	public function setFacing(Dir:Int):Void
 	{
 		switch(Dir)

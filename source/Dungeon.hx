@@ -3,25 +3,19 @@ import flixel.FlxG;
 
 /**
  * ...
- * @author ...
+ * @author Bownly
  */
 class Dungeon extends TownState
 {
 
-	public function new() 
+	public function new(EntranceID:Int, MapName:String, ?SongName:String, ?Dungeon:Bool) 
 	{
-		super();
-		
-		levelName = "assets/levels/dungeon.oel";
-		tileName = "assets/images/tiles_dungeon.png";
-		nonCollidableTiles = [0, 1, 2, 3, 4, 5, 6];
-		worldMapPosX = 32;
-		worldMapPosY = 384;	
+		super(EntranceID, MapName, SongName, Dungeon);
+		levelType = TownState.DUNGEON;
 	}
 	
 	override public function create():Void 
 	{
 		super.create();
-		songTownsong = FlxG.sound.load("assets/music/quiet.wav");
 	}
 }

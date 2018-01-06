@@ -95,8 +95,8 @@ class MenuSubState extends FlxSubState
 			trace("TODO: clean up this code later");
 		else
 		{
-			var win2H = 44;
-			_menu = new MenuPause(  [wpad, wpad + (winH + wpad)], 
+			var win2H = 56;
+			_menu = new MenuPause(  [wpad, wpad + 6 + winH],  // the 6 is an arbitrary amount that looks good
 									[winW, win2H], 1, 
 									[wpad*2 + winW, wpad], 
 									_state, this);

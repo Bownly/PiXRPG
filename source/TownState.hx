@@ -30,6 +30,12 @@ import MenuClasses;
  */
 class TownState extends FlxState
 {
+	public static inline var OVERWORLD:Int = 0;
+	public static inline var BATTLE:Int = 1;
+	public static inline var DUNGEON:Int = 2;
+	public static inline var UNIVERSAL:Int = 3;
+	public var levelType:Int = 0;
+
 	public var encounterDecrementer:Int = 0;
 	public var encounterLowerBound:Int = 0;
 	public var encounterUpperBound:Int = 0;
@@ -71,7 +77,6 @@ class TownState extends FlxState
 	override public function create():Void
 	{
 		eventManager = new EventClasses.EventManager(this);
-		// songTownsong = FlxG.sound.load("assets/music/townsong.wav");
 		
 		Reg.resetEncounterCounter(encounterLowerBound, encounterUpperBound);
 		
@@ -83,14 +88,11 @@ class TownState extends FlxState
 
 		FlxG.camera.bgColor = 0xffffffff;
 		FlxG.camera.follow(player);		
-		// FlxG.camera.pixelPerfectRender = false;
 		FlxG.mouse.visible = false;		
 
-		// does this fix it????
 		FlxG.camera.pixelPerfectRender = true;
-		// FlxG.camera.pixelPerfectPosition = false;
 
-FlxG.scaleMode = new PixelPerfectScaleMode();
+		FlxG.scaleMode = new PixelPerfectScaleMode();
 		super.create();
 
 		bgColor = 0xffffffff;  // hwite
@@ -119,6 +121,9 @@ FlxG.scaleMode = new PixelPerfectScaleMode();
 
 		SoundManager.initializeSFX();
 		playSong();
+
+		Reg.curLevelType = levelType;
+		Reg.curLevelExitID = edgeExitNextEntID;
 	}
 	
 	/**
@@ -134,6 +139,7 @@ FlxG.scaleMode = new PixelPerfectScaleMode();
 	{
 		eventManager.update(elapsed);
 		super.update(elapsed);	
+		Reg.playTime += elapsed;
 
 		if (Reg.STATE != Reg.STATE_TRANSITION)
 		{
@@ -147,8 +153,13 @@ FlxG.scaleMode = new PixelPerfectScaleMode();
 				var map = tileMap;
 				var val:Int = encounterMap.tileArray[Std.int(player.y/16 * (width+16)/16 + player.x/16)];
 
-				sub = new BattleSubState(this, calculateEncounter(val));
-				this.openSubState(sub);
+				if (val != 16)
+				{
+					sub = new BattleSubState(this, calculateEncounter(val));
+					this.openSubState(sub);
+				}
+				else
+					Reg.resetEncounterCounter(encounterLowerBound, encounterUpperBound);
 			}
 
 			if (Reg.STATE == Reg.STATE_NORMAL)
@@ -230,7 +241,13 @@ FlxG.scaleMode = new PixelPerfectScaleMode();
 			case 4: arr.push(new EnemyClasses.EnemyFlower());
 			case 5: arr.push(new EnemyClasses.EnemyTadpole());
 			case 6: arr.push(new EnemyClasses.EnemyFrog());
+			case 7: arr.push(new EnemyClasses.EnemyRabbit());
+			case 8: arr.push(new EnemyClasses.EnemyReindeer());
+			case 15: arr.push(new EnemyClasses.EnemyTest());
+			case 16: arr.push(new EnemyClasses.EnemyTest());
 		}
+		trace("VAL:         " + Val);
+		trace("enemy arr:   " + arr);
 		return arr;
 	}
 

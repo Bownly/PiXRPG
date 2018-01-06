@@ -30,15 +30,15 @@ class FrogPondHouse2 extends TownState
 	override public function create():Void
 	{
 		grpNPCs = new FlxTypedGroup<NPC>();
-		npc = new NPC(256, 256, FlxObject.LEFT, 3, this, "npc 0");
-		npcGondola = new NPC(0, 0, FlxObject.DOWN, 13, this, "npc 1");
+		npc = new NPC(256, 256, FlxObject.LEFT, Reg.npcs["frogman"], this, "npc 0");
+		npcGondola = new NPC(0, 0, FlxObject.DOWN, Reg.npcs["gondolagirl"], this, "npc 1");
 		grpNPCs.add(npc);
 		grpNPCs.add(npcGondola);
 		
-		obj0 = new NPC(0, 0, FlxObject.RIGHT, 8, this, "obj 0");
-		obj1 = new NPC(0, 0, FlxObject.RIGHT, 8, this, "obj 1");
-		obj2 = new NPC(0, 0, FlxObject.RIGHT, 8, this, "obj 2");
-		obj3 = new NPC(0, 0, FlxObject.RIGHT, 8, this, "obj 3");
+		obj0 = new NPC(0, 0, FlxObject.RIGHT, Reg.npcs["pedestal2"], this, "obj 0");
+		obj1 = new NPC(0, 0, FlxObject.RIGHT, Reg.npcs["pedestal2"], this, "obj 1");
+		obj2 = new NPC(0, 0, FlxObject.RIGHT, Reg.npcs["pedestal2"], this, "obj 2");
+		obj3 = new NPC(0, 0, FlxObject.RIGHT, Reg.npcs["pedestal2"], this, "obj 3");
 		obj0.setCanTurn(false);
 		obj1.setCanTurn(false);
 		obj2.setCanTurn(false);

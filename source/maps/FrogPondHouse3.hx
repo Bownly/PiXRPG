@@ -24,7 +24,7 @@ class FrogPondHouse3 extends TownState
 	override public function create():Void
 	{
 		grpNPCs = new FlxTypedGroup<NPC>();
-		npc = new NPC(256, 256, FlxObject.DOWN, 3, this, "npc");
+		npc = new NPC(256, 256, FlxObject.DOWN, Reg.npcs["frogman"], this, "npc");
 		grpNPCs.add(npc);
 
 		super.create();

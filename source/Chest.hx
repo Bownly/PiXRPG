@@ -12,11 +12,9 @@ import EventClasses;
 class Chest extends NPC
 {
 	
-	public function new(X:Float=0, Y:Float=0, Dir:Int, State:TownState, Flag:String) 
+	public function new(X:Float=0, Y:Float=0, Dir:Int, Species, State:TownState, Flag:String) 
 	{
-		// the first chest sprite is the 10th npc, hence the 10 value below
-		var _species = 10;
-		super(X, Y, Dir, _species, State, Flag);
+		super(X, Y, Dir, Species, State, Flag);
 	}
 	
 	
@@ -44,7 +42,7 @@ class Chest extends NPC
 		var o = 10;  // number of sprites per char
 		loadGraphic(AssetPaths.NPC__png, true, 16, 16);
 		animation.add("0", [buffer + o * _species], 3, true);
-		animation.add("1", [buffer + o * (_species + 1)], 3, true);
+		animation.add("1", [buffer + o * (_species + 2)], 3, true);
 		setAnim();
 	}
 

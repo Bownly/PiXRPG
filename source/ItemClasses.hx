@@ -56,13 +56,15 @@ class BaseItem
 	public var desc:String;
 	public var iconID:Int;
 	public var canUseOutOfBattle:Bool = false;
+	public var type:Int;
 
-	public function new(Name:String, Desc:String, IconID:Int) 
+	public function new(Name:String, Desc:String, IconID:Int, Type:Int) 
 	{
 		isUsed = false;
 		name = Name;
 		desc = Desc;
 		iconID = IconID;
+		type = Type;
 	}
 
 	public function use()
@@ -77,12 +79,12 @@ class BaseItem
 
 class ItemHealing extends BaseItem
 {
-	public var _val:Int;
+	var _val:Int;
 
 	public function new(Name:String, Desc:String, IconID:Int, Val:Int)
 	{
 		_val = Val;
-		super(Name, Desc, IconID);
+		super(Name, Desc, IconID, TownState.UNIVERSAL);
 		canUseOutOfBattle = true;
 	}
 
@@ -92,8 +94,21 @@ class ItemHealing extends BaseItem
 		super.use();
 		InventoryManager.removeItem();
 	}
+}
 
-	
+class ItemEscapeRope extends BaseItem
+{
+	public function new()
+	{
+		var n = "Escape Rope";
+		super(n, Strings.itemDescriptions[n], 23, TownState.DUNGEON);
+	}
 
+	override public function use()
+	{
+		super.use();
+		InventoryManager.removeItem();
+		Reg.goToNextLevel(Reg.curLevelExitID, "worldmap.tmx");
+	}
 }
 

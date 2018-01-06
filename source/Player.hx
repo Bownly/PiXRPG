@@ -38,14 +38,18 @@ class Player extends Entity
 		facing = Facing;
 		
 		loadGraphic(AssetPaths.mctest__png, true, 16, 16);
-		animation.add("up_0", [10, 11], ANIMATION_SPEED, true);
-		animation.add("dn_0", [12, 13], ANIMATION_SPEED, true);
-		animation.add("lf_0", [14, 15], ANIMATION_SPEED, true);
-		animation.add("rt_0", [16, 17], ANIMATION_SPEED, true);
-		animation.add("up_1", [0, 1], ANIMATION_SPEED, true);
-		animation.add("dn_1", [2, 3], ANIMATION_SPEED, true);
-		animation.add("lf_1", [4, 5], ANIMATION_SPEED, true);
-		animation.add("rt_1", [6, 7], ANIMATION_SPEED, true);
+		animation.add("up_0", [0, 1], ANIMATION_SPEED, true);
+		animation.add("dn_0", [2, 3], ANIMATION_SPEED, true);
+		animation.add("lf_0", [4, 5], ANIMATION_SPEED, true);
+		animation.add("rt_0", [6, 7], ANIMATION_SPEED, true);
+		animation.add("up_1", [10, 11], ANIMATION_SPEED, true);
+		animation.add("dn_1", [12, 13], ANIMATION_SPEED, true);
+		animation.add("lf_1", [14, 15], ANIMATION_SPEED, true);
+		animation.add("rt_1", [16, 17], ANIMATION_SPEED, true);
+		animation.add("up_2", [20, 21], ANIMATION_SPEED, true);
+		animation.add("dn_2", [22, 23], ANIMATION_SPEED, true);
+		animation.add("lf_2", [24, 25], ANIMATION_SPEED, true);
+		animation.add("rt_2", [26, 27], ANIMATION_SPEED, true);
 		
 		setFacing(facing);
 	}
@@ -59,6 +63,7 @@ class Player extends Entity
 			// Move the player to the next block
 			if (isMoving)
 			{
+
 				switch (facing)
 				{
 					case FlxObject.UP:
@@ -70,19 +75,20 @@ class Player extends Entity
 					case FlxObject.RIGHT:
 						x += MOVEMENT_SPEED;
 				}
+				// Check if the player has now reached the next block
+				if (((Math.ceil(x) % TILE_SIZE == 0) || (Math.floor(x) % TILE_SIZE == 0)) &&
+					((Math.ceil(y) % TILE_SIZE == 0) || (Math.floor(y) % TILE_SIZE == 0)))
+				{
+					isMoving = false;
+					x = Math.round(x);
+					y = Math.round(y);
+				}
 			}
 			
-			// Check if the player has now reached the next block
-			if (((Math.ceil(x) % TILE_SIZE == 0) || (Math.floor(x) % TILE_SIZE == 0)) &&
-				((Math.ceil(y) % TILE_SIZE == 0) || (Math.floor(y) % TILE_SIZE == 0)))
-			{
-				isMoving = false;
-				x = Math.round(x);
-				y = Math.round(y);
-			}
+
 		
 			// Check for WASD or arrow key presses and move accordingly
-			if (!isMoving)
+			else
 			{
 				if (FlxG.keys.anyPressed(Reg.keys["up"]))
 				{
@@ -90,7 +96,8 @@ class Player extends Entity
 					canMove = collisionCheck(facing);
 					if (canMove)
 						moveTo(FlxObject.UP);
-					animation.play("up_" + hasHood);
+					animation.play("up_" + hasHood, animation.frameIndex%2);
+
 				}
 				else if (FlxG.keys.anyPressed(Reg.keys["down"]))
 				{
@@ -98,7 +105,9 @@ class Player extends Entity
 					canMove = collisionCheck(facing);
 					if (canMove)
 						moveTo(FlxObject.DOWN);
-					animation.play("dn_" + hasHood);
+					animation.play("dn_" + hasHood, animation.frameIndex%2);
+				trace(" animation.frameIndex:  " +  animation.frameIndex);
+
 				}
 				else if (FlxG.keys.anyPressed(Reg.keys["left"]))
 				{
@@ -106,7 +115,8 @@ class Player extends Entity
 					canMove = collisionCheck(facing);
 					if (canMove)
 						moveTo(FlxObject.LEFT);
-					animation.play("lf_" + hasHood);
+					animation.play("lf_" + hasHood, animation.frameIndex%2);
+				trace(" animation.frameIndex:  " +  animation.frameIndex);
 				}
 				else if (FlxG.keys.anyPressed(Reg.keys["right"]))
 				{
@@ -114,7 +124,7 @@ class Player extends Entity
 					canMove = collisionCheck(facing);
 					if (canMove)
 						moveTo(FlxObject.RIGHT);
-					animation.play("rt_" + hasHood);
+					animation.play("rt_" + hasHood, animation.frameIndex);
 				}
 				
 				// interaction
@@ -122,49 +132,75 @@ class Player extends Entity
 					interactionCheck(facing);
 
 				// // todo: debug stuff, remove before shipping
-				// if (FlxG.keys.anyJustPressed(["P"]))
-				// {
-				// 	FlxG.switchState(new MenuState());
-				// }
-				// if (FlxG.keys.anyJustPressed(["H"]))
-				// {
-				// 	if (Reg.flags["p_hood"] == 0)
-				// 		Reg.flags["p_hood"] = 1;
-				// 	else
-				// 		Reg.flags["p_hood"] = 0;
-				// 	hasHood = Reg.flags["p_hood"];
-				// 	_state.eventManager.addEvents([new EventClasses.EventSFXPlay("lvl")]);
-				// }
-				// if (FlxG.keys.anyJustPressed(["Q"]))
-				// {
-				// 	Reg.flags["owl_clan_attack"] += 1;
-				// 	trace("flag incremented: " + Reg.flags["owl_clan_attack"]);
-				// }
-				// if (FlxG.keys.anyJustPressed(["E"]))
-				// {
-				// 	Reg.flags["frogponddun"] += 1;
-				// 	trace("dun done ");
-				// }
-				// if (FlxG.keys.anyJustPressed(["V"]))
-				// {
-				// 	// Reg.flags["frogponddun"] = 1;
-				// 	Reg.flags["difficulty"] = 1;
-				// 	trace(Reg.flags["difficulty"]);
-				// }
-				// if (FlxG.keys.anyJustPressed(["R"]))
-				// {
-				// 	if (Reg.flags["monshou_fire"] == 1)
-				// 		Reg.flags["monshou_gondola"] = 1;
-				// 	if (Reg.flags["monshou_ice"] == 1)
-				// 		Reg.flags["monshou_fire"] = 1;
-				// 	if (Reg.flags["monshou_frog"] == 1)
-				// 		Reg.flags["monshou_ice"] = 1;
-				// 	Reg.flags["monshou_frog"] = 1;
-				// 	trace("monshou++ ");
-				// }
+				if (FlxG.keys.anyJustPressed(["P"]))
+				{
+					FlxG.switchState(new MenuState());
+				}
+				if (FlxG.keys.anyJustPressed(["H"]))
+				{
+					if (Reg.flags["p_hood"] == 0)
+						Reg.flags["p_hood"] = 1;
+					else if (Reg.flags["p_hood"] == 1)
+						Reg.flags["p_hood"] = 2;
+					else
+						Reg.flags["p_hood"] = 0;
+					hasHood = Reg.flags["p_hood"];
+					_state.eventManager.addEvents([new EventClasses.EventSFXPlay("lvl")]);
+				}
+				if (FlxG.keys.anyJustPressed(["Q"]))
+				{
+					Reg.flags["first_wakeup"] = 1;
+					trace("first_wakeup = 2");
+					Reg.flags["first_froggo"] = 2;
+					trace("frist_froggo = 2");
+					Reg.flags["owl_clan_attack"] = 5;
+					trace("owl_clan_attack: " + Reg.flags["owl_clan_attack"]);
+					Reg.flags["frogponddun"] = 2;
+					trace("frogponddun done ");
+					Reg.flags["p_hood"] = 1;
+					trace("hood on");
+					Reg.flags["monshou_frog"] = 1;
+					trace("frog seal got");
+				}
+				if (FlxG.keys.anyJustPressed(["E"]))
+				{
+					Reg.flags["ch1_progress"] = 2;
+					Reg.flags["waterkid_in_hut"] = 3;
+					Reg.goToNextLevel(10, "worldmap.tmx");
+					// Reg.goToNextLevel(1, "waterkidhut.tmx");
+
+				}
+				if (FlxG.keys.anyJustPressed(["V"]))
+				{
+					// Reg.flags["frogponddun"] = 1;
+					Reg.flags["difficulty"] = 1;
+					trace(Reg.flags["difficulty"]);
+				}
+				if (FlxG.keys.anyJustPressed(["R"]))
+				{
+					if (Reg.flags["monshou_fire"] == 1)
+						Reg.flags["monshou_gondola"] = 1;
+					if (Reg.flags["monshou_ice"] == 1)
+						Reg.flags["monshou_fire"] = 1;
+					if (Reg.flags["monshou_frog"] == 1)
+						Reg.flags["monshou_ice"] = 1;
+					Reg.flags["monshou_frog"] = 1;
+					trace("monshou++ ");
+				}
+				if (FlxG.keys.anyJustPressed(["T"]))
+				{
+					healMP(100);
+					trace("hp + 100");
+					Reg.flags["coins_frog"] += 10;
+					trace("coins_frog += 10:  " + Reg.flags["coins_frog"]);
+				}
+				if (FlxG.keys.anyJustPressed(["Y"]))
+				{
+					// Reg.flags["frogponddun"] = 1;
+					Reg.flags["frostking_arc"] += 1;
+					trace("frostking_arc = " + Reg.flags["frostking_arc"]);
+				}
 				
-
-
 			}
 		}
 		else if (Reg.STATE == Reg.STATE_CUTSCENE)
@@ -244,56 +280,6 @@ class Player extends Entity
 			mp = maxmp;
 	}
 
-	override public function setFacing(Dir:Int):Void
-	{
-		hasHood = Reg.flags["p_hood"];
-		switch (Dir)
-		{
-			case FlxObject.UP:
-			{
-				facing = FlxObject.UP;
-				animation.play("up_" + hasHood);
-			}
-			case FlxObject.DOWN:
-			{
-				facing = FlxObject.DOWN;
-				animation.play("dn_" + hasHood);
-			}
-			case FlxObject.LEFT:
-			{
-				facing = FlxObject.LEFT;
-				animation.play("lf_" + hasHood);
-			}
-			case FlxObject.RIGHT:
-			{
-				facing = FlxObject.RIGHT;
-				animation.play("rt_" + hasHood);
-			}
-		}
-	}
-	
-	public static function setStats(LVL:Int, MMP:Int, MP:Int, XP:Int):Void
-	{
-		lp = LVL;
-		maxmp = MMP;
-		mp = MP;
-		xp = XP;
-	}
-
-	public static function resetStats():Void
-		setStats(1, 30, 30, 0);
-	
-
-	public function moveTo(Direction:Int):Void
-	{
-		// Only change direction if not already moving
-		if (!isMoving)
-		{
-			facing = Direction;
-			isMoving = true;
-		}
-	}
-
 	public function interactionCheck(Direction:Int):Void
 	{
 		var xx:Int = 0;
@@ -326,7 +312,7 @@ class Player extends Entity
 		
 		for (item in _state.grpNPCs)
 		{
-			if (item.y == y + yy && item.x == x + xx)
+			if (item.y == y + yy && item.x == x + xx && item.visible == true)
 			{
 				item.triggered(tempFace);
 				return;
@@ -334,5 +320,57 @@ class Player extends Entity
 		}
 		return;
 	}
+
+	public function moveTo(Direction:Int):Void
+	{
+		// Only change direction if not already moving
+		if (!isMoving)
+		{
+			facing = Direction;
+			isMoving = true;
+		}
+	}
+
+	public static function resetStats():Void
+		setStats(1, 30, 30, 0);
+
+	override public function setFacing(Dir:Int):Void
+	{
+		hasHood = Reg.flags["p_hood"];
+		switch (Dir)
+		{
+			case FlxObject.UP:
+			{
+				facing = FlxObject.UP;
+				animation.play("up_" + hasHood, animation.frameIndex);
+			}
+			case FlxObject.DOWN:
+			{
+				facing = FlxObject.DOWN;
+				animation.play("dn_" + hasHood, animation.frameIndex);
+			}
+			case FlxObject.LEFT:
+			{
+				facing = FlxObject.LEFT;
+				animation.play("lf_" + hasHood, animation.frameIndex);
+			}
+			case FlxObject.RIGHT:
+			{
+				facing = FlxObject.RIGHT;
+				animation.play("rt_" + hasHood, animation.frameIndex);
+			}
+		}
+	}
+	
+	public static function setStats(LVL:Int, MMP:Int, MP:Int, XP:Int):Void
+	{
+		lp = LVL;
+		maxmp = MMP;
+		mp = MP;
+		xp = XP;
+	}
+
+
+
 	
 }

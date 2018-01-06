@@ -16,6 +16,7 @@ class PicrossBoard extends FlxGroup
 	static public var REVERSEDVERT:Int = 1;
 	static public var REVERSEDHORZ:Int = 2;
 	static public var REVERSEDBOTH:Int = 3;
+	static public var CHRISTMASLIGHTS:Int    = 4;
 	public var state:Int = 0;
 
 	public var grpTexts:FlxTypedGroup<FlxText>;
@@ -182,31 +183,51 @@ class PicrossBoard extends FlxGroup
 		}
 	}
 
-	public function checkRowCorrect(RowID:Int):Bool
+	public function checkRowCorrect(RowID:Int, ?Color:FlxColor, ?GrayColor:FlxColor, ?Colorize:Bool):Bool
 	{
+		// have to do this colorBool stuff so that CHRISTMASLIGHTS mode doesn't get reset on BattleSubState.winCheck()
+		var colorBool = true;
+		if (Colorize != null)
+			colorBool = Colorize;
+		var tempColor = FlxColor.WHITE;
+		if (Color != null)
+			tempColor = Color;
+		var tempGray = FlxColor.GRAY;
+		if (GrayColor != null)
+			tempGray = GrayColor;
+
 		for (i in 0...dimens[1])
 		{
 			if (gridPicrossSquares[RowID][i].answer != gridPicrossSquares[RowID][i].status)
 			{
-				arrRowHints[RowID].setFormat(arrRowHints[RowID].size, FlxColor.WHITE);
+				if (colorBool)
+					arrRowHints[RowID].setFormat(arrRowHints[RowID].size, tempColor);
 				return false;
 			}
 		}
-		arrRowHints[RowID].setFormat(arrRowHints[RowID].size, FlxColor.GRAY);
+		if (colorBool)
+			arrRowHints[RowID].setFormat(arrRowHints[RowID].size, tempGray);
 		return true;
 	}
 
-	public function checkColCorrect(ColID:Int):Bool
+	public function checkColCorrect(ColID:Int, ?Color:FlxColor, ?GrayColor:FlxColor):Bool
 	{
+		var tempColor = FlxColor.WHITE;
+		if (Color != null)
+			tempColor = Color;
+		var tempGray = FlxColor.GRAY;
+		if (GrayColor != null)
+			tempGray = GrayColor;
+
 		for (row in 0...dimens[0])
 		{
 			if (gridPicrossSquares[row][ColID].answer != gridPicrossSquares[row][ColID].status)
 			{
-				arrColHints[ColID].setFormat(arrColHints[ColID].size, FlxColor.WHITE);
+				arrColHints[ColID].setFormat(arrColHints[ColID].size, tempColor);
 				return false;
 			}
 		}
-		arrColHints[ColID].setFormat(arrColHints[ColID].size, FlxColor.GRAY);
+		arrColHints[ColID].setFormat(arrColHints[ColID].size, tempGray);
 		return true;
 	}
 

@@ -13,7 +13,7 @@ import MenuClasses;
  * @author Bownly
  */
 
-class FrogPondDun extends TownState
+class FrogPondDun extends Dungeon
 {
 	var obj0:NPC;
 	var chest5:Chest;
@@ -34,39 +34,39 @@ class FrogPondDun extends TownState
 	{
 		grpNPCs = new FlxTypedGroup<NPC>();
 		
-		dummy = new NPC(0, 0, FlxObject.DOWN, 8, this, "npc 0");
-		npclazy = new NPC(0, 0, FlxObject.UP, 3, this, "npc 1");
+		dummy = new NPC(0, 0, FlxObject.DOWN, Reg.npcs["dummy"], this, "npc 0");
+		npclazy = new NPC(0, 0, FlxObject.UP, Reg.npcs["frogman"], this, "npc 1");
 		grpNPCs.add(dummy);
 		grpNPCs.add(npclazy);
 
-		chest5 = new Chest(0, 0, FlxObject.UP, this, "frogpond_chest5");
+		chest5 = new Chest(0, 0, FlxObject.UP, Reg.npcs["chest1_closed"], this, "frogpond_chest5");
 		grpNPCs.add(chest5);
 		
-		obj0 = new NPC(0, 0, FlxObject.RIGHT, 8, this, "obj 0");
+		obj0 = new NPC(0, 0, FlxObject.RIGHT, Reg.npcs["pedestal2"], this, "obj 0");
 		obj0.events = [new EventDialog(Strings.mchouseStrings[1], this)];
 		obj0.setCanTurn(false);
 		grpNPCs.add(obj0);
 
 		if (Reg.flags["first_froggo"] == 1)
 		{
-			npcRival = new NPC(0, 0, FlxObject.LEFT, 2, this, "npc 2");
+			npcRival = new NPC(0, 0, FlxObject.LEFT, Reg.npcs["rival"], this, "npc 2");
 			// npcRival.visible = false;
 			grpNPCs.add(npcRival);
 		}
 
 		if (Reg.flags["frogpond_door5"] == 0)
 		{
-			door5 = new NPC(0, 0, FlxObject.DOWN, 9, this, "frogpond_door5");
+			door5 = new NPC(0, 0, FlxObject.DOWN, Reg.npcs["door1"], this, "frogpond_door5");
 			grpNPCs.add(door5);
 		}
 		if (Reg.flags["frogpond_door6"] == 0)
 		{
-			door6 = new NPC(0, 0, FlxObject.DOWN, 9, this, "frogpond_door6");
+			door6 = new NPC(0, 0, FlxObject.DOWN, Reg.npcs["door1"], this, "frogpond_door6");
 			grpNPCs.add(door6);
 		}
 		if (Reg.flags["frogpond_door7"] == 0)
 		{
-			door7 = new NPC(0, 0, FlxObject.DOWN, 9, this, "frogpond_door7");
+			door7 = new NPC(0, 0, FlxObject.DOWN, Reg.npcs["door1"], this, "frogpond_door7");
 			grpNPCs.add(door7);
 		}
 
@@ -87,12 +87,12 @@ class FrogPondDun extends TownState
 
 		if (Reg.flags["first_froggo"] == 1)
 		{
-			eventManager.addEvents([new EventNPCWalk(npcRival, [[FlxObject.LEFT, 1], [FlxObject.RIGHT, 0]]),
-									new EventNPCWalk(player, [[FlxObject.LEFT, 0]]),
+			eventManager.addEvents([new EventNPCWalk([npcRival], [[[FlxObject.LEFT, 1], [FlxObject.RIGHT, 0]]]),
+									new EventNPCWalk([player], [[[FlxObject.LEFT, 0]]]),
 									new EventFlag("first_froggo", 2),
 									new EventNPCAdd(npcRival, grpNPCs),
 									new EventDialog(Strings.frogponddunStrings[34], this),
-									new EventNPCWalk(npcRival, [[FlxObject.LEFT, 1], [FlxObject.UP, 12]]),
+									new EventNPCWalk([npcRival], [[[FlxObject.LEFT, 1], [FlxObject.UP, 12]]]),
 									new EventNPCRemove(npcRival)
 									]);
 
@@ -101,10 +101,10 @@ class FrogPondDun extends TownState
 		if (Reg.flags["frogpond_chest5"] == 0)
 		{
 			chest5.events = [new EventStringVarChange("%item%", "Pond Scum"),
-							 new EventDialog(Strings.inventoryStrings[0], this),
-							 new EventItemGet(new ItemClasses.ItemHealing("Pond Scum", Strings.itemDescriptions["Pond Scum"], 9, 999)),
 							 new EventFlag("frogpond_chest5", 1),
-							 new EventNPCTrigger(chest5, 0)
+							 new EventNPCTrigger(chest5, 0),
+							 new EventDialog(Strings.inventoryStrings[0], this),
+							 new EventItemGet(new ItemClasses.ItemHealing("Pond Scum", Strings.itemDescriptions["Pond Scum"], 9, 999))
 							];
 		}
 

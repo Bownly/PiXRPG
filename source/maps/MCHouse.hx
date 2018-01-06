@@ -39,10 +39,10 @@ class MCHouse extends TownState
 	{
 		grpNPCs = new FlxTypedGroup<NPC>();
 
-		obj0 = new NPC(0, 0, FlxObject.RIGHT, 8, this, "obj 0");
-		obj1 = new NPC(0, 0, FlxObject.RIGHT, 8, this, "obj 1");
-		obj2 = new NPC(0, 0, FlxObject.RIGHT, 8, this, "obj 2");
-		obj3 = new NPC(0, 0, FlxObject.RIGHT, 8, this, "obj 3");
+		obj0 = new NPC(0, 0, FlxObject.RIGHT, Reg.npcs["pedestal2"], this, "obj 0");
+		obj1 = new NPC(0, 0, FlxObject.RIGHT, Reg.npcs["pedestal2"], this, "obj 1");
+		obj2 = new NPC(0, 0, FlxObject.RIGHT, Reg.npcs["pedestal2"], this, "obj 2");
+		obj3 = new NPC(0, 0, FlxObject.RIGHT, Reg.npcs["pedestal2"], this, "obj 3");
 		obj0.setCanTurn(false);
 		obj1.setCanTurn(false);
 		obj2.setCanTurn(false);
@@ -54,9 +54,9 @@ class MCHouse extends TownState
 
 		if (Reg.flags["owl_clan_attack"] == 2)  // 2 = return home
 		{
-			npcDad = new NPC(0, 0, FlxObject.DOWN, 1, this, "npc 1", true);
-			npcRival = new NPC(0, 0, FlxObject.UP, 2, this, "npc 5", true);
-			npcFroggo = new NPC(0, 0, FlxObject.UP, 0, this, "npc 2");
+			npcDad = new NPC(0, 0, FlxObject.DOWN, Reg.npcs["dad"], this, "npc 1", true);
+			npcRival = new NPC(0, 0, FlxObject.UP, Reg.npcs["rival"], this, "npc 5", true);
+			npcFroggo = new NPC(0, 0, FlxObject.UP, Reg.npcs["froggo"], this, "npc 2");
 			grpNPCs.add(npcDad);	
 			grpNPCs.add(npcRival);	
 			grpNPCs.add(npcFroggo);
@@ -64,16 +64,16 @@ class MCHouse extends TownState
 		}
 		else if (Reg.flags["owl_clan_attack"] == 1)  // 1 = post-attack
 		{
-			npcDad = new NPC(0, 0, FlxObject.RIGHT, 1, this, "npc 1", true);
-			npcRival = new NPC(0, 0, FlxObject.LEFT, 2, this, "npc 5", true);
+			npcDad = new NPC(0, 0, FlxObject.RIGHT, Reg.npcs["dad"], this, "npc 1", true);
+			npcRival = new NPC(0, 0, FlxObject.LEFT, Reg.npcs["rival"], this, "npc 5", true);
 			grpNPCs.add(npcDad);	
 			grpNPCs.add(npcRival);	
 		}
 		else if (Reg.flags["frogponddun"] == 2 && Reg.flags["owl_clan_attack"] == 0) // compeleted the dungeon, owl_clan_attack start
 		{
-			npcDad = new NPC(0, 0, FlxObject.DOWN, 1, this, "npc 1");
-			npcRival = new NPC(0, 0, FlxObject.UP, 2, this, "npc 2");
-			npcOwl = new NPC(0, 0, FlxObject.RIGHT, 4, this, "npc 0");
+			npcDad = new NPC(0, 0, FlxObject.DOWN, Reg.npcs["dad"], this, "npc 1");
+			npcRival = new NPC(0, 0, FlxObject.UP, Reg.npcs["rival"], this, "npc 2");
+			npcOwl = new NPC(0, 0, FlxObject.RIGHT, Reg.npcs["owl"], this, "npc 0");
 			grpNPCs.add(npcDad);	
 			grpNPCs.add(npcRival);	
 			grpNPCs.add(npcOwl);
@@ -83,25 +83,22 @@ class MCHouse extends TownState
 		{
 			if (Reg.flags["first_wakeup"] == 1)
 			{
-				npcDad = new NPC(0, 0, FlxObject.RIGHT, 1, this, "npc 0");
-				npcRival = new NPC(0, 0, FlxObject.LEFT, 2, this, "npc 1");
-				door = new NPC(0, 0, FlxObject.DOWN, 9, this, "npc 4");
+				npcDad = new NPC(0, 0, FlxObject.RIGHT, Reg.npcs["dad"], this, "npc 0");
+				npcRival = new NPC(0, 0, FlxObject.LEFT, Reg.npcs["rival"], this, "npc 1");
+				door = new NPC(0, 0, FlxObject.UP, Reg.npcs["door1"], this, "npc 4");
 				grpNPCs.add(npcDad);	
 				grpNPCs.add(npcRival);	
 				grpNPCs.add(door);	
 			}
 			else if (Reg.flags["first_wakeup"] == 2)
 			{
-				npcDad = new NPC(0, 0, FlxObject.DOWN, 1, this, "npc 0");
+				npcDad = new NPC(0, 0, FlxObject.DOWN, Reg.npcs["dad"], this, "npc 0");
 				grpNPCs.add(npcDad);	
 			}
 		}
 
 
 		super.create();
-
-
-		// playSong();			
 
 		assignEvents();
 	}
@@ -117,25 +114,25 @@ class MCHouse extends TownState
 
 		if (Reg.flags["owl_clan_attack"] == 2)  // 2 = return home
 		{
-			eventManager.addEvents([new EventNPCWalk(player, [[FlxObject.UP, 3]]),
+			eventManager.addEvents([new EventNPCWalk([player], [[[FlxObject.UP, 3]]]),
 									new EventNPCAdd(npcFroggo, grpNPCs),
-									new EventNPCWalk(npcFroggo, [[FlxObject.UP, 1], [FlxObject.LEFT, 1], [FlxObject.UP, 1]]),
+									new EventNPCWalk([npcFroggo], [[[FlxObject.UP, 1], [FlxObject.LEFT, 1], [FlxObject.UP, 1]]]),
 									new EventDialog(Strings.mchouseStrings[34], this),
-									new EventNPCWalk(npcFroggo, [[FlxObject.RIGHT, 1], [FlxObject.UP, 1]]),
+									new EventNPCWalk([npcFroggo], [[[FlxObject.RIGHT, 1], [FlxObject.UP, 1]]]),
 									new EventDialog(Strings.mchouseStrings[35], this),
-									new EventNPCWalk(player, [[FlxObject.UP, 1]]),
+									new EventNPCWalk([player], [[[FlxObject.UP, 1]]]),
 									new EventDialog(Strings.mchouseStrings[36], this),
-									new EventNPCWalk(npcFroggo, [[FlxObject.DOWN, 1]]),
+									new EventNPCWalk([npcFroggo], [[[FlxObject.DOWN, 1]]]),
 									new EventDialog(Strings.mchouseStrings[37], this),
-									new EventNPCWalk(npcFroggo, [[FlxObject.UP, 1]]),
-									new EventNPCWalk(npcDad, [[FlxObject.DOWN, 1]]),
+									new EventNPCWalk([npcFroggo], [[[FlxObject.UP, 1]]]),
+									new EventNPCWalk([npcDad], [[[FlxObject.DOWN, 1]]]),
 									new EventNPCRemove(npcDad),
-									new EventNPCWalk(npcFroggo, [[FlxObject.LEFT, 0]]),
-									new EventNPCWalk(npcRival, [[FlxObject.RIGHT, 1]]),
+									new EventNPCWalk([npcFroggo], [[[FlxObject.LEFT, 0]]]),
+									new EventNPCWalk([npcRival], [[[FlxObject.RIGHT, 1]]]),
 									new EventNPCRemove(npcRival),
-									new EventNPCWalk(npcFroggo, [[FlxObject.DOWN, 1]]),
-									new EventNPCWalk(player, [[FlxObject.LEFT, 1], [FlxObject.RIGHT, 0]]),
-									new EventNPCWalk(npcFroggo, [[FlxObject.DOWN, 5]]),
+									new EventNPCWalk([npcFroggo], [[[FlxObject.DOWN, 1]]]),
+									new EventNPCWalk([player], [[[FlxObject.LEFT, 1], [FlxObject.RIGHT, 0]]]),
+									new EventNPCWalk([npcFroggo], [[[FlxObject.DOWN, 5]]]),
 									new EventNPCRemove(npcFroggo),
 									new EventFlag("owl_clan_attack", 3)
 									]);
@@ -149,36 +146,36 @@ class MCHouse extends TownState
 		{
 			eventManager.addEvents([new EventNPCKillOrNot(npcDad, true),
 							 		new EventDialog(Strings.mchouseStrings[21], this),
-									new EventNPCWalk(player, [[FlxObject.UP, 3]]),
+									new EventNPCWalk([player], [[[FlxObject.UP, 3]]]),
 									new EventNPCAdd(npcRival, grpNPCs),
-									new EventNPCWalk(npcRival, [[FlxObject.LEFT, 1], [FlxObject.UP, 1]]),
-									new EventNPCWalk(npcOwl, [[FlxObject.DOWN, 0]]),
+									new EventNPCWalk([npcRival], [[[FlxObject.LEFT, 1], [FlxObject.UP, 1]]]),
+									new EventNPCWalk([npcOwl], [[[FlxObject.DOWN, 0]]]),
 									new EventDialog(Strings.mchouseStrings[22], this),
 									new EventDialog(Strings.mchouseStrings[23], this),
-									new EventNPCWalk(npcRival, [[FlxObject.UP, 2]]),
+									new EventNPCWalk([npcRival], [[[FlxObject.UP, 2]]]),
 									new EventDialog(Strings.mchouseStrings[24], this),
-									new EventNPCWalk(player, [[FlxObject.UP, 3]]),
+									new EventNPCWalk([player], [[[FlxObject.UP, 3]]]),
 									new EventDialog(Strings.mchouseStrings[26], this),
 									new EventDialog(Strings.mchouseStrings[38], this),
 									new EventZaWarudo(0.3),
 									new EventSFXPlay("hurt"),
 									new EventNPCKillOrNot(npcRival, true),
 									new EventZaWarudo(0.3),
-									new EventNPCWalk(player, [[FlxObject.LEFT, 0]]),
+									new EventNPCWalk([player], [[[FlxObject.LEFT, 0]]]),
 									new EventDialog(Strings.mchouseStrings[25], this),
 									new EventDialog(Strings.mchouseStrings[27], this),
-									new EventNPCWalk(npcOwl, [[FlxObject.RIGHT, 0]]),
+									new EventNPCWalk([npcOwl], [[[FlxObject.RIGHT, 0]]]),
 									new EventDialog(Strings.mchouseStrings[28], this),
-									new EventNPCWalk(npcOwl, [[FlxObject.LEFT, 1], [FlxObject.DOWN, 2], 
-									 						  [FlxObject.RIGHT, 2], [FlxObject.DOWN, 2]]),
-									new EventNPCWalk(player, [[FlxObject.DOWN, 0]]),
+									new EventNPCWalk([npcOwl], [[[FlxObject.LEFT, 1], [FlxObject.DOWN, 2], 
+																		 						  [FlxObject.RIGHT, 2], [FlxObject.DOWN, 2]]]),
+									new EventNPCWalk([player], [[[FlxObject.DOWN, 0]]]),
 									new EventDialog(Strings.mchouseStrings[29], this),
-									new EventNPCWalk(player, [[FlxObject.DOWN, 2]]),
-									new EventNPCWalk(npcOwl, [[FlxObject.UP, 0]]),
+									new EventNPCWalk([player], [[[FlxObject.DOWN, 2]]]),
+									new EventNPCWalk([npcOwl], [[[FlxObject.UP, 0]]]),
 									new EventDialog(Strings.mchouseStrings[30], this),
 									new EventBattle([new EnemyOwl()], this, "owl_clan_attack", 1, "miniboss"),
 									new EventDialog(Strings.mchouseStrings[31], this),
-									new EventNPCWalk(npcOwl, [[FlxObject.DOWN, 3]]),
+									new EventNPCWalk([npcOwl], [[[FlxObject.DOWN, 3]]]),
 									new EventNPCRemove(npcOwl),
 									new EventDialog(Strings.mchouseStrings[32], this),
 									new EventNPCSetCanTurn(npcDad, false),
@@ -190,8 +187,24 @@ class MCHouse extends TownState
 			if (Reg.flags["first_wakeup"] == 1)  // first talk with dad
 			{
 				door.events = [new EventDialog(Strings.mchouseStrings[0], this)];
-				npcRival.events = [ new EventDialog(Strings.mchouseStrings[6], this),
-									new EventNPCWalk(npcRival, [[FlxObject.LEFT, 0]])];
+				npcRival.events = [ 
+									// new EventNPCWalk([npcRival, npcDad], 
+													 // [ [[FlxObject.DOWN, 4], [FlxObject.RIGHT, 5], 
+													 // 	[FlxObject.UP, 3], [FlxObject.LEFT, 5],
+													 // 	[FlxObject.UP, 1], [FlxObject.DOWN, 0]
+													 //   ],
+													 //   [[FlxObject.RIGHT, 1],
+													 //    [FlxObject.DOWN, 1], [FlxObject.LEFT, 2],
+													 //    [FlxObject.UP, 3], [FlxObject.RIGHT, 1],
+													 //    [FlxObject.DOWN, 2]
+													 //   ]
+													 // ]),
+
+
+
+									new EventDialog(Strings.mchouseStrings[6], this),
+									new EventNPCWalk([npcRival], [[[FlxObject.LEFT, 0]]])
+									];
 				npcDad.events = [new EventDialog(Strings.mchouseStrings[7], this),
 								 new EventDialog(Strings.mchouseStrings[8], this),
 								 new EventDialog(Strings.mchouseStrings[9], this),
@@ -208,14 +221,14 @@ class MCHouse extends TownState
 
 								 new EventDialog(Strings.mchouseStrings[17], this),
 								 new EventDialog(Strings.mchouseStrings[18], this),
-								 new EventNPCWalk(npcRival, [[FlxObject.LEFT, 0]]),
+								 new EventNPCWalk([npcRival], [[[FlxObject.LEFT, 0]]]),
 								 new EventDialog(Strings.mchouseStrings[19], this),
 								 new EventFlag("first_wakeup", 2),
-								 new EventNPCWalk(npcRival, [[FlxObject.DOWN, 6]]),
+								 new EventNPCWalk([npcRival], [[[FlxObject.DOWN, 6]]]),
 								 new EventZaWarudo(0.5),
 								 new EventNPCRemove(door),
 								 new EventZaWarudo(0.5),
-								 new EventNPCWalk(npcRival, [[FlxObject.DOWN, 1]]),
+								 new EventNPCWalk([npcRival], [[[FlxObject.DOWN, 1]]]),
 								 new EventNPCRemove(npcRival)
 				];
 			}

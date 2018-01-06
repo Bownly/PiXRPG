@@ -37,14 +37,14 @@ class MCHouse1 extends TownState
 		
 		if (Reg.flags["first_wakeup"] == 0)
 		{
-			npcRival = new NPC(48, 32, FlxObject.UP, 2, this, "npc 0");
+			npcRival = new NPC(48, 32, FlxObject.UP, Reg.npcs["rival"], this, "npc 0");
 			grpNPCs.add(npcRival);
 		}
 
-		obj0 = new NPC(0, 0, FlxObject.RIGHT, 8, this, "obj 0");
-		obj1 = new NPC(0, 0, FlxObject.RIGHT, 8, this, "obj 1");
-		obj2 = new NPC(0, 0, FlxObject.RIGHT, 8, this, "obj 2");
-		obj3 = new NPC(0, 0, FlxObject.RIGHT, 8, this, "obj 3");
+		obj0 = new NPC(0, 0, FlxObject.RIGHT, Reg.npcs["pedestal2"], this, "obj 0");
+		obj1 = new NPC(0, 0, FlxObject.RIGHT, Reg.npcs["pedestal2"], this, "obj 1");
+		obj2 = new NPC(0, 0, FlxObject.RIGHT, Reg.npcs["pedestal2"], this, "obj 2");
+		obj3 = new NPC(0, 0, FlxObject.RIGHT, Reg.npcs["pedestal2"], this, "obj 3");
 		obj0.setCanTurn(false);
 		obj1.setCanTurn(false);
 		obj2.setCanTurn(false);
@@ -78,8 +78,8 @@ class MCHouse1 extends TownState
 									new EventDialog(Strings.mchouse1Strings[3], this),
 									new EventDialog(Strings.mchouse1Strings[4], this),
 									new EventDialog(Strings.mchouse1Strings[5], this),
-									new EventNPCWalk(npcRival, [[FlxObject.LEFT, 6],
-															[FlxObject.DOWN, 1]]),
+									new EventNPCWalk([npcRival], [ [[FlxObject.LEFT, 6],
+																	[FlxObject.DOWN, 1]]]),
 									new EventNPCRemove(npcRival),
 									new EventFlag("first_wakeup", 1)
 									]);

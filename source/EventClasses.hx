@@ -6,6 +6,8 @@ import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxGroup;
 import flixel.text.FlxText;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 
 import EnemyClasses;
@@ -260,10 +262,10 @@ class EventMusicStop extends BaseEvent
 
 class EventNPCAdd extends BaseEvent
 {
-	var _npc:NPC;
+	var _npc:Entity;
 	var _group:FlxTypedGroup<NPC>;
 
-	public function new(Npc:NPC, Group:FlxTypedGroup<NPC>)
+	public function new(Npc:Entity, ?Group:FlxTypedGroup<NPC>)
 	{
 		super();
 		_npc = Npc;
@@ -272,7 +274,6 @@ class EventNPCAdd extends BaseEvent
 
 	override public function update(elapsed:Float)
 	{
-		// _group.add(_npc);
 		_npc.visible = true;
 		destroy();
 	}
@@ -311,6 +312,15 @@ class EventNPCRemove extends BaseEvent
 	{
 		_npc.visible = false;
 		destroy();
+	}
+}
+
+class EventNPCRun extends EventNPCWalk
+{
+	public function new(Npc:Array<Entity>, Path:Array<Array<Array<Int>>>, ?Animated:Array<Bool>)
+	{
+		super(Npc, Path, Animated);
+		MOVEMENT_SPEED = Entity.RUN_SPEED;
 	}
 }
 
@@ -354,91 +364,129 @@ class EventNPCTrigger extends BaseEvent
 
 class EventNPCWalk extends BaseEvent
 {
-	var _npc:Entity;
-	var _path:Array<Array<Int>>;
-	var _animated:Bool = true;
-	private static inline var MOVEMENT_SPEED:Int = 1;
-	public var baseX:Float;
-	public var baseY:Float;
+	var _npc:Array<Entity>;
+	var _path:Array<Array<Array<Int>>>;
+	var _animated:Array<Bool>;
+	var MOVEMENT_SPEED:Int = 1;
+	public var baseX:Array<Float>;
+	public var baseY:Array<Float>;
 
 	// public var isMoving:Bool;
 
-	public function new(Npc:Entity, Path:Array<Array<Int>>, ?Animated:Bool)
+	public function new(Npc:Array<Entity>, Path:Array<Array<Array<Int>>>, ?Animated:Array<Bool>)
 	{
 		super();
 		_npc = Npc;
 		_path = Path;
 		if (Animated != null)
 			_animated = Animated;
-		baseX = 0;
-		baseY = 0;
+		else
+		{
+			_animated = [];
+			for (i in 0..._npc.length)
+			{
+				_animated.push(true);
+			}
+		}
+		MOVEMENT_SPEED = Entity.WALK_SPEED;
+
+		baseX = [];
+		baseY = [];
+		for (i in 0..._npc.length)
+		{
+			baseX.push(0);
+			baseY.push(0);
+		}
 	}
 
 	override public function update(elapsed:Float)
 	{
-		// have to reinitialize the values here to ensure that they are correct at the time of the event's activation
-		if (baseX == 0)
-			baseX = _npc.x;
-		if (baseY == 0)
-			baseY = _npc.y;
-
-		if (_path.length > 0)
+		for (i in 0..._npc.length)
 		{
-			Reg.STATE = Reg.STATE_CUTSCENE;
-			switch (_path[0][0])
+			// have to reinitialize the values here to ensure that they are correct at the time of the event's activation
+			if (baseX[i] == 0)
+				baseX[i] = Std.int(_npc[i].x / 16) * 16;
+			if (baseY[i] == 0)
+				baseY[i] = Std.int(_npc[i].y / 16) * 16;
+
+			if (_path[i] != null && _path[i].length > 0)
 			{
-				case FlxObject.UP:
+				Reg.STATE = Reg.STATE_CUTSCENE;
+				switch (_path[i][0][0])
 				{
-					if (_animated)
-						_npc.setFacing(FlxObject.UP);
-					// if not done moving
-					if (Std.int(Math.abs(baseY - _npc.y)) != _path[0][1] * 16)
-						_npc.y -= MOVEMENT_SPEED;
-					else
-						popOffDirection();
-				}
-				case FlxObject.DOWN:
-				{
-					if (_animated)
-						_npc.setFacing(FlxObject.DOWN);						
-					if (Std.int(Math.abs(baseY - _npc.y)) != _path[0][1] * 16)
-						_npc.y += MOVEMENT_SPEED;
-					else
-						popOffDirection();
-				}
-				case FlxObject.LEFT:
-				{
-					if (_animated)
-						_npc.setFacing(FlxObject.LEFT);
-					if (Std.int(Math.abs(baseX - _npc.x)) != _path[0][1] * 16)
-						_npc.x -= MOVEMENT_SPEED;
-					else
-						popOffDirection();
-				}
-				case FlxObject.RIGHT:
-				{
-					if (_animated)
-						_npc.setFacing(FlxObject.RIGHT);
-					if (Std.int(Math.abs(baseX - _npc.x)) != _path[0][1] * 16)
-						_npc.x += MOVEMENT_SPEED;
-					else
-						popOffDirection();
-				}
-				default:
-				{
-					popOffDirection();
+					case FlxObject.UP:
+					{
+						if (_animated[i])
+							_npc[i].setFacing(FlxObject.UP);
+						// if not done moving
+						if (Std.int(Math.abs(baseY[i] - _npc[i].y)) != _path[i][0][1] * 16)
+							_npc[i].y -= MOVEMENT_SPEED;
+						else
+							popOffDirection(i);
+					}
+					case FlxObject.DOWN:
+					{
+						if (_animated[i])
+							_npc[i].setFacing(FlxObject.DOWN);						
+						if (Std.int(Math.abs(baseY[i] - _npc[i].y)) != _path[i][0][1] * 16)
+							_npc[i].y += MOVEMENT_SPEED;
+						else
+							popOffDirection(i);
+					}
+					case FlxObject.LEFT:
+					{
+						if (_animated[i])
+							_npc[i].setFacing(FlxObject.LEFT);
+						if (Std.int(Math.abs(baseX[i] - _npc[i].x)) != _path[i][0][1] * 16)
+							_npc[i].x -= MOVEMENT_SPEED;
+						else
+							popOffDirection(i);
+					}
+					case FlxObject.RIGHT:
+					{
+						if (_animated[i])
+							_npc[i].setFacing(FlxObject.RIGHT);
+						if (Std.int(Math.abs(baseX[i] - _npc[i].x)) != _path[i][0][1] * 16)
+							_npc[i].x += MOVEMENT_SPEED;
+						else
+							popOffDirection(i);
+					}
+					default:
+					{
+						popOffDirection(i);
+					}
 				}
 			}
+	
 		}
 	}
 
 
-	private function popOffDirection():Void
+	private function popOffDirection(I:Int):Void
 	{
-		_path.remove(_path[0]);
-		baseX = _npc.x;
-		baseY = _npc.y;
-		if (_path.length == 0)
+		var i = I;
+		_path[i].remove(_path[i][0]);
+		baseX[i] = _npc[i].x;
+		baseY[i] = _npc[i].y;
+		if (_path[i].length == 0)
+		{
+		// 	_path.remove(_path[i]);
+		// 	_npc.remove(_npc[i]);
+		// 	baseX.remove(baseX[i]);
+		// 	baseY.remove(baseY[i]);
+			destroyCheck();			
+		}
+	}
+
+	private function destroyCheck():Void
+	{
+		var toDestroy:Bool = true;
+		for (i in 0..._path.length)
+		{
+			if (_path[i].length != 0)
+				toDestroy = false;
+		}
+		if (toDestroy)
 			destroy();
 	}
 }
@@ -462,6 +510,33 @@ class EventSaveGame extends BaseEvent
 	}
 }
 
+class EventScreenFade extends BaseEvent
+{
+	var _state:TownState;
+	var _dur:Float;
+
+	public function new(State:TownState, Duration:Float)
+	{
+		_state = State;
+		_dur = Duration;
+		super();
+	}
+
+	override public function update(elapsed:Float)
+	{
+		var _sprTransition = new FlxSprite(0, 0);
+		// 258 and 500 are just arbitrary extra border pixels
+		_sprTransition.x = _state.player.x - FlxG.width/2 - 258;
+		_sprTransition.y = _state.player.y - FlxG.height/2 - 258;
+		_sprTransition.makeGraphic(FlxG.width + 500, FlxG.height + 500, 0xff000000);
+		_sprTransition.alpha = 0;
+
+		_state.add(_sprTransition);
+	    FlxTween.tween(_sprTransition, { alpha: 1 }, _dur, { ease:FlxEase.circOut });
+		destroy();
+	}
+}
+
 class EventSFXPlay extends BaseEvent
 {
 	var _sfx:String;
@@ -478,6 +553,26 @@ class EventSFXPlay extends BaseEvent
 		destroy();
 	}
 }
+
+class EventSpriteAdd extends BaseEvent
+{
+	var _spr:FlxSprite;
+	var _state:FlxState;
+
+	public function new(Sprite:FlxSprite, State:FlxState)
+	{
+		super();
+		_spr = Sprite;
+		_state = State;
+	}
+
+	override public function update(elapsed:Float)
+	{
+		_state.add(_spr);
+		destroy();
+	}
+}
+
 class EventStringVarChange extends BaseEvent
 {
 	var _name:String;
